@@ -6,10 +6,16 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        poppins: ['Poppins', 'sans-serif'],
+      },
       colors:{
         'custom-dark':'#213343',
         'custom-dark-orange':'#FB923C',
-      }
+        'custom-light-orange':'#FEE3CE',
+        'custom-black-text':'#213343',
+        'hover-button-color':'#dc9256',
+      },
     },
   },
   plugins: [],
