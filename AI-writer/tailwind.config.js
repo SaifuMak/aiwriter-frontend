@@ -14,7 +14,7 @@ export default {
         'custom-dark-orange':'#FB923C',
         'custom-light-orange':'#FEE3CE',
         'custom-black-text':'#213343',
-        'hover-button-color':'#dc9256',
+        'hover-button-color':'#f6a665',
       },
     },
   },
