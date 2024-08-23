@@ -4,9 +4,33 @@ import { VscCheck } from "react-icons/vsc";
 function KeywordsForArticle() {
     const [selectedTopic, setselectedTopic] = useState('')
 
-    const DataStyle = 'px-4  xl:text-base text-sm py-6 xl:py-8 border-b w-1/4  text-center'
+    const DataStyle = 'px-4   xl:text-base text-sm py-6 xl:py-8 border-b w-1/4  text-center'
     const TableHeading = ['Keyword', 'Volume', 'KD', 'Traffic potential']
     const TableRows = [
+        {
+            title: 'Importance of SEO for small businesses',
+            metric1: '60',
+            metric2: '29',
+            metric3: '1900',
+        },
+        {
+            title: 'Importance of SEO for small businesses',
+            metric1: '60',
+            metric2: '29',
+            metric3: '1900',
+        },
+        {
+            title: 'Importance of SEO for small businesses',
+            metric1: '60',
+            metric2: '29',
+            metric3: '1900',
+        },
+        {
+            title: 'Importance of SEO for small businesses',
+            metric1: '60',
+            metric2: '29',
+            metric3: '1900',
+        },
         {
             title: 'Importance of SEO for small businesses',
             metric1: '60',
@@ -53,7 +77,7 @@ function KeywordsForArticle() {
             <h2 className="text-lg lg:text-2xl xl:text-2xl">Choose keywords for your Article</h2>
             <div className="grid grid-cols-4 rounded-lg ">
                 {TableHeading.map((title, index) => (
-                    <div key={index} className="grid items-center justify-center px-4 py-6 font-semibold bg-custom-light-orange ">{title}</div>))}
+                    <div key={index} className="grid items-center justify-center px-4 py-6 font-semibold text-center max-sm:text-sm bg-custom-light-orange ">{title}</div>))}
             </div>
 
 
