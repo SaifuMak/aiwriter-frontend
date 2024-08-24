@@ -11,7 +11,7 @@ function InputComponent({label,placeholder,count,onChange,value}) {
                 </div>
                 <span className="text-[#E6E6E6] max-lg:text-sm ml-1">{count}</span>
             </div>
-            <input type="text" onChange={onChange} value= {value} className="px-4 py-1.5 bg-white rounded-md outline-none max-sm:lg:text-sm lg:py:2 xl:py-2.5 " placeholder={placeholder} />
+            <input type="text" onChange={onChange} value= {value} className="px-4 py-1.5 bg-white rounded-md outline-none text-sm lg:text-base  lg:py-2 xl:py-2.5 " placeholder={placeholder} />
         </section>
     )
 }

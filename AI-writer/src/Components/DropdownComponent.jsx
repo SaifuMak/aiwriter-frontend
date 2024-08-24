@@ -6,7 +6,7 @@ function DropdownComponent({ label, options, IsOpened, value, ToggleAction, Hand
 
 
     return (
-        <div className="relative w-full mt-10">
+        <div className="relative w-full mt-8">
             <label className="inline-block mb-1 text-sm text-white lg:text-base xl:text-lg ">{label}</label>
             <div
                 className="relative w-full px-4 py-1.5 lg:py-2 xl:py-2.5 bg-[#42515F] border border-custom-dark-orange border-opacity-55  rounded-md cursor-pointer"

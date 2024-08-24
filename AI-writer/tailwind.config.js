@@ -13,6 +13,7 @@ export default {
         'custom-dark':'#213343',
         'custom-dark-orange':'#FB923C',
         'custom-light-orange':'#FEE3CE',
+        'custom-lighter-orange' :'#FEF2E8',
         'custom-black-text':'#213343',
         'hover-button-color':'#f6a665',
       },

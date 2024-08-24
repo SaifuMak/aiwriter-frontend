@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import InputComponent from '../InputComponent'
-
+import { MdOutlineKeyboardDoubleArrowLeft } from "react-icons/md";
+import { RxDoubleArrowLeft } from "react-icons/rx";
 
 import DropdownComponent from '../DropdownComponent';
 
@@ -8,7 +9,7 @@ function ArticleSidebar() {
     const [selectedTopicOrKeywords, setselectedTopicOrKeywords] = useState('')
     const [selectedKeywords, setselectedKeywords] = useState('')
     const [selectedCallToAction, setCallToAction] = useState('')
-    
+
 
     const [ToneOfVoiceDropdown, setToneOfVoiceDropdown] = useState(false)
     const [ToneOfVoice, setToneOfVoice] = useState('')
@@ -90,6 +91,11 @@ function ArticleSidebar() {
                 count={`${selectedTopicOrKeywords.length}/200`}
             />
 
+
+            {/* <div className="flex justify-center ">
+                <button className="text-white bg-custom-dark-orange lg:text-base text-sm text-center py-1 lg:py-1.5 xl:py-2 rounded-md mt-10 w-[100px] lg:w-[120px] xl:w-[211px]">Next</button>
+            </div> */}
+
             <InputComponent
                 label='Keywords'
                 onChange={handleKeywords}
@@ -117,7 +123,7 @@ function ArticleSidebar() {
             />
 
             <InputComponent
-                label='Quality type'
+                label='Call-to-Action'
                 onChange={handleCallToAction}
                 value={selectedCallToAction}
                 placeholder="Type here....."
@@ -133,10 +139,14 @@ function ArticleSidebar() {
                 HandleSelection={handleQualitySelection}
             />
 
+            <div className="flex items-center mt-10 space-x-16 sm:space-x-2 lg:space-x-5 xl:space-x-7 2xl:space-x-10 ">
+                <div className="lg:p-2 sm:p-1 p-1.5 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
+                    <RxDoubleArrowLeft className='text-lg lg:text-2xl text-custom-dark-orange' />
+                </div>
+                <button className="px-2 py-1.5 tracking-wider text-white rounded-sm cursor-pointer sm:text-xs lg:py-2 xl:px-6 lg:px-5 lg:text-base bg-custom-dark-orange ">Generate Ideas</button>
+            </div>
 
-            {/* <div className="flex justify-center ">
-                <button className="text-white bg-custom-dark-orange text-center py-1 sm:py-2 rounded-md mt-10 w-[211px]">Next</button>
-            </div> */}
+
 
 
 

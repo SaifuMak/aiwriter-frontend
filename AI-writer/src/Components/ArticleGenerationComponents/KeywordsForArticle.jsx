@@ -90,7 +90,7 @@ function KeywordsForArticle() {
                                 <td className={DataStyle}>
                                     <div className="flex items-center justify-center space-x-2">
                                         <div className="relative xl:p-1.5 ">
-                                            {selectedTopic.includes(index) && (<VscCheck className='absolute top-0 right-0 duration-500 xl:text-xl xl:top-1 xl:right-1 ' />)}
+                                            {selectedTopic.includes(index) && (<VscCheck className='absolute -top-0.5 -right-0.5 duration-500 xl:text-xl xl:top-1 xl:right-1 ' />)}
                                             <span className={`flex items-center border duration-500 border-custom-dark-orange justify-center w-4 h-4 xl:w-5 xl:h-5 rounded-full ${selectedTopic.includes(index) ? 'bg-custom-dark-orange' : 'bg-transparent'} `}></span>
                                         </div>
                                         <span>{row.title}</span>
