@@ -20,6 +20,9 @@ function ArticleGeneration() {
     const [IsSidedbarOpened, setIsSidedbarOpened] = useState(false)
     const [IsMobileArticleSidebarOpened, setIsMobileArticleSidebarOpened] = useState(false)
 
+    const [IsProfilePopup, setIsProfilePopup] = useState(false)
+
+
 
     return (
         <>
@@ -34,11 +37,12 @@ function ArticleGeneration() {
                     dragElastic={0.01}
                     onClick={() => setIsSidedbarOpened(true)} className="fixed flex items-center justify-center h-12 rounded-full -left-3 bg-stone-400 top-30 sm:hidden "><IoIosArrowDropright className='text-xl translate-x-2.5 bg-stone-200 rounded-full text-stone-500' /></motion.span>
 
-                {IsSidedbarOpened && (<MobileSidebar setIsSidedbarOpened={setIsSidedbarOpened} />)}
+                {IsSidedbarOpened && (<MobileSidebar IsProfilePopup={IsProfilePopup} setIsSidedbarOpened={setIsSidedbarOpened} setIsProfilePopup={setIsProfilePopup} />)}
 
                 <div className="xl:w-[500px] sm:w-[200px] lg:w-[400px] max-sm:hidden ">
                     <ArticleSidebar />
                 </div>
+                
                 <div className="w-full ">
                     {IsMobileArticleSidebarOpened && (<div className=" sm:hidden">
                         <MobileArticleSidebar setIsMobileArticleSidebarOpened={setIsMobileArticleSidebarOpened} />

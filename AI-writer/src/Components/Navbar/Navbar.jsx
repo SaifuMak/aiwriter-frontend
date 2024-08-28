@@ -18,7 +18,7 @@ function Navbar({setIsSidedbarOpened,IsSidedbarOpened,setIsMobileArticleSidebarO
                 <div className="w-32 h-12 -ml-4 lg:-ml-7 xl:-ml-8 xl:h-16 max-sm:hidden xl:w-44">
                     <img src={Logo} alt="" className="object-cover w-full h-full" />
                 </div>
-                <IoMenuOutline onClick={()=>setIsSidedbarOpened(!IsSidedbarOpened)} className={`text-4xl  rounded-md  max-sm:hidden cursor-pointer  text-custom-dark-orange`} />
+                <IoMenuOutline onClick={()=>setIsSidedbarOpened(!IsSidedbarOpened)} className={`text-4xl  rounded-md   max-sm:hidden cursor-pointer  text-custom-dark-orange`} />
 
                 <IoMenuOutline onClick={()=>setIsMobileArticleSidebarOpened(!IsMobileArticleSidebarOpened)} className={`text-4xl  sm:hidden rounded-md cursor-pointer  text-custom-dark-orange`} />
 

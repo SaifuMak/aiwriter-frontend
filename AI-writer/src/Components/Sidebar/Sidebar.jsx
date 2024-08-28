@@ -8,8 +8,28 @@ import { IoMenuOutline } from "react-icons/io5";
 
 import Logo from '../../assets/Images/Logo.png'
 
-function Sidebar() {
+
+import { useDispatch, useSelector } from 'react-redux';
+import { loginSuccess, setLogout } from '../../Redux/Slices/AuthSlice'
+
+
+function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
+
+  const dispatch = useDispatch()
+
+  const { IsAuthenticated, Username } = useSelector(state => state.auth);
+  console.log(IsAuthenticated, '-----', Username, '-----------------------------------')
+
   const menustyle = 'flex items-center  lg:text-base xl:text-base text-white space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer  hover:text-custom-dark-orange'
+
+
+  const handleProfilePopup = () => {
+    console.log('clicked the modal')
+    setIsProfilePopup(true)
+    // setIsSidedbarOpened(false)
+  }
+
+
   return (
 
     <div className='flex flex-col items-center px-2 py-16 space-y-12 md:py-10 md:space-y-10 xl:space-y-12 xl:px-4 bg-custom-dark h-svh'>
@@ -69,7 +89,7 @@ function Sidebar() {
             <span className="text-base xl:text-lg">MakTal</span>
           </div>
 
-          <IoMenuOutline className='' />
+          <IoMenuOutline onClick={handleProfilePopup} className=' bg-slate-400' />
 
         </div>
       </section>

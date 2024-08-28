@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { IoMenuOutline } from "react-icons/io5";
+import ProfileDetails from '../../Components/Profile/ProfileDetails';
 
 
 import Sidebar from '../../Components/Sidebar/Sidebar'
@@ -7,24 +8,30 @@ import ArticleCard from '../../Components/ArticleCard'
 
 function Home() {
   const [IsSidebarVisible, setIsSidebarVisible] = useState(false)
+  const [IsProfilePopup, setIsProfilePopup] = useState(false)
+
   return (
 
     <div className="flex justify-center font-poppins ">
       <div className="2xl:w-2/12 lg:w-3/12 max-lg:hidden ">
-        <Sidebar  />
+        <Sidebar setIsProfilePopup={setIsProfilePopup} />
       </div>
 
-     {IsSidebarVisible && ( <div className="fixed inset-0 z-50 bg-black bg-opacity-75">
-          <div className="absolute top-0 left-0 w-8/12 h-full max-w-xs bg-white shadow-lg">
-            <Sidebar />
-            <button
-              className="absolute text-xl text-white top-2 right-4"
-              onClick={() => setIsSidebarVisible(false)}
-            >
-              ✕
-            </button>
-          </div>
-        </div>)}
+      {IsSidebarVisible && (<div className="fixed inset-0 z-50 bg-black bg-opacity-75">
+        <div className="absolute top-0 left-0 w-8/12 h-full max-w-xs bg-white shadow-lg">
+          <Sidebar  />
+          <button
+            className="absolute text-xl text-white top-2 right-4"
+            onClick={() => setIsSidebarVisible(false)}
+          >
+            ✕
+          </button>
+        </div>
+      </div>)}
+
+      {IsProfilePopup && (
+        <ProfileDetails setIsProfilePopup={setIsProfilePopup}  />
+      )}
 
 
 
@@ -33,8 +40,8 @@ function Home() {
         <div className="flex justify-between w-full px-2 py-4 md:py-6 md:px-4 xl:py-8 bg-custom-light-orange rounded-xl ">
 
           <div className="flex items-center justify-center space-x-3 lg:hidden ">
-          <IoMenuOutline onClick={()=>setIsSidebarVisible(!IsSidebarVisible)} className='text-2xl md:text-3xl' />
-          <h4 className="text-base md:text-xl xl:text-2xl "> Welcome MakTal</h4>
+            <IoMenuOutline onClick={() => setIsSidebarVisible(!IsSidebarVisible)} className='text-2xl md:text-3xl' />
+            <h4 className="text-base md:text-xl xl:text-2xl "> Welcome MakTal</h4>
           </div>
 
           <h4 className="text-xl xl:text-2xl max-lg:hidden "> Welcome MakTal</h4>
@@ -61,7 +68,7 @@ function Home() {
               "Get inspired by top ranking competitors."
             ]}
             buttonText='REWRITE NOW'
-            footer={<span className="font-semibold">Unlimited usage</span> }
+            footer={<span className="font-semibold">Unlimited usage</span>}
           />
         </div>
 
