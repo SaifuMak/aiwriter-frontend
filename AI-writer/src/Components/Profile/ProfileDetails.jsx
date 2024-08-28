@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
-import {setLogout } from '../../Redux/Slices/AuthSlice'
-import { useDispatch,useSelector } from 'react-redux';
-
+import { setLogout } from '../../Redux/Slices/AuthSlice'
+import { useDispatch, useSelector } from 'react-redux';
 
 
 function ProfileDetails({ setIsProfilePopup }) {
     const profileRef = useRef(null)
-  const dispatch = useDispatch()
+    const dispatch = useDispatch()
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -21,8 +20,8 @@ function ProfileDetails({ setIsProfilePopup }) {
     }, [setIsProfilePopup])
 
 
-    
-    const handleLogout = ()=>{
+
+    const handleLogout = () => {
         dispatch(setLogout())
         setIsProfilePopup(false)
     }
@@ -30,7 +29,7 @@ function ProfileDetails({ setIsProfilePopup }) {
 
 
     return (
-    
+
 
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-55">
             <div ref={profileRef} className="w-[600px]  flex  justify-center  py-10 items-center  bg-custom-dark rounded-lg shadow-lg ">

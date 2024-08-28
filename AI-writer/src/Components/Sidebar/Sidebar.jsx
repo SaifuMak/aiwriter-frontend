@@ -23,12 +23,7 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
   const menustyle = 'flex items-center  lg:text-base xl:text-base text-white space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer  hover:text-custom-dark-orange'
 
 
-  const handleProfilePopup = () => {
-    console.log('clicked the modal')
-    setIsProfilePopup(true)
-    // setIsSidedbarOpened(false)
-  }
-
+  
 
   return (
 
@@ -83,13 +78,13 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
 
       <section className='w-full py-4 text-white border rounded-lg xl:py-8 border-custom-dark-orange border-opacity-60 ' >
 
-        <div className="flex items-center justify-between px-2 cursor-pointer xl:px-4 ">
+        <div onClick={()=>setIsProfilePopup(true)} className="flex items-center justify-between px-2 cursor-pointer xl:px-4 ">
           <div className="flex items-center justify-center space-x-2">
             <div className="flex items-center justify-center w-6 h-6 rounded-full max-lg:text-sm xl:w-8 xl:h-8 bg-custom-dark-orange">M</div>
             <span className="text-base xl:text-lg">MakTal</span>
           </div>
 
-          <IoMenuOutline onClick={handleProfilePopup} className=' bg-slate-400' />
+          <IoMenuOutline className='text-3xl text-stone-200'  />
 
         </div>
       </section>

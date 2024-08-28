@@ -8,7 +8,8 @@ import ShortArrow from '../../assets/Icons/ShortArrow';
 
 function Navbar({setIsSidedbarOpened,IsSidedbarOpened,setIsMobileArticleSidebarOpened,IsMobileArticleSidebarOpened}) {
     const [TopicChoosen, setTopicChoosen] = useState(true)
-     const [IsOutline, setIsOutline] = useState(false)
+    const [IsOutline, setIsOutline] = useState(false)
+
 
     return (
         <div className="w-full flex justify-center space-x-3 sm:space-x-6 lg:space-x-12 xl:space-x-20 items-center py-4 px-2 lg:px-6 xl:px-7 bg-[#14212C]">
