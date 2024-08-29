@@ -1,9 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { setLogout } from '../../Redux/Slices/AuthSlice'
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom'
+import Axiosinstance from '../../Axios/Axiosinstance';
+
 
 
 function ProfileDetails({ setIsProfilePopup }) {
+const { IsAuthenticated, Username, Email  } = useSelector(state => state.auth);
+    
+  const navigate = useNavigate()
     const profileRef = useRef(null)
     const dispatch = useDispatch()
 
@@ -19,11 +25,26 @@ function ProfileDetails({ setIsProfilePopup }) {
         }
     }, [setIsProfilePopup])
 
+    const data = 'logout'
 
 
-    const handleLogout = () => {
-        dispatch(setLogout())
-        setIsProfilePopup(false)
+
+    const handleLogout = async() => {
+
+        try {
+            const response = await Axiosinstance.post('api/logout',data)
+            dispatch(setLogout())
+            setIsProfilePopup(false)
+           
+            
+            navigate('/login')
+        }
+
+        catch (error) {
+            dispatch(setLogout())
+           
+
+        }
     }
 
 
@@ -40,12 +61,14 @@ function ProfileDetails({ setIsProfilePopup }) {
                             M
                         </span>
 
-                        <span className="mt-2 text-2xl ">MakTal</span>
-                        <span className="">maktal@gmail.com</span>
+                        <span className="mt-2 text-2xl ">{Username}</span>
+                        <span className="">{Email}</span>
                     </div>
 
                     <div className="flex flex-col items-center justify-center space-y-4 ">
-                        <button className="w-40 py-2 text-sm duration-300 rounded-md bg-slate-500 hover:bg-custom-dark-orange">Change password</button>
+                        <div className="">
+                        <Link to='/password-change' className="px-4 py-2.5 text-sm duration-300 rounded-md bg-slate-500 hover:bg-custom-dark-orange">Change password</Link>
+                        </div>
                         <button onClick={handleLogout} className="w-40 py-2 text-sm rounded-md bg-slate-500 hover:bg-custom-dark-orange">Logout</button>
                     </div>
                 </div>

@@ -6,13 +6,23 @@ import Axiosinstance from '../Axios/Axiosinstance'
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { Toaster, toast } from 'sonner';
-
+import { loginSuccess } from '../Redux/Slices/AuthSlice'
 import SuccessToast from '../Utils/SuccessToast';
 import ErrorToast from '../Utils/ErrorToast';
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+
+
 
 
 
 function Login() {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const { IsAuthenticated } = useSelector(state => state.auth);
+
+
     const [Email, setEmail] = useState('')
     const [Password, setPassword] = useState('')
     const [isPasswordVisible, setisPasswordVisible] = useState(false)
@@ -29,8 +39,8 @@ function Login() {
         setisPasswordVisible(() => !isPasswordVisible)
     }
 
-    const loginSubmit = async() => {
-        if(!Password || !Email){
+    const loginSubmit = async () => {
+        if (!Password || !Email) {
             ErrorToast('Fields cannot be empty ')
             return
         }
@@ -42,21 +52,20 @@ function Login() {
 
         try {
             const response = await Axiosinstance.post('api/login', data)
-            // navigate('/cashplus-dashboard')
-        SuccessToast('success')
+            dispatch(loginSuccess({}));
 
 
-
+            SuccessToast('success')
+            navigate('/')
         }
 
         catch (error) {
-            // toast.error('Wrong credentials.');
-
+            ErrorToast('Incorrect email or password')
         }
-
         console.log(Email, Password)
-
     }
+
+
 
     return (
         <div className="flex items-center justify-center h-screen bg-custom-dark font-poppins">
@@ -67,21 +76,24 @@ function Login() {
                 </div>
 
                 <span className="text-white ">Login to your account</span>
+                {IsAuthenticated && (
+                    <span className="">still autheticated </span>
+                )}
 
 
-                <input onChange={handleEmail} type="text" className="p-1 mt-16 text-white bg-transparent border-b focus:text-custom-dark-orange border-white outline-none focus:border-custom-dark-orange transition duration-300 w-72 sm:w-[360px]" placeholder='Email address' />
+                <input onChange={handleEmail} value={Email} type="text" className="p-1 mt-16 text-white bg-transparent border-b focus:text-custom-dark-orange border-white outline-none focus:border-custom-dark-orange transition duration-300 w-72 sm:w-[360px]" placeholder='Email address' />
                 <div className="relative ">
                     {Password && (
-                        
+
                         <span
                             onClick={togglePasswordVisible}
                             className="absolute cursor-pointer text-custom-dark-orange right-5 bottom-4"
                         >
                             {isPasswordVisible ? <FaEye /> : <FaEyeSlash />}
                         </span>
-
                     )}
-                    <input onChange={handlePassword} type={isPasswordVisible ? 'text' : 'password'} className="p-1 mt-8 text-white focus:text-custom-dark-orange bg-transparent border-b border-white outline-none focus:border-custom-dark-orange transition duration-300 w-72 sm:w-[360px]" placeholder='Password' />
+
+                    <input onChange={handlePassword} value={Password} type={isPasswordVisible ? 'text' : 'password'} className="p-1 mt-8 text-white focus:text-custom-dark-orange bg-transparent border-b border-white outline-none focus:border-custom-dark-orange transition duration-300 w-72 sm:w-[360px]" placeholder='Password' />
                 </div>
                 <button onClick={loginSubmit} className="w-full py-2 mt-12 text-white rounded-md bg-custom-dark-orange ">Login</button>
 
