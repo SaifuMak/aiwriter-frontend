@@ -9,7 +9,7 @@ import { Toaster, toast } from 'sonner';
 import { loginSuccess } from '../Redux/Slices/AuthSlice'
 import SuccessToast from '../Utils/SuccessToast';
 import ErrorToast from '../Utils/ErrorToast';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 
 
@@ -97,7 +97,7 @@ function Login() {
                 </div>
                 <button onClick={loginSubmit} className="w-full py-2 mt-12 text-white rounded-md bg-custom-dark-orange ">Login</button>
 
-                <p className="mt-8 cursor-pointer text-custom-dark-orange ">Forgot password?</p>
+                <Link to='/forgot-password' className="mt-8 cursor-pointer text-custom-dark-orange ">Forgot password?</Link>
 
             </div>
             <Toaster position="bottom-right" />

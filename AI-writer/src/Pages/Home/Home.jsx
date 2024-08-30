@@ -17,19 +17,16 @@ function Home() {
   const navigate = useNavigate()
   const [IsSidebarVisible, setIsSidebarVisible] = useState(false)
   const [IsProfilePopup, setIsProfilePopup] = useState(false)
-  const [isloading, setLoading] = useState(true)
+  const [isloading, setLoading] = useState(false)
   const { IsAuthenticated } = useSelector(state => state.auth);
 
 
 
   const GetLoginStatus = async () => {
-
-
     try {
       const response = await Axiosinstance.get('api/check_login_status')
 
 
-      console.log(response.data, '&&&&&&&&&&&&&&&&&&&&333333333333333333')
       const email = response.data.email
       const username = response.data.name
 
@@ -57,6 +54,8 @@ function Home() {
 
     }
     else {
+    setLoading(true)
+
       GetLoginStatus();
     }
 

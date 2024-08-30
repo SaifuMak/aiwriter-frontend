@@ -2,11 +2,18 @@ import React, { useState } from 'react'
 import Logo from '../assets/Images/Logo.png'
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import Axiosinstance from '../Axios/Axiosinstance'
+import { Toaster, toast } from 'sonner';
+
+import SuccessToast from '../Utils/SuccessToast';
+import ErrorToast from '../Utils/ErrorToast';
+import PulseLoader from 'react-spinners/PulseLoader';
 
 
 function PasswordChange() {
   const [isPasswordVisible, setisPasswordVisible] = useState(false)
   const [isConfirmPasswordVisible, setisConfirmPasswordVisible] = useState(false)
+  const [IsLoading, setIsLoading] = useState(false)
 
   const [password, setpassword] = useState('')
   const [newpassword, setNewpassword] = useState('')
@@ -37,6 +44,41 @@ function PasswordChange() {
     setNewpassword(Newpassword)
     const isPasswordStrong = moderateRegex.test(Newpassword)
     setisPoorPassword(isPasswordStrong)
+  }
+
+  const HandleChangePassword = async () => {
+
+    if (!newpassword || !password || !isPoorPassword || IsLoading) {
+      return
+    }
+    setIsLoading(true)
+
+    const data = {
+      'temp_password': newpassword,
+      'password': password
+    }
+
+    try {
+      const response = await Axiosinstance.post('api/change-password', data)
+      setNewpassword('')
+      setpassword('')
+      SuccessToast(response.data.message)
+
+      setIsLoading(false)
+    }
+
+    catch (error) {
+      if (error.response && error.response.status === 403) {
+        // Handle session expired
+        ErrorToast('Session expired. Please log in again.');
+      }
+      else {
+        ErrorToast(error.response.data.message);
+      }
+
+      setIsLoading(false)
+
+    }
   }
 
 
@@ -77,14 +119,31 @@ function PasswordChange() {
           )}
 
           <input onChange={HandleConfirmPassword} value={newpassword} type={isConfirmPasswordVisible ? 'text' : 'password'} className="p-1 mt-8 text-white focus:text-custom-dark-orange bg-transparent border-b border-white outline-none focus:border-custom-dark-orange transition duration-300 w-72 sm:w-[360px]" placeholder='Current Password' />
-          {!isPoorPassword && ( <span className="w-11/12 mt-1 text-sm ">Please use 8+ characters with letters and digits.</span> )}
+          {(!isPoorPassword && newpassword) && (<span className="w-11/12 mt-1 text-sm ">Please use 8+ characters with letters and digits.</span>)}
         </div>
 
 
-        <button className="w-full py-2 mt-12 text-white rounded-md bg-custom-dark-orange ">CHANGE PASSWORD</button>
+        {/* {IsLoading}  <button onClick={HandleChangePassword} className="w-full py-2 mt-12 text-white rounded-md bg-custom-dark-orange ">CHANGE PASSWORD</button> */}
+
+
+        <button onClick={HandleChangePassword} className="w-full py-2 mt-12 text-white rounded-md bg-custom-dark-orange">{IsLoading ? (
+          <div className="flex items-center justify-center">
+            <span>Requesting</span>
+            <PulseLoader color="#ffffff" size={6} margin={4} />
+          </div>
+        ) : (
+          <div className="flex items-center justify-center ">
+            <span>CHANGE PASSWORD</span>
+
+          </div>
+
+        )}
+        </button>
 
 
       </div>
+      <Toaster position="bottom-right" />
+
     </div>
   )
 
