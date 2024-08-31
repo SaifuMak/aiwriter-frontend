@@ -4,11 +4,20 @@ import Logo from '../../assets/Images/Logo.png'
 import { IoMenuOutline } from "react-icons/io5";
 import LongArrow from '../../assets/Icons/LongArrow';
 import ShortArrow from '../../assets/Icons/ShortArrow';
+import { useDispatch, useSelector } from 'react-redux';
+import {resetArticleGeneration} from '../../Redux/Slices/ArticleGenerationSlice'
+
 
 
 function Navbar({setIsSidedbarOpened,IsSidedbarOpened,setIsMobileArticleSidebarOpened,IsMobileArticleSidebarOpened}) {
+    const {currentStep} = useSelector((state) => state.articleGeneration);
+    const dispatch = useDispatch();
+   
+   
     const [TopicChoosen, setTopicChoosen] = useState(true)
     const [IsOutline, setIsOutline] = useState(false)
+
+     console.log(currentStep,'--------------------------------')
 
 
     return (
@@ -29,7 +38,7 @@ function Navbar({setIsSidedbarOpened,IsSidedbarOpened,setIsMobileArticleSidebarO
 
                 {/* Desktop view  */}
                 <div className="flex items-center justify-center space-x-1 text-sm tracking-wider text-white max-sm:hidden lg:space-x-3 lg:text-lg ">
-                    <span className=" text-custom-dark-orange">Choose a Topic</span>
+                    <span className=" text-custom-dark-orange">Choose a Topic{currentStep}</span>
                     <LongArrow isActive= {TopicChoosen}/>
                     <span  className={`${IsOutline ? 'text-custom-dark-orange':''}`}>Get an Outline</span>
                     <LongArrow isActive={IsOutline} />
@@ -45,7 +54,7 @@ function Navbar({setIsSidedbarOpened,IsSidedbarOpened,setIsMobileArticleSidebarO
                     <span className="">Generate Article</span>
                 </div>
 
-                <RxCross1 className='p-1 text-2xl font-semibold transition-transform duration-300 transform rounded-full cursor-pointer sm:text-3xl hover:rotate-90 hover:bg-slate-700 text-custom-dark-orange ' />
+                <RxCross1 onClick={()=>dispatch(resetArticleGeneration())} className='p-1 text-2xl font-semibold transition-transform duration-300 transform rounded-full cursor-pointer sm:text-3xl hover:rotate-90 hover:bg-slate-700 text-custom-dark-orange ' />
             </div>
 
         </div>

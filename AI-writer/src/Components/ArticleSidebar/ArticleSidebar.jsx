@@ -4,8 +4,15 @@ import { MdOutlineKeyboardDoubleArrowLeft } from "react-icons/md";
 import { RxDoubleArrowLeft } from "react-icons/rx";
 
 import DropdownComponent from '../DropdownComponent';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTitle } from '../../Redux/Slices/ArticleGenerationSlice'
 
-function ArticleSidebar() {
+
+function ArticleSidebar({Fetchkeywords}) {
+    const dispatch = useDispatch();
+    const { title, currentStep } = useSelector((state) => state.articleGeneration);
+
+
     const [selectedTopicOrKeywords, setselectedTopicOrKeywords] = useState('')
     const [selectedKeywords, setselectedKeywords] = useState('')
     const [selectedCallToAction, setCallToAction] = useState('')
@@ -24,7 +31,8 @@ function ArticleSidebar() {
     const handleTopicsOrKeywords = (e) => {
         const newValue = e.target.value;
         if (newValue.length <= 200) {
-            setselectedTopicOrKeywords(newValue);
+            dispatch(setTitle(newValue));
+            // setselectedTopicOrKeywords(newValue);
         }
     }
 
@@ -64,10 +72,12 @@ function ArticleSidebar() {
     const handleQualityToggle = () => {
         setQualityTypeDroptype(!QualityTypeDroptype);
     };
+
     const handleQualitySelection = (option) => {
         setQualityType(option);
         setQualityTypeDroptype(false);
     };
+
 
     const options = [
         'Lorem',
@@ -80,21 +90,30 @@ function ArticleSidebar() {
     ];
 
 
+
     return (
         <div className="flex flex-col h-full min-h-screen px-4 py-12 xl:px-7 bg-custom-dark ">
             <h2 className="text-xl xl:text-2xl text-custom-dark-orange">Article Writer 1.0</h2>
+
+
             <InputComponent
-                label={`${selectedTopicOrKeywords ? 'Topic' : 'Enter a Topic or Keywords'}`}
+                label={`${title ? 'Topic' : 'Enter a Topic or Keywords'}`}
                 onChange={handleTopicsOrKeywords}
-                value={selectedTopicOrKeywords}
+                value={title}
                 placeholder="Type here....."
-                count={`${selectedTopicOrKeywords.length}/200`}
+                count={`${title.length}/200`}
             />
 
 
-            {/* <div className="flex justify-center ">
-                <button className="text-white bg-custom-dark-orange lg:text-base text-sm text-center py-1 lg:py-1.5 xl:py-2 rounded-md mt-10 w-[100px] lg:w-[120px] xl:w-[211px]">Next</button>
-            </div> */}
+
+            {currentStep === 1 && (<div className="flex justify-center ">
+                <button onClick={Fetchkeywords} className="text-white bg-custom-dark-orange lg:text-base text-sm text-center py-1 lg:py-1.5 xl:py-2 rounded-md mt-10 w-[100px] lg:w-[120px] xl:w-[211px]">Next</button>
+            </div>)}
+            
+            {currentStep === 2 && (<div className="flex justify-center ">
+                <button className="text-white bg-custom-light-orange lg:text-base text-sm text-center py-1 lg:py-1.5 xl:py-2 rounded-md mt-10 w-[100px] lg:w-[120px] xl:w-[211px]">Next</button>
+            </div>)}
+
 
             <InputComponent
                 label='Keywords'
@@ -103,6 +122,7 @@ function ArticleSidebar() {
                 placeholder="Type here....."
                 count={`${selectedKeywords.length}/200`}
             />
+
 
             <DropdownComponent
                 label='Tone of voice'
@@ -145,12 +165,6 @@ function ArticleSidebar() {
                 </div>
                 <button className="px-2 py-1.5 tracking-wider text-white rounded-sm cursor-pointer sm:text-xs lg:py-2 xl:px-6 lg:px-5 lg:text-base bg-custom-dark-orange ">Generate Ideas</button>
             </div>
-
-
-
-
-
-
 
 
         </div>

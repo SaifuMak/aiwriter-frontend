@@ -21,7 +21,7 @@ function Demo() {
 
         try {
             const response = await Axiosinstance.post('api/generate-article', data)
-            setArticle(response.data)
+            setArticle(response.data.article)
 
 
 

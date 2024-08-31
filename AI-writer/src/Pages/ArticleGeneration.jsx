@@ -12,15 +12,49 @@ import MobileArticleSidebar from '../Components/ArticleSidebar/MobileArticleSide
 import StructureOfArticle from '../Components/ArticleGenerationComponents/StructureOfArticle'
 import ArticleSummary from '../Components/ArticleGenerationComponents/ArticleSummary'
 
+import Axiosinstance from '../Axios/Axiosinstance'
+// import {} from '../Redux/Slices/ArticleGenerationSlice'
+import { useDispatch, useSelector } from 'react-redux';
+
 import { IoIosArrowDropright } from "react-icons/io";
 
 import { motion } from 'framer-motion';
 
 function ArticleGeneration() {
+
+    const {loading,title} = useSelector((state) => state.articleGeneration);
+
     const [IsSidedbarOpened, setIsSidedbarOpened] = useState(false)
     const [IsMobileArticleSidebarOpened, setIsMobileArticleSidebarOpened] = useState(false)
 
     const [IsProfilePopup, setIsProfilePopup] = useState(false)
+
+
+    // api calls 
+
+    const Fetchkeywords = async()=>{
+        if(!title){
+            return
+        }
+        const data = {
+            'topic': title,
+        } 
+        
+        try {
+            const response = await Axiosinstance.post('api/generate-article', data)
+            console.log(response.data)
+
+
+
+        }
+
+        catch (error) {
+            console.log(error)
+        }
+
+
+
+    }
 
 
 
@@ -40,7 +74,7 @@ function ArticleGeneration() {
                 {IsSidedbarOpened && (<MobileSidebar IsProfilePopup={IsProfilePopup} setIsSidedbarOpened={setIsSidedbarOpened} setIsProfilePopup={setIsProfilePopup} />)}
 
                 <div className="xl:w-[500px] sm:w-[200px] lg:w-[400px] max-sm:hidden ">
-                    <ArticleSidebar />
+                    <ArticleSidebar Fetchkeywords={Fetchkeywords} />
                 </div>
                 
                 <div className="w-full ">
@@ -48,12 +82,15 @@ function ArticleGeneration() {
                         <MobileArticleSidebar setIsMobileArticleSidebarOpened={setIsMobileArticleSidebarOpened} />
                     </div>)}
 
-                    {/* <ArticleLoader /> */}
+                   {loading && (
+                    <ArticleLoader />
+                   )}
+                        
                     {/* <KeywordsForArticle /> */}
                     {/* <GenerateOrRegenerateIdeas /> */}
                     {/* <GenerateOutline /> */}
                     {/* <StructureOfArticle /> */}
-                    <ArticleSummary />
+                    {/* <ArticleSummary /> */}
                     {/* <Worksheet /> */}
 
 
