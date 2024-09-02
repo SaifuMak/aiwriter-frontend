@@ -12,48 +12,116 @@ import MobileArticleSidebar from '../Components/ArticleSidebar/MobileArticleSide
 import StructureOfArticle from '../Components/ArticleGenerationComponents/StructureOfArticle'
 import ArticleSummary from '../Components/ArticleGenerationComponents/ArticleSummary'
 
+import { Toaster, toast } from 'sonner';
+
+
 import Axiosinstance from '../Axios/Axiosinstance'
-// import {} from '../Redux/Slices/ArticleGenerationSlice'
+import {setKeywords,previousStep ,setTitle,setCurrentStep,setRefTitle,resetArticleGeneration,setLoading} from '../Redux/Slices/ArticleGenerationSlice'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { IoIosArrowDropright } from "react-icons/io";
+import ErrorToast from '../Utils/ErrorToast'
+
 
 import { motion } from 'framer-motion';
 
+
 function ArticleGeneration() {
 
-    const {loading,title} = useSelector((state) => state.articleGeneration);
+    const dispatch = useDispatch()
+
+    const {selectedKeywords,title, currentStep,selectedToneOfVoice,selectedPointOfView,refTitle} = useSelector((state) => state.articleGeneration);
 
     const [IsSidedbarOpened, setIsSidedbarOpened] = useState(false)
     const [IsMobileArticleSidebarOpened, setIsMobileArticleSidebarOpened] = useState(false)
 
     const [IsProfilePopup, setIsProfilePopup] = useState(false)
+    const [tempTitle, setTempTitle] = useState('')
+
+
+
+    // other  actions 
+
+    const handleBackButtonClick = ()=>{  //  this decreases the count for the currentstate , allow users to go back 
+        dispatch(previousStep())
+
+    }
+
+    const handleSidebarOptionsVisible = ()=>{
+        // we are going to the step 2 after the selection of the keywords , if no keywords return 
+        if(!selectedKeywords.trim()){
+            ErrorToast('Please select any keywords')
+
+            return
+        }
+        //   side bar options are only visible  the currrentstep is greater than 1 
+        dispatch(setCurrentStep(2))
+    
+    }
+
+
+    const sampleClicks = ()=>{
+        console.log('clicked')
+    }
+   
 
 
     // api calls 
 
     const Fetchkeywords = async()=>{
+        
         if(!title){
+            ErrorToast('Please enter title')
             return
         }
-        const data = {
-            'topic': title,
-        } 
         
-        try {
-            const response = await Axiosinstance.post('api/generate-article', data)
-            console.log(response.data)
+        if( title !== refTitle ){
+            const tempTitle = title
+           
+            const data = {
+                'topic': title,
+            } 
+            dispatch(resetArticleGeneration())
+            dispatch(setTitle(tempTitle))
+            dispatch(setRefTitle(tempTitle))
+           
 
+            try {
+                dispatch(setLoading(true))
+                const response = await Axiosinstance.post('api/generate-article', data)
+                const articles = response.data.article
+                const keywordsArray = articles 
+                ? articles.split('\n').map(item => item.replace(/^\d+\.\s*/, '').trim())
+                : [];
+                console.log(keywordsArray,'///////////////////')
+                
 
+                dispatch(setKeywords(keywordsArray))
+                dispatch(setCurrentStep(1))
+                dispatch(setLoading(false))
+
+            }
+            catch (error) {
+                console.log(error)
+                dispatch(setLoading(false))
+
+            }
+        }
+        else{
+            dispatch(setCurrentStep(1))
 
         }
 
-        catch (error) {
-            console.log(error)
+       
+    }
+
+
+    const GenerateHeadlines = async()=>{
+        if(!title || !selectedKeywords || !selectedToneOfVoice || !selectedPointOfView){
+            ErrorToast('Please fill all  fields')
+            return 
         }
-
-
-
+       
     }
 
 
@@ -74,7 +142,7 @@ function ArticleGeneration() {
                 {IsSidedbarOpened && (<MobileSidebar IsProfilePopup={IsProfilePopup} setIsSidedbarOpened={setIsSidedbarOpened} setIsProfilePopup={setIsProfilePopup} />)}
 
                 <div className="xl:w-[500px] sm:w-[200px] lg:w-[400px] max-sm:hidden ">
-                    <ArticleSidebar Fetchkeywords={Fetchkeywords} />
+                    <ArticleSidebar handleBackButtonClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} />
                 </div>
                 
                 <div className="w-full ">
@@ -82,11 +150,14 @@ function ArticleGeneration() {
                         <MobileArticleSidebar setIsMobileArticleSidebarOpened={setIsMobileArticleSidebarOpened} />
                     </div>)}
 
-                   {loading && (
-                    <ArticleLoader />
-                   )}
+                  
+                   { (currentStep === 0 ||  currentStep === 2) && <ArticleLoader />}
+                   
+                   { currentStep === 1  &&  <KeywordsForArticle handleSidebarOptionsVisible={handleSidebarOptionsVisible} />}
+                
+
+              
                         
-                    {/* <KeywordsForArticle /> */}
                     {/* <GenerateOrRegenerateIdeas /> */}
                     {/* <GenerateOutline /> */}
                     {/* <StructureOfArticle /> */}
@@ -96,6 +167,7 @@ function ArticleGeneration() {
 
 
                 </div>
+            <Toaster position="bottom-right" />
 
             </div>
         </>

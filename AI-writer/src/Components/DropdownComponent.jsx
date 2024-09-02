@@ -14,7 +14,8 @@ function DropdownComponent({ label, options, IsOpened, value, ToggleAction, Hand
             >
                 <span className={`block text-sm lg:text-base  ${value ? 'text-white' : 'text-slate-400'} truncate`}>{value ? value : label}</span>
                 <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    {IsOpened ? (<MdKeyboardArrowUp className='text-xl text-slate-600' />) : (< MdKeyboardArrowDown className='text-xl text-slate-600' />)}
+                    {/* {IsOpened ? (<MdKeyboardArrowUp className='text-2xl rotate-180 text-custom-dark-orange' />) : (< MdKeyboardArrowDown className='text-2xl rotate-180 text-custom-dark-orange' />)} */}
+                    <MdKeyboardArrowDown className={`${IsOpened ? 'rotate-180' : 'rotate-0'} text-custom-dark-orange transition-transform duration-150  transform  text-2xl`} />
                 </span>
             </div>
             {IsOpened && (

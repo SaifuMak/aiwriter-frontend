@@ -2,12 +2,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    currentStep: 1,  // Start at step 1 by default
+    currentStep: 0,  // Start at step 1 by default
     title: '',
+    refTitle :'',
     keywords: [],
+    selectedKeywords: [],
     outline: [],
     articleStructure: {},
-    loading: true,
+    loading: false,
+    isFetching : false,
+    selectedToneOfVoice : 'Professional',
+    selectedPointOfView : 'Second-Person (You)'
+
     // Add any other initial state you need
 };  
 
@@ -19,24 +25,52 @@ const ArticleGenerationSlice = createSlice({
         nextStep(state) {
             state.currentStep += 1;  // Move to the next step
         },
+
         previousStep(state) {
             state.currentStep -= 1;  // Move to the previous step
         },
+
+        setCurrentStep(state, action) {
+            state.currentStep = action.payload;  // Set loading state
+        },
+
         setLoading(state, action) {
             state.loading = action.payload;  // Set loading state
         },
+
         setTitle(state, action) {
-            state.title = action.payload;
+            state.title = action.payload; // Set title state 
         },
+
+        setRefTitle(state, action) {
+            state.refTitle = action.payload; // Set title state 
+        },
+
+
         setKeywords(state, action) {
-            state.keywords = action.payload;
+            state.keywords = action.payload; // Set keywords generated
         },
+
+        setSelectedKeywordsRedux(state, action) {
+            state.selectedKeywords = action.payload; // Set keywords selected
+        },
+
+        setToneOfVoice(state, action) {
+            state.selectedToneOfVoice = action.payload; // Set selected tone of voice 
+        },
+
+        setPointOfView(state, action) {
+            state.selectedPointOfView = action.payload; // Set selected Point of view
+        },
+
         setOutline(state, action) {
             state.outline = action.payload;
         },
+
         setArticleStructure(state, action) {
             state.articleStructure = action.payload;
         },
+
         resetArticleGeneration() {
             return initialState;  // Reset to initial state
         },
@@ -44,5 +78,5 @@ const ArticleGenerationSlice = createSlice({
 });
 
 
-export const {nextStep, previousStep, setLoading, setTitle, setKeywords, setOutline, setArticleStructure, resetArticleGeneration } = ArticleGenerationSlice.actions;
+export const {nextStep, previousStep,setRefTitle, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setToneOfVoice,setPointOfView, setOutline, setArticleStructure, resetArticleGeneration } = ArticleGenerationSlice.actions;
 export default ArticleGenerationSlice.reducer;
