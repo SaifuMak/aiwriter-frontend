@@ -16,7 +16,7 @@ import { Toaster, toast } from 'sonner';
 
 
 import Axiosinstance from '../Axios/Axiosinstance'
-import {setKeywords,previousStep ,setTitle,setCurrentStep,setRefTitle,resetArticleGeneration,setLoading} from '../Redux/Slices/ArticleGenerationSlice'
+import { setKeywords, previousStep, setTitle, setCurrentStep, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading } from '../Redux/Slices/ArticleGenerationSlice'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { IoIosArrowDropright } from "react-icons/io";
@@ -30,7 +30,7 @@ function ArticleGeneration() {
 
     const dispatch = useDispatch()
 
-    const {selectedKeywords,title, currentStep,selectedToneOfVoice,selectedPointOfView,refTitle} = useSelector((state) => state.articleGeneration);
+    const { selectedKeywords, title, currentStep, selectedToneOfVoice, selectedPointOfView,selectedHeadline, refTitle, } = useSelector((state) => state.articleGeneration);
 
     const [IsSidedbarOpened, setIsSidedbarOpened] = useState(false)
     const [IsMobileArticleSidebarOpened, setIsMobileArticleSidebarOpened] = useState(false)
@@ -42,59 +42,68 @@ function ArticleGeneration() {
 
     // other  actions 
 
-    const handleBackButtonClick = ()=>{  //  this decreases the count for the currentstate , allow users to go back 
+    const handleBackButtonClick = () => {  //  this decreases the count for the currentstate , allow users to go back 
         dispatch(previousStep())
 
     }
 
-    const handleSidebarOptionsVisible = ()=>{
+    const handleSidebarOptionsVisible = () => {
         // we are going to the step 2 after the selection of the keywords , if no keywords return 
-        if(!selectedKeywords.trim()){
+        if (!selectedKeywords.trim()) {
             ErrorToast('Please select any keywords')
 
             return
         }
         //   side bar options are only visible  the currrentstep is greater than 1 
         dispatch(setCurrentStep(2))
+
+    }
+
     
+    const handleOutlineGeneration = ()=>{
+        if(!selectedHeadline.trim()){
+            ErrorToast('Please select any Headline')
+            return
+        }
+        dispatch(setCurrentStep(4))
     }
 
 
-    const sampleClicks = ()=>{
+    const sampleClicks = () => {
         console.log('clicked')
     }
-   
+
 
 
     // api calls 
 
-    const Fetchkeywords = async()=>{
-        
-        if(!title){
+    const Fetchkeywords = async () => {
+
+        if (!title) {
             ErrorToast('Please enter title')
             return
         }
-        
-        if( title !== refTitle ){
+
+        if (title !== refTitle) {
             const tempTitle = title
-           
+
             const data = {
                 'topic': title,
-            } 
+            }
             dispatch(resetArticleGeneration())
             dispatch(setTitle(tempTitle))
             dispatch(setRefTitle(tempTitle))
-           
+
 
             try {
                 dispatch(setLoading(true))
                 const response = await Axiosinstance.post('api/generate-article', data)
                 const articles = response.data.article
-                const keywordsArray = articles 
-                ? articles.split('\n').map(item => item.replace(/^\d+\.\s*/, '').trim())
-                : [];
-                console.log(keywordsArray,'///////////////////')
-                
+                const keywordsArray = articles
+                    ? articles.split('\n').map(item => item.replace(/^\d+\.\s*/, '').trim())
+                    : [];
+                console.log(keywordsArray, '///////////////////')
+
 
                 dispatch(setKeywords(keywordsArray))
                 dispatch(setCurrentStep(1))
@@ -107,21 +116,83 @@ function ArticleGeneration() {
 
             }
         }
-        else{
+        else {
             dispatch(setCurrentStep(1))
 
         }
 
-       
+
     }
 
 
-    const GenerateHeadlines = async()=>{
-        if(!title || !selectedKeywords || !selectedToneOfVoice || !selectedPointOfView){
+    const GenerateHeadlines = async () => {
+
+        if (!title || !selectedKeywords || !selectedToneOfVoice || !selectedPointOfView) {
             ErrorToast('Please fill all  fields')
-            return 
+            return
         }
-       
+        
+        const data = {
+            'title': title,
+            'keywords': selectedKeywords,
+            'tone_of_voice': selectedToneOfVoice,
+            'point_of_view': selectedPointOfView,
+        }
+        dispatch(setLoading(true))
+
+
+
+        try {
+            const response = await Axiosinstance.post('api/generate-headlines', data)
+            dispatch(setHeadlines(response.data.headlines))
+            dispatch(setLoading(false))
+            dispatch(setCurrentStep(3))
+
+            dispatch(setSelectedHeadline(''))   // clear the selected headline  
+
+        }
+        catch (error) {
+            console.log(error)
+            dispatch(setLoading(false))
+            ErrorToast('Limit reached! Please try after 20 seconds')
+
+        }
+        console.log(title, selectedKeywords, selectedToneOfVoice, selectedPointOfView)
+
+    }
+
+    const GenerateOutlines = async () => {
+
+        if (!title || !selectedKeywords || !selectedToneOfVoice || !selectedPointOfView) {
+            ErrorToast('Please fill all  fields')
+            return
+        }
+        
+        const data = {
+            'main_headline':selectedHeadline,
+            'title': title,
+            'keywords': selectedKeywords,
+            'tone_of_voice': selectedToneOfVoice,
+            'point_of_view': selectedPointOfView,
+        }
+        dispatch(setLoading(true))
+
+
+
+        try {
+            const response = await Axiosinstance.post('api/generate-outlines', data)
+            dispatch(setLoading(false))
+            // dispatch(setCurrentStep(3))
+
+
+        }
+        catch (error) {
+            console.log(error)
+            dispatch(setLoading(false))
+            ErrorToast('Limit reached! Please try after 20 seconds')
+
+        }
+
     }
 
 
@@ -142,24 +213,21 @@ function ArticleGeneration() {
                 {IsSidedbarOpened && (<MobileSidebar IsProfilePopup={IsProfilePopup} setIsSidedbarOpened={setIsSidedbarOpened} setIsProfilePopup={setIsProfilePopup} />)}
 
                 <div className="xl:w-[500px] sm:w-[200px] lg:w-[400px] max-sm:hidden ">
-                    <ArticleSidebar handleBackButtonClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} />
+                    <ArticleSidebar handleBackButtonClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} GenerateOutlines={GenerateOutlines} />
                 </div>
-                
+
                 <div className="w-full ">
                     {IsMobileArticleSidebarOpened && (<div className=" sm:hidden">
                         <MobileArticleSidebar setIsMobileArticleSidebarOpened={setIsMobileArticleSidebarOpened} />
                     </div>)}
 
-                  
-                   { (currentStep === 0 ||  currentStep === 2) && <ArticleLoader />}
-                   
-                   { currentStep === 1  &&  <KeywordsForArticle handleSidebarOptionsVisible={handleSidebarOptionsVisible} />}
-                
 
-              
-                        
-                    {/* <GenerateOrRegenerateIdeas /> */}
-                    {/* <GenerateOutline /> */}
+                    {(currentStep === 0 || currentStep === 2) && <ArticleLoader />}
+
+                    {currentStep === 1 && <KeywordsForArticle handleSidebarOptionsVisible={handleSidebarOptionsVisible} />}
+
+                    {currentStep === 3 && <GenerateOrRegenerateIdeas GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} />}
+                    {currentStep === 4 &&<GenerateOutline GenerateOutlines={GenerateOutlines} />}
                     {/* <StructureOfArticle /> */}
                     {/* <ArticleSummary /> */}
                     {/* <Worksheet /> */}
@@ -167,7 +235,7 @@ function ArticleGeneration() {
 
 
                 </div>
-            <Toaster position="bottom-right" />
+                <Toaster position="bottom-right" />
 
             </div>
         </>

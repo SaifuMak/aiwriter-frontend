@@ -1,7 +1,8 @@
 import React from 'react'
 import DotIcon from '../assets/Icons/DotIcon'
 
-function InputComponent({label,placeholder,count,onChange,value,isOptional,isVisible}) {
+
+function InputComponent({label,placeholder,count,onChange,value,isOptional,isActive}) {
     return (
         <section className="flex flex-col w-full mt-8 space-y-2">
             <div className="flex items-center justify-between ">
@@ -12,7 +13,7 @@ function InputComponent({label,placeholder,count,onChange,value,isOptional,isVis
                 </div>
                 <span className="text-[#E6E6E6]  max-lg:text-sm ml-1">{count}</span>
             </div>
-            <input type="text" onChange={onChange} value= {value} disabled={isVisible} className="px-4 py-1.5 bg-white rounded-md outline-none text-sm lg:text-base  lg:py-2 xl:py-2.5 " placeholder={placeholder} />
+            <input type="text" onChange={onChange} value= {value} disabled={isActive} className={`px-4 py-1.5 ${isActive ? 'cursor-not-allowed' : ''} bg-white rounded-md outline-none text-sm lg:text-base  lg:py-2 xl:py-2.5 `} placeholder={placeholder} />
         </section>
     )
 }

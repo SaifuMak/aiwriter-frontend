@@ -14,44 +14,7 @@ function KeywordsForArticle({handleSidebarOptionsVisible}) {
     const DataStyle = 'px-4   xl:text-base text-sm py-6 xl:py-8 border-b w-1/4  text-center'
     const TableHeading = ['Keyword', 'Search Volume']
 
-    const TableRows = [
-        {
-            title: 'Importance of SEO for small businesses',
-            volume: '60',
-
-        },
-        {
-            title: 'Importance of SEO for small businesses',
-            volume: '60',
-
-        },
-        {
-            title: 'Importance of SEO for small businesses',
-            volume: '60',
-
-        },
-        {
-            title: 'Importance of SEO for small businesses',
-            volume: '60',
-
-        },
-        {
-            title: 'Importance of SEO for small businesses',
-            volume: '60',
-
-        },
-        {
-            title: 'Importance of SEO for small businesses',
-            volume: '60',
-
-        },
-        {
-            title: 'Importance of SEO for small businesses',
-            volume: '60',
-
-        },
-
-    ];
+   
 
     console.log(keywords, '-----------keyword comp------------------')
 

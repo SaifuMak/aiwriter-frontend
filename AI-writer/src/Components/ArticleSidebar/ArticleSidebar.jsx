@@ -7,12 +7,12 @@ import PulseLoader from 'react-spinners/PulseLoader';
 
 import DropdownComponent from '../DropdownComponent';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTitle, setToneOfVoice, setPointOfView,setSelectedKeywordsRedux } from '../../Redux/Slices/ArticleGenerationSlice'
+import { setTitle, setToneOfVoice, setPointOfView, setSelectedKeywordsRedux } from '../../Redux/Slices/ArticleGenerationSlice'
 
 import ButtonComponent from '../ArticleGenerationComponents/SmallComponents/ButtonComponent';
 
 
-function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOptionsVisible, GenerateHeadlines }) {
+function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOptionsVisible, GenerateHeadlines, handleOutlineGeneration,GenerateOutlines }) {
     const dispatch = useDispatch();
     const { title, currentStep, selectedKeywords, loading, selectedToneOfVoice, selectedPointOfView, } = useSelector((state) => state.articleGeneration);
 
@@ -126,7 +126,7 @@ function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOpt
                 value={title}
                 placeholder="Enter Title....."
                 count={`${title.length}/200`}
-                isVisible={currentStep !== 0}
+                isActive={currentStep !== 0}
             />
 
 
@@ -151,7 +151,7 @@ function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOpt
             </div>)}
 
 
-           
+
             {currentStep > 1 && (
                 <>
                     <InputComponent
@@ -161,6 +161,7 @@ function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOpt
                         placeholder="Enter Keywords....."
                         count={`${selectedKeywords && selectedKeywords.length}/200`}
                         isOptional={false}
+                        isActive={currentStep > 2}
                     />
 
 
@@ -171,6 +172,8 @@ function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOpt
                         ToggleAction={handleToneOfVoiceToggle}
                         value={selectedToneOfVoice}
                         HandleSelection={handleToneOfVoiceSelection}
+                        isActive={currentStep < 3}
+
                     />
 
                     <DropdownComponent
@@ -180,6 +183,8 @@ function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOpt
                         ToggleAction={handlePointOfViewToggle}
                         value={selectedPointOfView}
                         HandleSelection={handlePointOfViewSelection}
+                        isActive={currentStep < 3}
+
                     />
 
                     <InputComponent
@@ -189,6 +194,7 @@ function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOpt
                         placeholder="company name, contact....."
                         count={`${selectedCallToAction.length}/200`}
                         isOptional={true}
+                        isActive={currentStep > 2}
                     />
 
                     <DropdownComponent
@@ -198,6 +204,8 @@ function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOpt
                         ToggleAction={handleQualityToggle}
                         value={QualityType}
                         HandleSelection={handleQualitySelection}
+                        isActive={currentStep < 3}
+
                     />
 
 
@@ -212,6 +220,21 @@ function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOpt
                             label="Generate Ideas"
                             isVisible={currentStep === 2}
                         />
+
+                        <ButtonComponent
+                            onClick={handleOutlineGeneration}
+                            label="Next"
+                            isVisible={currentStep === 3}
+                        />
+
+                        <ButtonComponent
+                            onClick={GenerateOutlines}
+                            label="Generate Structure"
+                            isVisible={currentStep === 4}
+                        />
+
+
+
                     </div>
 
                 </>

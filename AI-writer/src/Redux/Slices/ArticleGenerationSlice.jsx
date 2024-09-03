@@ -2,11 +2,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    currentStep: 0,  // Start at step 1 by default
+    currentStep: 0,  // Start at step 0 by default
     title: '',
     refTitle :'',
     keywords: [],
     selectedKeywords: [],
+    headlines : [],
+    selectedHeadline : '',
     outline: [],
     articleStructure: {},
     loading: false,
@@ -63,6 +65,14 @@ const ArticleGenerationSlice = createSlice({
             state.selectedPointOfView = action.payload; // Set selected Point of view
         },
 
+        setHeadlines(state, action) {
+            state.headlines = action.payload; // Set generated headlines
+        },
+
+        setSelectedHeadline(state, action) {
+            state.selectedHeadline = action.payload; // Set selected headline 
+        },
+
         setOutline(state, action) {
             state.outline = action.payload;
         },
@@ -78,5 +88,5 @@ const ArticleGenerationSlice = createSlice({
 });
 
 
-export const {nextStep, previousStep,setRefTitle, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setToneOfVoice,setPointOfView, setOutline, setArticleStructure, resetArticleGeneration } = ArticleGenerationSlice.actions;
+export const {nextStep, previousStep,setRefTitle,setHeadlines,setSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setToneOfVoice,setPointOfView, setOutline, setArticleStructure, resetArticleGeneration } = ArticleGenerationSlice.actions;
 export default ArticleGenerationSlice.reducer;
