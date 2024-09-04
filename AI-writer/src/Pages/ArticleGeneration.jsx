@@ -14,9 +14,8 @@ import ArticleSummary from '../Components/ArticleGenerationComponents/ArticleSum
 
 import { Toaster, toast } from 'sonner';
 
-
 import Axiosinstance from '../Axios/Axiosinstance'
-import { setKeywords, previousStep, setTitle, setCurrentStep, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading } from '../Redux/Slices/ArticleGenerationSlice'
+import { setKeywords, previousStep, setTitle, setCurrentStep,setOutlines, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading,ClearOutlines,ClearSelectedOutlines,SetSelectedOutlineKey } from '../Redux/Slices/ArticleGenerationSlice'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { IoIosArrowDropright } from "react-icons/io";
@@ -66,6 +65,11 @@ function ArticleGeneration() {
             return
         }
         dispatch(setCurrentStep(4))
+    }
+
+    const HandleOutlinesStructure = ()=>{
+        dispatch(setCurrentStep(6))
+
     }
 
 
@@ -120,8 +124,6 @@ function ArticleGeneration() {
             dispatch(setCurrentStep(1))
 
         }
-
-
     }
 
 
@@ -181,8 +183,16 @@ function ArticleGeneration() {
 
         try {
             const response = await Axiosinstance.post('api/generate-outlines', data)
+
+        
+            dispatch(ClearSelectedOutlines())
+            dispatch(ClearOutlines())
+            dispatch(SetSelectedOutlineKey(''))
+            
             dispatch(setLoading(false))
-            // dispatch(setCurrentStep(3))
+            dispatch(setOutlines(response.data.outlines))
+            dispatch(setCurrentStep(5))
+
 
 
         }
@@ -213,7 +223,7 @@ function ArticleGeneration() {
                 {IsSidedbarOpened && (<MobileSidebar IsProfilePopup={IsProfilePopup} setIsSidedbarOpened={setIsSidedbarOpened} setIsProfilePopup={setIsProfilePopup} />)}
 
                 <div className="xl:w-[500px] sm:w-[200px] lg:w-[400px] max-sm:hidden ">
-                    <ArticleSidebar handleBackButtonClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} GenerateOutlines={GenerateOutlines} />
+                    <ArticleSidebar handleBackButtonClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} GenerateOutlines={GenerateOutlines} HandleOutlinesStructure={HandleOutlinesStructure} />
                 </div>
 
                 <div className="w-full ">
@@ -228,9 +238,9 @@ function ArticleGeneration() {
 
                     {currentStep === 3 && <GenerateOrRegenerateIdeas GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} />}
                     {currentStep === 4 &&<GenerateOutline GenerateOutlines={GenerateOutlines} />}
-                    {/* <StructureOfArticle /> */}
-                    {/* <ArticleSummary /> */}
-                    {/* <Worksheet /> */}
+                    {currentStep === 5 && <StructureOfArticle HandleOutlinesStructure={HandleOutlinesStructure} />}
+                   {currentStep === 7 &&  <ArticleSummary />}
+                   {currentStep === 6 && <Worksheet />}
 
 
 

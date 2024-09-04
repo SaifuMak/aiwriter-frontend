@@ -9,10 +9,13 @@ const initialState = {
     selectedKeywords: [],
     headlines : [],
     selectedHeadline : '',
-    outline: [],
+    outline: {}, // generated outlines
+    selectedOutlines: [], // selected outlines 
+    selectedOutlineKey : '',  // selected main title or key of  the outline
     articleStructure: {},
     loading: false,
     isFetching : false,
+    isIndividualOutlines : false, // state showing whether user selected the individual outline selection option 
     selectedToneOfVoice : 'Professional',
     selectedPointOfView : 'Second-Person (You)'
 
@@ -73,8 +76,31 @@ const ArticleGenerationSlice = createSlice({
             state.selectedHeadline = action.payload; // Set selected headline 
         },
 
-        setOutline(state, action) {
-            state.outline = action.payload;
+        setOutlines(state, action) {
+            state.outline = action.payload; // Set all generated outlines 
+        },
+        ClearOutlines(state) {
+            state.outline = {}; // clear all outlines 
+        },
+
+        ClearSelectedOutlines(state){
+            state.selectedOutlines = []; // clear all selected outlines
+        },
+
+        setSelectedOutlines(state, action){
+            state.selectedOutlines.push(action.payload) // add all individual outlines to the state 
+        },
+
+        RemoveSelectedOutlines(state, action){
+            state.selectedOutlines = state.selectedOutlines.filter(content => content !== action.payload) // unselect the  individual outlines from  the state 
+        },
+
+        SetSelectedOutlineKey(state, action){
+            state.selectedOutlineKey = action.payload;  // set the key or title of the selected outline 
+        },
+
+        setIsIndividualOutlines(state, action) {
+            state.isIndividualOutlines = action.payload; // a bolean value to toggle the individual outline selection option 
         },
 
         setArticleStructure(state, action) {
@@ -88,5 +114,5 @@ const ArticleGenerationSlice = createSlice({
 });
 
 
-export const {nextStep, previousStep,setRefTitle,setHeadlines,setSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setToneOfVoice,setPointOfView, setOutline, setArticleStructure, resetArticleGeneration } = ArticleGenerationSlice.actions;
+export const {nextStep, previousStep,setRefTitle,setHeadlines,setSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setToneOfVoice,setPointOfView, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration } = ArticleGenerationSlice.actions;
 export default ArticleGenerationSlice.reducer;

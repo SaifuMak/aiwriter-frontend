@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {setKeywords,setSelectedKeywordsRedux} from '../../Redux/Slices/ArticleGenerationSlice'
 
 
+
 function KeywordsForArticle({handleSidebarOptionsVisible}) {
     const dispatch = useDispatch()
     const [selectedTopic, setselectedTopic] = useState('')
