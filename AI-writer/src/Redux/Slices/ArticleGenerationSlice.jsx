@@ -12,7 +12,9 @@ const initialState = {
     outline: {}, // generated outlines
     selectedOutlines: [], // selected outlines 
     selectedOutlineKey : '',  // selected main title or key of  the outline
+    ReorderedSelectedOutlines: [], // Reordered selected outlines 
     articleStructure: {},
+    finalArticle : '',
     loading: false,
     isFetching : false,
     isIndividualOutlines : false, // state showing whether user selected the individual outline selection option 
@@ -103,8 +105,15 @@ const ArticleGenerationSlice = createSlice({
             state.isIndividualOutlines = action.payload; // a bolean value to toggle the individual outline selection option 
         },
 
+        setReorderedSelectedOutlines(state, action){
+            state.ReorderedSelectedOutlines = action.payload; // unselect the  individual outlines from  the state 
+        },
+
         setArticleStructure(state, action) {
             state.articleStructure = action.payload;
+        },
+        setFinalArticle(state, action){
+            state.finalArticle = action.payload;
         },
 
         resetArticleGeneration() {
@@ -114,5 +123,5 @@ const ArticleGenerationSlice = createSlice({
 });
 
 
-export const {nextStep, previousStep,setRefTitle,setHeadlines,setSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setToneOfVoice,setPointOfView, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration } = ArticleGenerationSlice.actions;
+export const {nextStep, previousStep,setRefTitle,setHeadlines,setSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setToneOfVoice,setPointOfView, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration,setReorderedSelectedOutlines,setFinalArticle } = ArticleGenerationSlice.actions;
 export default ArticleGenerationSlice.reducer;

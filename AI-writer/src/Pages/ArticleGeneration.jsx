@@ -12,10 +12,11 @@ import MobileArticleSidebar from '../Components/ArticleSidebar/MobileArticleSide
 import StructureOfArticle from '../Components/ArticleGenerationComponents/StructureOfArticle'
 import ArticleSummary from '../Components/ArticleGenerationComponents/ArticleSummary'
 
+import FinalArticle from '../Components/FinalArticle/FinalArticle'
 import { Toaster, toast } from 'sonner';
 
 import Axiosinstance from '../Axios/Axiosinstance'
-import { setKeywords, previousStep, setTitle, setCurrentStep,setOutlines, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading,ClearOutlines,ClearSelectedOutlines,SetSelectedOutlineKey } from '../Redux/Slices/ArticleGenerationSlice'
+import { setKeywords, previousStep, setTitle, setCurrentStep,setOutlines, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading,ClearOutlines,ClearSelectedOutlines,SetSelectedOutlineKey,setReorderedSelectedOutlines } from '../Redux/Slices/ArticleGenerationSlice'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { IoIosArrowDropright } from "react-icons/io";
@@ -29,7 +30,13 @@ function ArticleGeneration() {
 
     const dispatch = useDispatch()
 
-    const { selectedKeywords, title, currentStep, selectedToneOfVoice, selectedPointOfView,selectedHeadline, refTitle, } = useSelector((state) => state.articleGeneration);
+    const { selectedKeywords, title, currentStep,selectedOutlines,ReorderedSelectedOutlines, selectedToneOfVoice, selectedPointOfView,selectedHeadline, refTitle,setFinalArticle } = useSelector((state) => state.articleGeneration);
+     
+
+    // This is the selected outlines  data 
+    const [items, setItems] = useState([]); 
+
+    const [articleHTML, setArticleHTML] = useState('');
 
     const [IsSidedbarOpened, setIsSidedbarOpened] = useState(false)
     const [IsMobileArticleSidebarOpened, setIsMobileArticleSidebarOpened] = useState(false)
@@ -73,11 +80,6 @@ function ArticleGeneration() {
     }
 
 
-    const sampleClicks = () => {
-        console.log('clicked')
-    }
-
-
 
     // api calls 
 
@@ -101,7 +103,7 @@ function ArticleGeneration() {
 
             try {
                 dispatch(setLoading(true))
-                const response = await Axiosinstance.post('api/generate-article', data)
+                const response = await Axiosinstance.post('api/generate-keywords', data)
                 const articles = response.data.article
                 const keywordsArray = articles
                     ? articles.split('\n').map(item => item.replace(/^\d+\.\s*/, '').trim())
@@ -200,13 +202,75 @@ function ArticleGeneration() {
             console.log(error)
             dispatch(setLoading(false))
             ErrorToast('Limit reached! Please try after 20 seconds')
+        }
+    }
+
+
+    const GenerateArticle = async()=>{
+        dispatch(setReorderedSelectedOutlines(items))
+
+
+        const data = {
+            'title': selectedHeadline,
+            'keywords': selectedKeywords,
+            'tone_of_voice': selectedToneOfVoice,
+            'point_of_view': selectedPointOfView,
+            'headlines':items,
+        }
+        dispatch(setLoading(true))
+
+
+        try {
+            const response = await Axiosinstance.post('api/generate-article', data)
+            const article = response.data.article.replace("```html", "").replace("```", "").trim();
+            console.log(article)
+            setArticleHTML(article)
+            dispatch(setLoading(false))
+            dispatch(setCurrentStep(7))
+
+        }
+        catch (error) {
+            console.log(error)
+            dispatch(setLoading(false))
+            ErrorToast('An error occured')
+
+        }
+
+    }
+
+    const RegenerateArticle = async()=>{
+        const reorderedHeadlines = ReorderedSelectedOutlines.flat()
+
+
+        const data = {
+            'title': selectedHeadline,
+            'keywords': selectedKeywords,
+            'tone_of_voice': selectedToneOfVoice,
+            'point_of_view': selectedPointOfView,
+            'headlines':reorderedHeadlines,
+        }
+        dispatch(setLoading(true))
+
+
+        try {
+            const response = await Axiosinstance.post('api/generate-article', data)
+            const article = response.data.article.replace("```html", "").replace("```", "").trim();
+            console.log(article)
+            setArticleHTML(article)
+            dispatch(setLoading(false))
+
+        }
+        catch (error) {
+            console.log(error)
+            dispatch(setLoading(false))
+            ErrorToast('An error occured')
 
         }
 
     }
 
 
-
+    
     return (
         <>
             <Navbar IsSidedbarOpened={IsSidedbarOpened} setIsSidedbarOpened={setIsSidedbarOpened} setIsMobileArticleSidebarOpened={setIsMobileArticleSidebarOpened} IsMobileArticleSidebarOpened={IsMobileArticleSidebarOpened} />
@@ -223,8 +287,9 @@ function ArticleGeneration() {
                 {IsSidedbarOpened && (<MobileSidebar IsProfilePopup={IsProfilePopup} setIsSidedbarOpened={setIsSidedbarOpened} setIsProfilePopup={setIsProfilePopup} />)}
 
                 <div className="xl:w-[500px] sm:w-[200px] lg:w-[400px] max-sm:hidden ">
-                    <ArticleSidebar handleBackButtonClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} GenerateOutlines={GenerateOutlines} HandleOutlinesStructure={HandleOutlinesStructure} />
+                    <ArticleSidebar handleBackButtonClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} GenerateOutlines={GenerateOutlines} HandleOutlinesStructure={HandleOutlinesStructure} GenerateArticle={GenerateArticle} RegenerateArticle={RegenerateArticle} />
                 </div>
+
 
                 <div className="w-full ">
                     {IsMobileArticleSidebarOpened && (<div className=" sm:hidden">
@@ -239,8 +304,9 @@ function ArticleGeneration() {
                     {currentStep === 3 && <GenerateOrRegenerateIdeas GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} />}
                     {currentStep === 4 &&<GenerateOutline GenerateOutlines={GenerateOutlines} />}
                     {currentStep === 5 && <StructureOfArticle HandleOutlinesStructure={HandleOutlinesStructure} />}
-                   {currentStep === 7 &&  <ArticleSummary />}
-                   {currentStep === 6 && <Worksheet />}
+                   {currentStep === 6 &&  <ArticleSummary setItems={setItems} items={items} GenerateArticle={GenerateArticle}  />}
+                   {/* {currentStep === 6 && <Worksheet />} */}
+                   {currentStep === 7 && <FinalArticle articleHTML={articleHTML} />}
 
 
 

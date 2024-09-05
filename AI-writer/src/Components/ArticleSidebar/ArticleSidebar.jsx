@@ -12,7 +12,7 @@ import { setTitle, setToneOfVoice, setPointOfView, setSelectedKeywordsRedux } fr
 import ButtonComponent from '../ArticleGenerationComponents/SmallComponents/ButtonComponent';
 
 
-function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOptionsVisible, GenerateHeadlines, handleOutlineGeneration, GenerateOutlines, HandleOutlinesStructure }) {
+function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOptionsVisible, GenerateHeadlines, handleOutlineGeneration, GenerateOutlines, HandleOutlinesStructure, GenerateArticle, RegenerateArticle }) {
     const dispatch = useDispatch();
     const { title, currentStep, selectedKeywords, loading, selectedToneOfVoice, selectedPointOfView, } = useSelector((state) => state.articleGeneration);
 
@@ -240,9 +240,15 @@ function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOpt
                         />
 
                         <ButtonComponent
-                            onClick={GenerateOutlines}
+                            onClick={GenerateArticle}
                             label="Generate Article"
                             isVisible={currentStep === 6}
+                        />
+
+                        <ButtonComponent
+                            onClick={RegenerateArticle}
+                            label="Regenerate Article"
+                            isVisible={currentStep === 7}
                         />
 
 
