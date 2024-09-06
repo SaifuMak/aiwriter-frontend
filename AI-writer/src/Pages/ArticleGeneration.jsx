@@ -16,7 +16,7 @@ import FinalArticle from '../Components/FinalArticle/FinalArticle'
 import { Toaster, toast } from 'sonner';
 
 import Axiosinstance from '../Axios/Axiosinstance'
-import { setKeywords, previousStep, setTitle, setCurrentStep,setOutlines, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading,ClearOutlines,ClearSelectedOutlines,SetSelectedOutlineKey,setReorderedSelectedOutlines } from '../Redux/Slices/ArticleGenerationSlice'
+import { setKeywords, previousStep, setTitle, setCurrentStep, setOutlines, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading, ClearOutlines, ClearSelectedOutlines, SetSelectedOutlineKey, setReorderedSelectedOutlines, setFinalArticle, resetFinalArticle, nextStep } from '../Redux/Slices/ArticleGenerationSlice'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { IoIosArrowDropright } from "react-icons/io";
@@ -30,11 +30,11 @@ function ArticleGeneration() {
 
     const dispatch = useDispatch()
 
-    const { selectedKeywords, title, currentStep,selectedOutlines,ReorderedSelectedOutlines, selectedToneOfVoice, selectedPointOfView,selectedHeadline, refTitle,setFinalArticle } = useSelector((state) => state.articleGeneration);
-     
+    const { selectedKeywords, title, currentStep, selectedOutlines, ReorderedSelectedOutlines, selectedToneOfVoice, selectedPointOfView, selectedHeadline, refTitle, loading } = useSelector((state) => state.articleGeneration);
+
 
     // This is the selected outlines  data 
-    const [items, setItems] = useState([]); 
+    const [items, setItems] = useState([]);
 
     const [articleHTML, setArticleHTML] = useState('');
 
@@ -53,6 +53,14 @@ function ArticleGeneration() {
 
     }
 
+    const handleForwardButtonClick = () => {  //  this decreases the count for the currentstate , allow users to go back 
+        if (currentStep === 7) {
+            return
+        }
+        dispatch(nextStep())
+
+    }
+
     const handleSidebarOptionsVisible = () => {
         // we are going to the step 2 after the selection of the keywords , if no keywords return 
         if (!selectedKeywords.trim()) {
@@ -65,16 +73,16 @@ function ArticleGeneration() {
 
     }
 
-    
-    const handleOutlineGeneration = ()=>{
-        if(!selectedHeadline.trim()){
+
+    const handleOutlineGeneration = () => {
+        if (!selectedHeadline.trim()) {
             ErrorToast('Please select any Headline')
             return
         }
         dispatch(setCurrentStep(4))
     }
 
-    const HandleOutlinesStructure = ()=>{
+    const HandleOutlinesStructure = () => {
         dispatch(setCurrentStep(6))
 
     }
@@ -135,7 +143,7 @@ function ArticleGeneration() {
             ErrorToast('Please fill all  fields')
             return
         }
-        
+
         const data = {
             'title': title,
             'keywords': selectedKeywords,
@@ -171,9 +179,9 @@ function ArticleGeneration() {
             ErrorToast('Please fill all  fields')
             return
         }
-        
+
         const data = {
-            'main_headline':selectedHeadline,
+            'main_headline': selectedHeadline,
             'title': title,
             'keywords': selectedKeywords,
             'tone_of_voice': selectedToneOfVoice,
@@ -186,11 +194,11 @@ function ArticleGeneration() {
         try {
             const response = await Axiosinstance.post('api/generate-outlines', data)
 
-        
+
             dispatch(ClearSelectedOutlines())
             dispatch(ClearOutlines())
             dispatch(SetSelectedOutlineKey(''))
-            
+
             dispatch(setLoading(false))
             dispatch(setOutlines(response.data.outlines))
             dispatch(setCurrentStep(5))
@@ -206,8 +214,15 @@ function ArticleGeneration() {
     }
 
 
-    const GenerateArticle = async()=>{
+    const GenerateArticle = async () => {
+        console.log(items)
+        const IsEmptyStrings =  items.filter(data => data.trim() === '');
+        if(IsEmptyStrings.length > 0){
+            ErrorToast('Oops! There is an empty headline in the list. Please check and update.')
+            return
+        }
         dispatch(setReorderedSelectedOutlines(items))
+        dispatch(resetFinalArticle())
 
 
         const data = {
@@ -215,7 +230,7 @@ function ArticleGeneration() {
             'keywords': selectedKeywords,
             'tone_of_voice': selectedToneOfVoice,
             'point_of_view': selectedPointOfView,
-            'headlines':items,
+            'headlines': items,
         }
         dispatch(setLoading(true))
 
@@ -223,6 +238,7 @@ function ArticleGeneration() {
         try {
             const response = await Axiosinstance.post('api/generate-article', data)
             const article = response.data.article.replace("```html", "").replace("```", "").trim();
+            dispatch(setFinalArticle(article))
             console.log(article)
             setArticleHTML(article)
             dispatch(setLoading(false))
@@ -238,8 +254,10 @@ function ArticleGeneration() {
 
     }
 
-    const RegenerateArticle = async()=>{
+    const RegenerateArticle = async () => {
         const reorderedHeadlines = ReorderedSelectedOutlines.flat()
+        dispatch(resetFinalArticle())
+
 
 
         const data = {
@@ -247,7 +265,7 @@ function ArticleGeneration() {
             'keywords': selectedKeywords,
             'tone_of_voice': selectedToneOfVoice,
             'point_of_view': selectedPointOfView,
-            'headlines':reorderedHeadlines,
+            'headlines': reorderedHeadlines,
         }
         dispatch(setLoading(true))
 
@@ -255,6 +273,7 @@ function ArticleGeneration() {
         try {
             const response = await Axiosinstance.post('api/generate-article', data)
             const article = response.data.article.replace("```html", "").replace("```", "").trim();
+            dispatch(setFinalArticle(article))
             console.log(article)
             setArticleHTML(article)
             dispatch(setLoading(false))
@@ -270,7 +289,7 @@ function ArticleGeneration() {
     }
 
 
-    
+
     return (
         <>
             <Navbar IsSidedbarOpened={IsSidedbarOpened} setIsSidedbarOpened={setIsSidedbarOpened} setIsMobileArticleSidebarOpened={setIsMobileArticleSidebarOpened} IsMobileArticleSidebarOpened={IsMobileArticleSidebarOpened} />
@@ -287,7 +306,7 @@ function ArticleGeneration() {
                 {IsSidedbarOpened && (<MobileSidebar IsProfilePopup={IsProfilePopup} setIsSidedbarOpened={setIsSidedbarOpened} setIsProfilePopup={setIsProfilePopup} />)}
 
                 <div className="xl:w-[500px] sm:w-[200px] lg:w-[400px] max-sm:hidden ">
-                    <ArticleSidebar handleBackButtonClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} GenerateOutlines={GenerateOutlines} HandleOutlinesStructure={HandleOutlinesStructure} GenerateArticle={GenerateArticle} RegenerateArticle={RegenerateArticle} />
+                    <ArticleSidebar handleBackButtonClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} GenerateOutlines={GenerateOutlines} HandleOutlinesStructure={HandleOutlinesStructure} GenerateArticle={GenerateArticle} RegenerateArticle={RegenerateArticle} handleForwardButtonClick={handleForwardButtonClick} />
                 </div>
 
 
@@ -298,17 +317,17 @@ function ArticleGeneration() {
 
 
                     {(currentStep === 0 || currentStep === 2) && <ArticleLoader />}
+                    {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading) && <ArticleLoader />}
+
 
                     {currentStep === 1 && <KeywordsForArticle handleSidebarOptionsVisible={handleSidebarOptionsVisible} />}
 
                     {currentStep === 3 && <GenerateOrRegenerateIdeas GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} />}
-                    {currentStep === 4 &&<GenerateOutline GenerateOutlines={GenerateOutlines} />}
+                    {(!loading && currentStep === 4) && <GenerateOutline GenerateOutlines={GenerateOutlines} />}
                     {currentStep === 5 && <StructureOfArticle HandleOutlinesStructure={HandleOutlinesStructure} />}
-                   {currentStep === 6 &&  <ArticleSummary setItems={setItems} items={items} GenerateArticle={GenerateArticle}  />}
-                   {/* {currentStep === 6 && <Worksheet />} */}
-                   {currentStep === 7 && <FinalArticle articleHTML={articleHTML} />}
-
-
+                    {(!loading && currentStep === 6) && <ArticleSummary setItems={setItems} items={items} GenerateArticle={GenerateArticle} />}
+                    {/* {currentStep === 6 && <Worksheet />} */}
+                    {(!loading && currentStep === 7) && <FinalArticle articleHTML={articleHTML} />}
 
                 </div>
                 <Toaster position="bottom-right" />

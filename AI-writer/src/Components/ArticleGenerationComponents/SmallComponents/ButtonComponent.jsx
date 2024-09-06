@@ -17,9 +17,9 @@ function ButtonComponent({ isVisible, onClick, color= '#FB923C',  label, isIcon=
         </button>
 
       ) : (
-        <button onClick={onClick} className="text-white flex justify-center  lg:text-base text-sm text-center py-1 lg:py-1.5 xl:py-2 rounded-md  px-3 min-w-[100px] xl:min-w-[151px] lg:min-w-[120px] " style={{ backgroundColor: color }}>
+        <button onClick={onClick} className="text-white flex  justify-center  lg:text-base text-sm text-center py-1 lg:py-1.5 xl:py-2 rounded-md  px-3 min-w-[100px] xl:min-w-[151px] lg:min-w-[120px] " style={{ backgroundColor: color }}>
          
-          <span className='flex items-center '>
+          <span className='flex items-center max-lg:text-xs text-nowrap '>
            {isIcon &&  <LuRefreshCcw className='mr-2 shrink-0' />}
             {label}</span>
         </button>

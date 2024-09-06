@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import InputComponent from '../InputComponent'
 import { MdOutlineKeyboardDoubleArrowLeft } from "react-icons/md";
 import { RxDoubleArrowLeft } from "react-icons/rx";
+import { RxDoubleArrowRight } from "react-icons/rx";
 import PulseLoader from 'react-spinners/PulseLoader';
 
 
@@ -12,9 +13,9 @@ import { setTitle, setToneOfVoice, setPointOfView, setSelectedKeywordsRedux } fr
 import ButtonComponent from '../ArticleGenerationComponents/SmallComponents/ButtonComponent';
 
 
-function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOptionsVisible, GenerateHeadlines, handleOutlineGeneration, GenerateOutlines, HandleOutlinesStructure, GenerateArticle, RegenerateArticle }) {
+function ArticleSidebar({ handleBackButtonClick, handleForwardButtonClick, Fetchkeywords, handleSidebarOptionsVisible, GenerateHeadlines, handleOutlineGeneration, GenerateOutlines, HandleOutlinesStructure, GenerateArticle, RegenerateArticle }) {
     const dispatch = useDispatch();
-    const { title, currentStep, selectedKeywords, loading, selectedToneOfVoice, selectedPointOfView, } = useSelector((state) => state.articleGeneration);
+    const { title, currentStep, selectedKeywords, loading, selectedToneOfVoice, selectedPointOfView, finalArticle,selectedOutlines,selectedHeadline } = useSelector((state) => state.articleGeneration);
 
 
     const [selectedTopicOrKeywords, setselectedTopicOrKeywords] = useState('')
@@ -210,7 +211,7 @@ function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOpt
 
 
 
-                    <div className="flex items-center mt-10 space-x-16 sm:space-x-2 lg:space-x-5 xl:space-x-7 2xl:space-x-10 ">
+                    <div className="flex items-center mt-10 space-x-16 sm:space-x-1 lg:space-x-5 xl:space-x-7 2xl:space-x-10 ">
                         <div onClick={handleBackButtonClick} className="lg:p-2 sm:p-1 p-1.5 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
                             <RxDoubleArrowLeft className='text-lg lg:text-2xl text-custom-dark-orange' />
                         </div>
@@ -250,6 +251,12 @@ function ArticleSidebar({ handleBackButtonClick, Fetchkeywords, handleSidebarOpt
                             label="Regenerate Article"
                             isVisible={currentStep === 7}
                         />
+                       {(currentStep === 6 && finalArticle || currentStep === 4 && selectedOutlines.length > 0 || currentStep === 2 && selectedHeadline ) && (  <div className="flex justify-end flex-grow ">
+
+                       <div onClick={handleForwardButtonClick} className="lg:p-2 sm:p-1 p-1.5  border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
+                            <RxDoubleArrowRight className='text-lg lg:text-2xl text-custom-dark-orange' />
+                        </div>
+                        </div>)}
 
 
 

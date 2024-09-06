@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { VscCheck } from "react-icons/vsc";
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsIndividualOutlines, setSelectedOutlines, RemoveSelectedOutlines, SetSelectedOutlineKey, ClearSelectedOutlines } from '../../Redux/Slices/ArticleGenerationSlice'
+import { setIsIndividualOutlines, setSelectedOutlines, RemoveSelectedOutlines, SetSelectedOutlineKey, ClearSelectedOutlines, resetReorderedSelectedOutlines } from '../../Redux/Slices/ArticleGenerationSlice'
 import ButtonComponent from './SmallComponents/ButtonComponent';
 import { motion } from 'framer-motion';
+import { countWords, countCharacters, calculateTotalWords, calculateTotalCharacters } from '../../Utils/Helperfunctions'
+
 
 
 
@@ -11,11 +13,12 @@ function StructureOfArticle({ HandleOutlinesStructure }) {
 
     const dispatch = useDispatch()
     const { outline, isIndividualOutlines, selectedOutlines, selectedOutlineKey, loading, } = useSelector((state) => state.articleGeneration);
-    console.log(selectedOutlines.flat(),'-----------')
-    
+    console.log(selectedOutlines.flat(), '-----------')
+
 
     const handleToggleIndividualSelection = () => {
         dispatch(ClearSelectedOutlines())
+        dispatch(resetReorderedSelectedOutlines())
         dispatch(SetSelectedOutlineKey(''))
 
         dispatch(setIsIndividualOutlines(!isIndividualOutlines));
@@ -23,24 +26,27 @@ function StructureOfArticle({ HandleOutlinesStructure }) {
 
     // handles the group slection of the outlines 
     const HandleOutlinesSelection = (content) => {
+
+        dispatch(resetReorderedSelectedOutlines())
+
         if (isIndividualOutlines) {
             return
         }
 
         dispatch(ClearSelectedOutlines())
         const outlines = outline[content];
-    dispatch(setSelectedOutlines(outlines));
+        dispatch(setSelectedOutlines(outlines));
 
 
-        
 
-    // Flatten the selectedOutlines array and add the new outlines
-    // const newSelectedOutlines = [...selectedOutlines.flat(), ...outlines];
 
-    // // Dispatch the action with the new flat array
-    // dispatch(setSelectedOutlines(newSelectedOutlines));
+        // Flatten the selectedOutlines array and add the new outlines
+        // const newSelectedOutlines = [...selectedOutlines.flat(), ...outlines];
 
-        
+        // // Dispatch the action with the new flat array
+        // dispatch(setSelectedOutlines(newSelectedOutlines));
+
+
         dispatch(SetSelectedOutlineKey(content))
 
     }
@@ -48,6 +54,8 @@ function StructureOfArticle({ HandleOutlinesStructure }) {
 
     // handles the single  slection of the outline 
     const handleIndividualSelection = (content) => {
+        dispatch(resetReorderedSelectedOutlines())
+
         if (!isIndividualOutlines) {
             return
         }
@@ -109,8 +117,11 @@ function StructureOfArticle({ HandleOutlinesStructure }) {
                                 </li>
                             ))}
 
-                            <div className="mt-6 ">
-                                <span className=" text-[#7D7D7D] text-sm font-semibold ">345 words / 653 charectors</span>
+                          
+                            <div className={`mt-6  `}>
+                                <span className="text-[#7D7D7D] text-sm font-semibold">
+                                    {calculateTotalWords(sections)} words / {calculateTotalCharacters(sections)} characters
+                                </span>
                             </div>
 
 

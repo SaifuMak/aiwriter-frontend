@@ -109,11 +109,18 @@ const ArticleGenerationSlice = createSlice({
             state.ReorderedSelectedOutlines = action.payload; // unselect the  individual outlines from  the state 
         },
 
+        resetReorderedSelectedOutlines(state) {
+            state.ReorderedSelectedOutlines = []; // Reset to the initial value
+        },
+
         setArticleStructure(state, action) {
             state.articleStructure = action.payload;
         },
         setFinalArticle(state, action){
             state.finalArticle = action.payload;
+        },
+        resetFinalArticle(state) {
+            state.finalArticle = ''; // Reset to the initial value
         },
 
         resetArticleGeneration() {
@@ -123,5 +130,5 @@ const ArticleGenerationSlice = createSlice({
 });
 
 
-export const {nextStep, previousStep,setRefTitle,setHeadlines,setSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setToneOfVoice,setPointOfView, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration,setReorderedSelectedOutlines,setFinalArticle } = ArticleGenerationSlice.actions;
+export const {nextStep, previousStep,setRefTitle,setHeadlines,setSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setToneOfVoice,setPointOfView, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration,setReorderedSelectedOutlines,setFinalArticle,resetFinalArticle,resetReorderedSelectedOutlines } = ArticleGenerationSlice.actions;
 export default ArticleGenerationSlice.reducer;
