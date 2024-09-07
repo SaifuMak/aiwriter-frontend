@@ -17,6 +17,7 @@
     "axios": "^1.7.5",
     "framer-motion": "^11.3.30",
     "lodash": "^4.17.21",
+    "lottie-react": "^2.4.0",
     "react": "^18.3.1",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
@@ -26,6 +27,7 @@
     "react-router-dom": "^6.26.1",
     "react-spinners": "^0.14.1",
     "react-tooltip": "^5.28.0",
+    "react-typewriter-effect": "^1.1.0",
     "redux-persist": "^6.0.0",
     "sonner": "^1.5.0"
   },

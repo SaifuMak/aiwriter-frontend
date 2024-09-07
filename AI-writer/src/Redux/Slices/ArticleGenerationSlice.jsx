@@ -19,7 +19,8 @@ const initialState = {
     isFetching : false,
     isIndividualOutlines : false, // state showing whether user selected the individual outline selection option 
     selectedToneOfVoice : 'Professional',
-    selectedPointOfView : 'Second-Person (You)'
+    selectedPointOfView : 'Second-Person (You)',
+    IsScrolled : false,
 
     // Add any other initial state you need
 };  
@@ -126,9 +127,15 @@ const ArticleGenerationSlice = createSlice({
         resetArticleGeneration() {
             return initialState;  // Reset to initial state
         },
+        setIsScrolling(state){
+            state.IsScrolled = true;
+        },
+        setScrollingfalse(state){
+            state.IsScrolled = false;
+        }
     },
 });
 
 
-export const {nextStep, previousStep,setRefTitle,setHeadlines,setSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setToneOfVoice,setPointOfView, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration,setReorderedSelectedOutlines,setFinalArticle,resetFinalArticle,resetReorderedSelectedOutlines } = ArticleGenerationSlice.actions;
+export const {nextStep, previousStep,setRefTitle,setHeadlines,setSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setToneOfVoice,setPointOfView, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration,setReorderedSelectedOutlines,setFinalArticle,resetFinalArticle,resetReorderedSelectedOutlines,setIsScrolling,setScrollingfalse } = ArticleGenerationSlice.actions;
 export default ArticleGenerationSlice.reducer;
