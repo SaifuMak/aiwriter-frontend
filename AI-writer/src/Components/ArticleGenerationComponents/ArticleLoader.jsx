@@ -3,17 +3,31 @@ import loader from '../../assets/Images/ArticleLoading.png'
 import Rocketloader from '../../assets/Images/ArticleRocketLoader.png'
 import Lottie from 'lottie-react';
 import animationData from '../../assets/LottieFiles/RocketAnimation.json'
+import { useDispatch, useSelector } from 'react-redux';
 
 
 function ArticleLoader() {
+    const {currentStep,loading } = useSelector((state) => state.articleGeneration);
+
     return (
         <div className="flex flex-col items-center justify-center w-full h-full ">
             <div className="w-64 h-64 xl:w-80 xl:h-80">
-                {/* <img src={Rocketloader} alt="" className="w-full h-full " />    */}
-                <Lottie animationData={animationData} className="w-full h-full" />
+              {loading ? (
+                 <Lottie animationData={animationData} className="w-full h-full" />
+
+              ) : (
+                <img src={Rocketloader} alt="" className="w-full h-full p-3 " />   
+
+
+              ) } 
             </div>
-            <span className="mt-10 text-center px-4 text-[#585858] ">Your copies created by artificial
-            intelligence will appear here.</span>
+          {currentStep === 0 && (<span className="mt-10 text-center px-4 text-[#585858] ">Kickoff Your Article by Entering Your Topic</span>)}  
+          {currentStep === 2 && (<span className="mt-10 text-center px-4 text-[#585858] ">Generated Ideas Will Show Up Here</span>)}  
+          {currentStep === 4 && (<span className="mt-10 text-center px-4 text-[#585858] ">Loading your structure outlines. Just a moment!</span>)}  
+          {currentStep === 6 && (<span className="mt-10 text-center px-4 text-[#585858] ">Your article is being crafted. We appreciate your patience.</span>)}  
+
+
+
         </div>
     )
 }

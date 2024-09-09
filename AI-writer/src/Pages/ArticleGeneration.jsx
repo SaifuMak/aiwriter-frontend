@@ -23,6 +23,7 @@ import { IoIosArrowDropright } from "react-icons/io";
 import ErrorToast from '../Utils/ErrorToast'
 
 
+
 import { motion } from 'framer-motion';
 
 
@@ -31,10 +32,12 @@ function ArticleGeneration() {
     const dispatch = useDispatch()
 
     const { selectedKeywords, title, currentStep, selectedOutlines, ReorderedSelectedOutlines, selectedToneOfVoice, selectedPointOfView, selectedHeadline, refTitle, loading } = useSelector((state) => state.articleGeneration);
-
+   
+ 
 
     // This is the selected outlines  data 
     const [items, setItems] = useState([]);
+
 
     const [articleHTML, setArticleHTML] = useState('');
 
@@ -47,6 +50,9 @@ function ArticleGeneration() {
 
 
     // other  actions 
+
+   
+   
 
     const handleBackButtonClick = () => {  //  this decreases the count for the currentstate , allow users to go back 
         dispatch(previousStep())
@@ -72,6 +78,8 @@ function ArticleGeneration() {
         dispatch(setCurrentStep(2))
 
     }
+
+
 
 
     const handleOutlineGeneration = () => {
@@ -192,7 +200,7 @@ function ArticleGeneration() {
 
 
         try {
-            const response = await Axiosinstance.post('api/generate-outlines', data)
+            const response = await Axiosinstance.post('api/generate-outlines', data,{ timeout: 10000 })
 
 
             dispatch(ClearSelectedOutlines())
@@ -209,7 +217,7 @@ function ArticleGeneration() {
         catch (error) {
             console.log(error)
             dispatch(setLoading(false))
-            ErrorToast('Limit reached! Please try after 20 seconds')
+            ErrorToast('Request timed out or failed, please try again ')
         }
     }
 
@@ -327,7 +335,7 @@ function ArticleGeneration() {
                     {currentStep === 5 && <StructureOfArticle HandleOutlinesStructure={HandleOutlinesStructure} />}
                     {(!loading && currentStep === 6) && <ArticleSummary setItems={setItems} items={items} GenerateArticle={GenerateArticle} />}
                     {/* {currentStep === 6 && <Worksheet />} */}
-                    {(!loading && currentStep === 7) && <FinalArticle articleHTML={articleHTML} />}
+                    {(!loading && currentStep === 7) && <FinalArticle articleHTML={articleHTML}  />}
 
                 </div>
                 <Toaster position="bottom-right" />

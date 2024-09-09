@@ -15,11 +15,11 @@ import ButtonComponent from '../ArticleGenerationComponents/SmallComponents/Butt
 
 function ArticleSidebar({ handleBackButtonClick, handleForwardButtonClick, Fetchkeywords, handleSidebarOptionsVisible, GenerateHeadlines, handleOutlineGeneration, GenerateOutlines, HandleOutlinesStructure, GenerateArticle, RegenerateArticle }) {
     const dispatch = useDispatch();
-    const { title, currentStep, selectedKeywords, loading, selectedToneOfVoice, selectedPointOfView, finalArticle,selectedOutlines,selectedHeadline } = useSelector((state) => state.articleGeneration);
+    const { title, currentStep, selectedKeywords, loading, selectedToneOfVoice, selectedPointOfView, finalArticle, selectedOutlines, selectedHeadline, isManualKeywordsEnabled } = useSelector((state) => state.articleGeneration);
 
 
-    const [selectedTopicOrKeywords, setselectedTopicOrKeywords] = useState('')
-    const [keywordsChange, setKeywordsChange] = useState('')
+    // const [selectedTopicOrKeywords, setselectedTopicOrKeywords] = useState('')
+    // const [keywordsChange, setKeywordsChange] = useState('')
     const [selectedCallToAction, setCallToAction] = useState('')
 
 
@@ -49,21 +49,21 @@ function ArticleSidebar({ handleBackButtonClick, handleForwardButtonClick, Fetch
         }
     }
 
-    const handleChangeKeywords = (e) => {
-        const newValue = e.target.value;
-        if (newValue.length <= 200) {
-            setKeywordsChange(newValue);
-        }
-    }
+    // const handleChangeKeywords = (e) => {
+    //     const newValue = e.target.value;
+    //     if (newValue.length <= 200) {
+    //         setKeywordsChange(newValue);
+    //     }
+    // }
 
 
 
-    const handleCallToAction = (e) => {
-        const newValue = e.target.value;
-        if (newValue.length <= 200) {
-            setCallToAction(newValue);
-        }
-    }
+    // const handleCallToAction = (e) => {
+    //     const newValue = e.target.value;
+    //     if (newValue.length <= 200) {
+    //         setCallToAction(newValue);
+    //     }
+    // }
 
 
 
@@ -130,6 +130,19 @@ function ArticleSidebar({ handleBackButtonClick, handleForwardButtonClick, Fetch
                 isActive={currentStep !== 0}
             />
 
+            {currentStep === 1 && isManualKeywordsEnabled && (
+                <InputComponent
+                    label='Keywords'
+                    onChange={handleKeywords}
+                    value={selectedKeywords}
+                    placeholder="Enter Keywords....."
+                    count={`${selectedKeywords && selectedKeywords.length}/200`}
+                    isOptional={false}
+                    isActive={currentStep > 2}
+                />
+
+            )}
+
 
             {currentStep === 0 && (<div className="flex items-center justify-center">{loading ? (
                 <button className="text-white bg-custom-dark-orange lg:text-base text-sm text-center py-1 lg:py-1.5 xl:py-2 rounded-md mt-10 w-[100px] lg:w-[120px] xl:w-[211px]">
@@ -150,6 +163,8 @@ function ArticleSidebar({ handleBackButtonClick, handleForwardButtonClick, Fetch
 
                 <button onClick={handleSidebarOptionsVisible} className="text-white bg-custom-dark-orange lg:text-base text-sm text-center py-1 lg:py-1.5 xl:py-2 rounded-md  w-[100px] lg:w-[120px] xl:w-[211px]">Next</button>
             </div>)}
+
+
 
 
 
@@ -188,7 +203,7 @@ function ArticleSidebar({ handleBackButtonClick, handleForwardButtonClick, Fetch
 
                     />
 
-                    <InputComponent
+                    {/* <InputComponent
                         label='Call-to-Action'
                         onChange={handleCallToAction}
                         value={selectedCallToAction}
@@ -196,7 +211,7 @@ function ArticleSidebar({ handleBackButtonClick, handleForwardButtonClick, Fetch
                         count={`${selectedCallToAction.length}/200`}
                         isOptional={true}
                         isActive={currentStep > 2}
-                    />
+                    /> */}
 
                     <DropdownComponent
                         label='Quality type'
@@ -251,11 +266,11 @@ function ArticleSidebar({ handleBackButtonClick, handleForwardButtonClick, Fetch
                             label="Regenerate Article"
                             isVisible={currentStep === 7}
                         />
-                       {(currentStep === 6 && finalArticle || currentStep === 4 && selectedOutlines.length > 0 || currentStep === 2 && selectedHeadline ) && (  <div className="flex justify-end flex-grow ">
+                        {(currentStep === 6 && finalArticle || currentStep === 4 && selectedOutlines.length > 0 || currentStep === 2 && selectedHeadline) && (<div className="flex justify-end flex-grow ">
 
-                       <div onClick={handleForwardButtonClick} className="lg:p-2 sm:p-1 p-1.5  border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
-                            <RxDoubleArrowRight className='text-lg lg:text-2xl text-custom-dark-orange' />
-                        </div>
+                            <div onClick={handleForwardButtonClick} className="lg:p-2 sm:p-1 p-1.5  border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
+                                <RxDoubleArrowRight className='text-lg lg:text-2xl text-custom-dark-orange' />
+                            </div>
                         </div>)}
 
 

@@ -5,8 +5,9 @@ const initialState = {
     currentStep: 0,  // Start at step 0 by default
     title: '',
     refTitle :'',
+    isManualKeywordsEnabled : false,
     keywords: [],
-    selectedKeywords: [],
+    selectedKeywords: '',
     headlines : [],
     selectedHeadline : '',
     outline: {}, // generated outlines
@@ -57,6 +58,10 @@ const ArticleGenerationSlice = createSlice({
 
         setKeywords(state, action) {
             state.keywords = action.payload; // Set keywords generated
+        },
+
+        setisManualKeywordsEnabled(state){
+            state.isManualKeywordsEnabled = !state.isManualKeywordsEnabled;
         },
 
         setSelectedKeywordsRedux(state, action) {
@@ -137,5 +142,5 @@ const ArticleGenerationSlice = createSlice({
 });
 
 
-export const {nextStep, previousStep,setRefTitle,setHeadlines,setSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setToneOfVoice,setPointOfView, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration,setReorderedSelectedOutlines,setFinalArticle,resetFinalArticle,resetReorderedSelectedOutlines,setIsScrolling,setScrollingfalse } = ArticleGenerationSlice.actions;
+export const {nextStep, previousStep,setRefTitle,setHeadlines,setSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setisManualKeywordsEnabled, setToneOfVoice,setPointOfView, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration,setReorderedSelectedOutlines,setFinalArticle,resetFinalArticle,resetReorderedSelectedOutlines,setIsScrolling,setScrollingfalse } = ArticleGenerationSlice.actions;
 export default ArticleGenerationSlice.reducer;
