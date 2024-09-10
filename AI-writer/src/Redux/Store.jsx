@@ -3,6 +3,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; 
 import AuthSlice from  './Slices/AuthSlice'
 import ArticleGenerationSlice from './Slices/ArticleGenerationSlice';
+import PlagiarismSlice from './Slices/PlagiarismSlice';
 import { combineReducers } from 'redux';
 
 // const persistConfig = {
@@ -19,6 +20,7 @@ import { combineReducers } from 'redux';
 const rootReducer = combineReducers({
     auth: AuthSlice,
     articleGeneration: ArticleGenerationSlice, 
+    Plagiarism : PlagiarismSlice,
     
 });
   

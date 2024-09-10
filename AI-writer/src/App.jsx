@@ -5,6 +5,7 @@ import PasswordChange from './Pages/PasswordChange'
 import ForgotPassword from './Pages/ForgotPassword'
 import EmailConfirmation from './Pages/EmailConfirmation'
 import ArticleGeneration from './Pages/ArticleGeneration'
+import Plagiarism from './Pages/Plagiarism'
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 
 import { Provider } from 'react-redux';
@@ -51,6 +52,10 @@ function App() {
 
               {<Route path='/article-generation' element={<PrivateRoutes />}>
                 <Route index element={<ArticleGeneration />} />
+              </Route>}
+
+              {<Route path='/plagiarism-checker' element={<PrivateRoutes />}>
+                <Route index element={<Plagiarism />} />
               </Route>}
 
               {<Route path='/demo' element={<PrivateRoutes />}>

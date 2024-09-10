@@ -10,12 +10,15 @@ import Logo from '../../assets/Images/Logo.png'
 
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess, setLogout } from '../../Redux/Slices/AuthSlice'
+import { HiOutlineDocumentMagnifyingGlass } from "react-icons/hi2";
+
+import { Link } from 'react-router-dom';
 
 
 function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
 
   const dispatch = useDispatch()
-  const { IsAuthenticated, Username, Email  } = useSelector(state => state.auth);
+  const { IsAuthenticated, Username, Email } = useSelector(state => state.auth);
 
 
 
@@ -56,7 +59,14 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
           <LuFileEdit className='' />
           <span className="">Article Rewriter</span>
         </div>
+
+
+        <div className={menustyle}>
+          <HiOutlineDocumentMagnifyingGlass className='' />
+          <Link to='/plagiarism-checker' className="">Plagiarism Checker</Link>
+        </div>
       </section>
+    
 
       <section className="w-full px-2 py-5 space-y-2 border rounded-lg xl:space-y-5 xl:px-4 border-custom-dark-orange border-opacity-60 ">
 
@@ -75,7 +85,7 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
       </section>
 
 
-    {IsAuthenticated && (  <section className='w-full py-4 text-white border rounded-lg xl:py-8 border-custom-dark-orange border-opacity-60 ' >
+      {IsAuthenticated && (<section className='w-full py-4 text-white border rounded-lg xl:py-8 border-custom-dark-orange border-opacity-60 ' >
 
         <div onClick={() => setIsProfilePopup(true)} className="flex items-center justify-between px-2 cursor-pointer xl:px-4 ">
           <div className="flex items-center justify-center space-x-2">
