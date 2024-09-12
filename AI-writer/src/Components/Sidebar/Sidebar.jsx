@@ -29,7 +29,7 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
 
   return (
 
-    <div className='flex flex-col items-center px-2 py-16 space-y-12 md:py-10 md:space-y-10 xl:space-y-12 xl:px-4 bg-custom-dark h-svh'>
+    <div className='flex flex-col items-center h-screen px-2 py-16 space-y-12 md:py-10 md:space-y-10 xl:space-y-12 xl:px-4 bg-custom-dark'>
 
       <section className='w-full border rounded-lg xl:py-2 border-custom-dark-orange border-opacity-60 ' >
 
