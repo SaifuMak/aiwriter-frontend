@@ -20,3 +20,12 @@ export function calculateTotalCharacters(sections) {
     return Object.values(sections)
         .reduce((total, content) => total + countCharacters(content), 0); // Sum of characters from all sections
 }
+
+
+export function FindPercentage(part,whole){
+    if(whole === 0){
+        return 0;
+    }
+    const percentage = (part/whole) * 100;
+    return percentage.toFixed(0)
+}

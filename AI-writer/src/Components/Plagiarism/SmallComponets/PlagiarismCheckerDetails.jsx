@@ -1,19 +1,110 @@
-import React from 'react'
 import { GoDotFill } from "react-icons/go";
+import RadialSeperators from '../../ArticleGenerationComponents/SmallComponents/RadialSeperators';
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { FindPercentage } from '../../../Utils/Helperfunctions'
+
+function PlagiarismCheckerDetails({ setUniqueWordsCount, setPlagiarismWordsCount, setPlagiarismPercentage, setUniquePercentage }) {
+
+  const [uniqueWordsArray, setUniqueWordsArray] = useState([]);
+
+  const { contents, totalWords } = useSelector((state) => state.Plagiarism);
 
 
 
-function PlagiarismCheckerDetails() {
+  useEffect(() => {
+    // When contents change, process the unique words
+    const allUniqueWords = [];
+
+
+    contents.forEach((data) => {
+      // Split textsnippet by spaces and ellipses, then filter unique words
+      const uniqueWords = [...new Set(data.textsnippet.split(/\s+|\.{3}/).map(word => word.trim()).filter(word => word))];
+      // Combine all unique words into one array
+      console.log(uniqueWords, 'before the pushing')
+
+      allUniqueWords.push(...uniqueWords);
+    });
+    console.log(allUniqueWords, 'after  pushing')
+    console.log([...new Set(allUniqueWords)], 'applied the set ')
+
+
+
+    // Filter out duplicates from the entire array and update the state
+    // setUniqueWordsArray([...new Set(allUniqueWords)]);
+    const uniqueWordsArray = [...new Set(allUniqueWords)]
+
+
+    if (contents.length > 0) {
+      console.log('entered the setting block ')
+
+      const plagiarismWordsCount = uniqueWordsArray.length
+      console.log(uniqueWordsArray, 'thiis is the unique array ')
+
+      console.log(plagiarismWordsCount, '0000000000000000000000000000000000000000')
+
+      setPlagiarismWordsCount(plagiarismWordsCount)
+
+      const PlagiarismPercentage = FindPercentage(plagiarismWordsCount, totalWords)
+      setPlagiarismPercentage(PlagiarismPercentage)
+
+      const uniqueWordsCount = totalWords - plagiarismWordsCount
+      setUniqueWordsCount(uniqueWordsCount)
+
+      const UniquePercentage = FindPercentage(uniqueWordsCount, totalWords)
+      setUniquePercentage(UniquePercentage)
+
+    }
+    else {
+      setPlagiarismWordsCount(0)
+      setUniquePercentage(100)
+      setUniqueWordsCount(totalWords)
+
+
+
+    }
+
+
+
+  }, [contents]); // Run this effect whenever contents changes
+
+
+ 
+
+
+
+
+
+
+
   return (
-    <div className="border border-[#FB923C] p-3 mt-10  w-3/4">
-    <p className="">25% Plagiarism - 146 similar words</p>
-    <a href="" className=" text-[#0176FF] ">https://www.loremipsum.com</a>
-    <ul className="mt-6 space-y-2">
-        <li className="flex items-center "> <GoDotFill className=' text-custom-dark-orange' /> Lorem Ipsum is simply dummy text of the printing...</li>
-        <li className="flex items-center "> <GoDotFill className=' text-custom-dark-orange' /> Lorem Ipsum is simply dummy text of the printing...</li>
 
-    </ul>
-</div>
+    <>
+      {contents.map((data, ind) => (
+
+
+
+        <div key={ind} className="border border-[#FB923C] space-y-4 rounded-md p-3 mt-4   w-full">
+
+          <div className="flex items-center ">
+            <RadialSeperators />
+            <p className="ml-3 "><span className=" text-[#FF0000] font-semibold">{FindPercentage(data.minwordsmatched, totalWords)}%</span> Plagiarism - {data.minwordsmatched} similar words</p>
+          </div>
+
+          <div className="flex w-11/12 ">
+            <a href={data.url} className=" ml-1 text-[#0176FF] ">{data.url}</a>
+          </div>
+
+          <ul className="">
+            {data.textsnippet.split('...').filter(part => part.trim() !== '').map((part, index) => (
+              <li key={index} className="flex mb-2 "><GoDotFill className='mr-1 text-custom-dark-orange shrink-0' />{part.trim()}</li>
+
+            ))}
+
+          </ul>
+
+        </div>))}
+    </>
   )
 }
 

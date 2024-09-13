@@ -33,14 +33,16 @@ import PlagiarismCheckerDetails from '../Components/Plagiarism/SmallComponets/Pl
 
 import { motion, useInstantLayoutTransition } from 'framer-motion';
 import { IoMenuOutline } from "react-icons/io5";
+import '../Components/Plagiarism/css/customScrollbar.css'
+import { useNavigate } from 'react-router-dom'
 
 
 function Plagiarism() {
+    const navigate =  useNavigate()
 
     const dispatch = useDispatch()
     const fileInputRef = useRef()
 
-    const { selectedKeywords, title, currentStep, selectedOutlines, ReorderedSelectedOutlines, selectedToneOfVoice, selectedPointOfView, selectedHeadline, refTitle, loading } = useSelector((state) => state.articleGeneration);
 
 
 
@@ -60,6 +62,12 @@ function Plagiarism() {
     const [IsMobileArticleSidebarOpened, setIsMobileArticleSidebarOpened] = useState(false)
     const [IsProfilePopup, setIsProfilePopup] = useState(false)
     const [tempTitle, setTempTitle] = useState('')
+
+    // states that are used  for seeing the result 
+    const [PlagiarismPercentage, setPlagiarismPercentage] = useState(0)
+    const [UniquePercentage, setUniquePercentage] = useState(0)
+    const [PlagiarismWordsCount, setPlagiarismWordsCount] = useState('')
+    const [UniqueWordsCount, setUniqueWordsCount] = useState(0)
 
     const [Content, setContent] = useState('')
 
@@ -151,6 +159,12 @@ function Plagiarism() {
             formData.append('content', Content);
         }
 
+        
+        setPlagiarismPercentage(0)
+        setUniquePercentage(0)
+        setPlagiarismWordsCount('')
+        setUniqueWordsCount('')
+
 
         try {
             const response = await Axiosinstance.post('api/plagiarism-check', formData, {
@@ -218,45 +232,56 @@ function Plagiarism() {
                         </div>
                     </div>
 
+                    {/* <div className="">
+                        <Worksheet />
+                    </div> */}
+
                     <div className="flex items-center justify-center ">
                         <div className="w-10/12 mt-4 ">
-                            <h2 className="text-2xl font-medium tracking-wide ">Results</h2>
+                            <h2  className="text-2xl font-medium tracking-wide ">Results</h2>
                             <div className="flex p-8 mt-4 space-x-4 bg-white rounded-lg">
 
 
                                 <div className="w-4/12 ">
                                     <div className="flex justify-between ">
                                         <div className="flex flex-col items-center justify-center px-8 py-4 border-2 border-slate-200 rounded-xl">
-                                            <CircularPercentage percentage={55} pathcolor='#FF0000' textcolor='#F20000' />
+                                            <CircularPercentage percentage={PlagiarismPercentage} pathcolor='#FF0000' textcolor='#F20000' />
                                             <span className="text-lg mt-2 font-semibold tracking-wide text-[#F20000]">Plagiarism</span>
                                         </div>
                                         <div className="flex flex-col items-center justify-center px-8 py-4 border-2 border-slate-200 rounded-xl">
-                                            <CircularPercentage percentage={45} pathcolor='#14AE20' textcolor='#14AE20' />
+                                            <CircularPercentage percentage={UniquePercentage} pathcolor='#14AE20' textcolor='#14AE20' />
                                             <span className="text-lg mt-2 font-semibold tracking-wide text-[#14AE20]">Unique</span>
                                         </div>
                                     </div>
 
                                     <div className="flex flex-col items-center justify-center w-full px-16 py-6 mt-4 border-2 rounded-lg border-slate-200">
-                                        <p className="font-semibold">Plagiarised Words: <span className="ml-1 text-red-500 ">254</span> </p>
-                                        <p className="mt-2 font-semibold">Unique Words:<span className="ml-1 text-green-500 ">210</span> </p>
+                                        <p className="font-semibold">Plagiarised Words: <span className="ml-1 text-red-500 ">{PlagiarismWordsCount}</span> </p>
+                                        <p className="mt-2 font-semibold">Unique Words:<span className="ml-1 text-green-500 ">{UniqueWordsCount}</span> </p>
 
                                         <span className="mt-10 text-[#858484] text-center text-nowrap text-sm">Scan details: 4:35PM (IST), 30 Aug 2024</span>
                                     </div>
                                 </div>
 
-                                <div className="w-full h-full">
+                                <div className="w-8/12 h-full">
 
-                                    <div className="bg-[#F6F7F8] h-[330px] max-h-[330px] overflow-y-auto space-y-3 flex flex-col justify-start w-full rounded-xl px-10">
-                                        <PlagiarismCheckerDetails />
-                                        <PlagiarismCheckerDetails />
-                                        <PlagiarismCheckerDetails />
+                                    
+                                    <div className="bg-[rgb(246,247,248)] custom-scrollbar space-y-4 h-[330px] max-h-[330px] overflow-y-auto  flex flex-col justify-start w-full rounded-xl px-10">
+                                       {PlagiarismWordsCount === 0  ? (
+                                        <div className="flex items-center justify-center w-full h-full ">
+                                        <p className="font-semibold tracking-wide text-center text-slate-500 ">Congratulations! Your content is authentic and does not contain any plagiarized material. Keep it up!</p>
+                                        </div>
+                                       ) : (
+                                        <PlagiarismCheckerDetails setUniqueWordsCount={setUniqueWordsCount} setPlagiarismWordsCount={setPlagiarismWordsCount} setPlagiarismPercentage={setPlagiarismPercentage} setUniquePercentage={setUniquePercentage}  />
+                                       )} 
+                                        
                                     </div>
+
+                                    
                                     <div className="flex justify-between px-16 mt-3">
                                         <button className="px-4 text-white rounded-lg py-2 bg-[#14AE20]">Rewrite my content</button>
-                                        <button className="px-4 text-white rounded-lg py-2 bg-[#213343]">Rewrite my content</button>
+                                        <button className="px-4 text-white rounded-lg py-2 bg-[#213343]">Download Report</button>
                                     </div>
                                 </div>
-
 
 
                             </div>

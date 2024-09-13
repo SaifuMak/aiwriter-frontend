@@ -1,0 +1,32 @@
+Custom scrollbar styles
+.custom-scrollbar {
+    scrollbar-width : auto;           /* Firefox */
+    scrollbar-color: #FB923C #D9D9D9; /* Firefox */
+    margin-right: 16px; 
+  }
+  
+  /* For Chrome, Edge, and Safari */
+  .custom-scrollbar::-webkit-scrollbar {
+     /* Set height for the horizontal scrollbar */
+    width: 18px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #D9D9D9;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #FB923C;
+    border-radius: 0px;
+    border: 2px solid transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #FB923C;
+  }
+
+  
+
+
+
+  
