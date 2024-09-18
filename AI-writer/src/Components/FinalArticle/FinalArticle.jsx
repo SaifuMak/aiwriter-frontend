@@ -162,7 +162,7 @@ function FinalArticle() {
       {/* Render the progressively revealed HTML with styles */}
       <div
         ref={contentRef}
-        className="px-4 py-10 min-h-[740px] max-h-[740px] sm:px-10 xl:px-20 2xl:px-28 article-content"
+        className="px-4 py-10 min-h-[780px] max-h-[780px] sm:px-10 xl:px-20 2xl:px-28 article-content"
         dangerouslySetInnerHTML={{ __html: visibleHTML }} // This renders the HTML progressively
         style={{ overflowY: 'auto' }} // Ensure the container scrolls
       />

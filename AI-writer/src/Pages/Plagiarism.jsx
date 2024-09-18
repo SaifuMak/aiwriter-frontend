@@ -38,7 +38,7 @@ import { useNavigate } from 'react-router-dom'
 
 
 function Plagiarism() {
-    const navigate =  useNavigate()
+    const navigate = useNavigate()
 
     const dispatch = useDispatch()
     const fileInputRef = useRef()
@@ -70,6 +70,11 @@ function Plagiarism() {
     const [UniqueWordsCount, setUniqueWordsCount] = useState(0)
 
     const [Content, setContent] = useState('')
+    const [PlagiarisedResult, setPlagiarisedResult] = useState([])
+    const [isPlagiarismChecked, setisPlagiarismChecked] = useState(false)
+    const [Plagiarisedwords, setPlagiarisedwords] = useState(null)
+    const [Sentences, setSentences] = useState([])
+
 
     const handleClick = () => {
         if (SelectedFile) {
@@ -159,7 +164,7 @@ function Plagiarism() {
             formData.append('content', Content);
         }
 
-        
+
         setPlagiarismPercentage(0)
         setUniquePercentage(0)
         setPlagiarismWordsCount('')
@@ -174,8 +179,10 @@ function Plagiarism() {
             })
             dispatch(resetContents())
             console.log(response.data.results)
-            dispatch(setContents(response.data.results))
+            // dispatch(setContents(response.data.results))
+            setPlagiarisedResult(response.data.results)
             dispatch(setTotalWords(response.data.TotalWords))
+            setisPlagiarismChecked(true)
 
         }
 
@@ -183,9 +190,48 @@ function Plagiarism() {
             console.log(error)
             ErrorToast(error.response.data.error)
 
-
         }
     }
+
+
+
+    const highlightContent = (text) => {
+        // Split the content into words
+        // const words = text.split(/\s+/);
+        const normalize = str => str.toLowerCase().replace(/[.,]/g, '').trim();
+    const words = text.split(/\s+/).map(normalize);
+    
+    // Normalize the plagiarized words
+    const normalizedPlagiarisedWords = Plagiarisedwords.map(normalize);
+        console.log(words, 'content words ----------------')
+         console.log(Plagiarisedwords, 'plagiarised words first set ')
+
+
+        return words.map((word, index) => {
+
+            // Check if the word is in the plagiarized words array
+            
+            const isPlagiarized = normalizedPlagiarisedWords.includes(word);
+            console.log(word,isPlagiarized )
+            return (
+                <span
+                    key={index}
+                    style={{
+                        backgroundColor: isPlagiarized ? '#F9D5D5' : '#D8EFDA',
+                        color: 'black',
+                        padding: '2px',
+
+                        marginBottom: '6px',
+                    }}
+                >
+                    {word}{' '}
+                </span>
+            );
+        });
+    }
+
+
+    console.log(Sentences, 'senetece arrayyyy *********************')
 
 
 
@@ -222,7 +268,7 @@ function Plagiarism() {
 
 
 
-                <div className="w-full px-6 py-10 md:px-8 xl:px-12 lg:w-10/12">
+                <div className="w-full px-4 py-10 md:px-8 xl:px-2 lg:w-10/12">
 
                     <div className="flex justify-between w-full rounded-xl ">
 
@@ -236,14 +282,14 @@ function Plagiarism() {
                         <Worksheet />
                     </div> */}
 
-                    <div className="flex items-center justify-center ">
-                        <div className="w-10/12 mt-4 ">
-                            <h2  className="text-2xl font-medium tracking-wide ">Results</h2>
+                    {isPlagiarismChecked && (<div className="flex items-center justify-center ">
+                        <div className="w-full mt-4 2xl:w-11/12 ">
+                            <h2 className="text-2xl font-medium tracking-wide ">Results</h2>
                             <div className="flex p-8 mt-4 space-x-4 bg-white rounded-lg">
 
 
-                                <div className="w-4/12 ">
-                                    <div className="flex justify-between ">
+                                <div className="w-3/12 ">
+                                    <div className="flex justify-center ">
                                         <div className="flex flex-col items-center justify-center px-8 py-4 border-2 border-slate-200 rounded-xl">
                                             <CircularPercentage percentage={PlagiarismPercentage} pathcolor='#FF0000' textcolor='#F20000' />
                                             <span className="text-lg mt-2 font-semibold tracking-wide text-[#F20000]">Plagiarism</span>
@@ -262,45 +308,47 @@ function Plagiarism() {
                                     </div>
                                 </div>
 
-                                <div className="w-8/12 h-full">
 
-                                    
-                                    <div className="bg-[rgb(246,247,248)] custom-scrollbar space-y-4 h-[330px] max-h-[330px] overflow-y-auto  flex flex-col justify-start w-full rounded-xl px-10">
-                                       {PlagiarismWordsCount === 0  ? (
-                                        <div className="flex items-center justify-center w-full h-full ">
-                                        <p className="font-semibold tracking-wide text-center text-slate-500 ">Congratulations! Your content is authentic and does not contain any plagiarized material. Keep it up!</p>
-                                        </div>
-                                       ) : (
-                                        <PlagiarismCheckerDetails setUniqueWordsCount={setUniqueWordsCount} setPlagiarismWordsCount={setPlagiarismWordsCount} setPlagiarismPercentage={setPlagiarismPercentage} setUniquePercentage={setUniquePercentage}  />
-                                       )} 
-                                        
+                                <div className="flex-1 h-full ">
+
+                                    <div className="bg-[rgb(246,247,248)] custom-scrollbar space-y-4 h-[330px] max-h-[330px] overflow-y-auto  flex flex-col justify-start w-full rounded-xl px-3 2xl:px-8">
+                                        {PlagiarismWordsCount === 0 ? (
+                                            <div className="flex items-center justify-center w-full h-full ">
+                                                <p className="font-semibold tracking-wide text-center text-slate-500 ">Congratulations! Your content is authentic and does not contain any plagiarized material. Keep it up!</p>
+                                            </div>
+                                        ) : (
+                                            <PlagiarismCheckerDetails PlagiarisedResult={PlagiarisedResult} setPlagiarisedwords={setPlagiarisedwords} setSentences={setSentences} setUniqueWordsCount={setUniqueWordsCount} setPlagiarismWordsCount={setPlagiarismWordsCount} setPlagiarismPercentage={setPlagiarismPercentage} setUniquePercentage={setUniquePercentage} />
+                                        )}
+
                                     </div>
 
-                                    
+
                                     <div className="flex justify-between px-16 mt-3">
                                         <button className="px-4 text-white rounded-lg py-2 bg-[#14AE20]">Rewrite my content</button>
                                         <button className="px-4 text-white rounded-lg py-2 bg-[#213343]">Download Report</button>
                                     </div>
                                 </div>
-
-
                             </div>
-
-
-
                         </div>
-
-                    </div>
+                    </div>)}
 
 
                     <div className="flex items-center justify-center">
-                        <div className="w-10/12 mt-10">
+                        <div className="w-full mt-10 2xl:w-11/12">
                             <h2 className="text-2xl font-medium tracking-wide ">Plagiarism Checker</h2>
                             {/* <button onClick={() => dispatch(resetContents())} className="px-6 py-1 text-white bg-indigo-500 rounded-lg ">Reset</button> */}
                             <div className="p-10 mt-6 space-y-2 bg-white rounded-lg shadow-xl ">
                                 <h5 className="font-semibold ">Paste (Ctrl + V) your article below then click for Plagiarism!</h5>
-                                <textarea onChange={handlePlagiarismContent} value={Content} className='w-full resize-none min-h-[400px] outline-none p-8 rounded-lg  bg-slate-50 border border-slate-200' name="" id="" placeholder='Enter text here to check plagiarism...'>
-                                </textarea>
+                                {Plagiarisedwords ? (
+                                    <div className='w-full  text-lg min-h-[400px] outline-none p-8 rounded-lg  bg-slate-50 border border-slate-200'>
+                                        {highlightContent(Content)}
+                                        {/* {Sentences.length > 0 && Sentences.map((data, index)=>(
+                                            <span className="mx-6 mb-4">{index}{data}</span>
+                                        )) } */}
+
+                                    </div>
+                                ) : (<textarea onChange={handlePlagiarismContent} value={Content} className='w-full resize-none text-lg min-h-[400px] outline-none p-8 rounded-lg  bg-slate-50 border border-slate-200' name="" id="" placeholder='Enter text here to check plagiarism...'>
+                                </textarea>)}
 
                                 <div className="flex items-center justify-between w-full h-10 ">
                                     <p className={`${wordsCount > 3000 ? 'text-red-500' : ''}`}>Words limit/Search: {wordsCount}/3000</p>

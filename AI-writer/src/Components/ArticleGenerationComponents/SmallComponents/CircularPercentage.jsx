@@ -3,7 +3,7 @@ import "react-circular-progressbar/dist/styles.css";
 
 const CircularPercentage = ({ percentage, pathcolor, textcolor  }) => {
   return (
-    <div style={{ width: "120px", height: "120px" }}>
+    <div className="w-24 h-24 ">
       <CircularProgressbar
         value={percentage}
         strokeWidth={12}

@@ -17,7 +17,7 @@ function Navbar({setIsSidedbarOpened,IsSidedbarOpened,setIsMobileArticleSidebarO
     const [TopicChoosen, setTopicChoosen] = useState(true)
     const [IsOutline, setIsOutline] = useState(false)
 
-     console.log(currentStep,'--------------------------------')
+    console.log(currentStep,'--------------------------------')
 
 
     return (
@@ -38,12 +38,13 @@ function Navbar({setIsSidedbarOpened,IsSidedbarOpened,setIsMobileArticleSidebarO
 
                 {/* Desktop view  */}
                 <div className="flex items-center justify-center space-x-1 text-sm tracking-wider text-white max-sm:hidden lg:space-x-3 lg:text-lg ">
-                    <span className=" text-custom-dark-orange">Choose a Topic{currentStep}</span>
+                    <span className=" text-custom-dark-orange">Choose a Topic</span>
                     <LongArrow isActive= {keywords.length > 0}/>
                     <span  className={`${selectedHeadline ? 'text-custom-dark-orange':''}`}>Get an Outline</span>
                     <LongArrow isActive={selectedHeadline} />
                     <span className={`${selectedOutlines.length > 0 ? 'text-custom-dark-orange':'' }`}>Generate Article</span>
                 </div>
+
 
                 {/* mobile view  */}
                 <div className="flex items-center justify-center space-x-1 text-sm tracking-wider text-white sm:hidden ">
