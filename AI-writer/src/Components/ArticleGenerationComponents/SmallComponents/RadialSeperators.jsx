@@ -3,12 +3,12 @@ import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-pro
 import 'react-circular-progressbar/dist/styles.css';
 import RadialComponent from './RadialComponent';
 
-function RadialSeperators() {
+function RadialSeperators({percentage}) {
   
   return (
     <div style={{ width: "35px", height: "35px" }}>
     <CircularProgressbarWithChildren
-    value={25}
+    value={percentage}
     strokeWidth={10}
     styles={buildStyles({
       strokeLinecap: "butt",
@@ -16,7 +16,7 @@ function RadialSeperators() {
     })}
   >
     <RadialComponent
-      count={20}
+      count={17}
       style={{
         background: "#fff",
         width: "2px",

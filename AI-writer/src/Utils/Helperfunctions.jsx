@@ -1,3 +1,6 @@
+import { useDispatch, useSelector } from 'react-redux';
+import {resetArticleGeneration} from '../Redux/Slices/ArticleGenerationSlice'
+
 export function countWords(text) {
     return text.split(/\s+/).filter(Boolean).length; // Split by whitespace and filter out empty strings
 }
@@ -28,4 +31,10 @@ export function FindPercentage(part,whole){
     }
     const percentage = (part/whole) * 100;
     return percentage.toFixed(0)
+}
+
+export function ResetArticleGenerator(dispatch){
+    dispatch(resetArticleGeneration())
+    
+
 }

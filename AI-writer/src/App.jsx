@@ -15,6 +15,7 @@ import store, { persistor } from './Redux/Store'
 import PublicRoutes from './Routes/PublicRoutes'
 import PrivateRoutes from './Routes/PrivateRoutes'
 import Demo from './Pages/Demo'
+import ArticleGenerate2 from './Pages/ArticleGenerate2'
 
 
 function App() {
@@ -52,6 +53,10 @@ function App() {
 
               {<Route path='/article-generation' element={<PrivateRoutes />}>
                 <Route index element={<ArticleGeneration />} />
+              </Route>}
+
+              {<Route path='/quick-article-generation' element={<PrivateRoutes />}>
+                <Route index element={<ArticleGenerate2 />} />
               </Route>}
 
               {<Route path='/plagiarism-checker' element={<PrivateRoutes />}>

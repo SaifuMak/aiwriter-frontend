@@ -5,6 +5,7 @@ import Axiosinstance from '../../Axios/Axiosinstance';
 import { loginSuccess, setLogout } from '../../Redux/Slices/AuthSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
+import {ResetArticleGenerator} from '../../Utils/Helperfunctions'
 
 
 import Sidebar from '../../Components/Sidebar/Sidebar'
@@ -117,16 +118,20 @@ function Home() {
                   "Get inspired by top ranking competitors."
                 ]}
                 buttonText='START WRITING'
+                LinkTo = '/article-generation'
                 footer={<span><span className="font-semibold">1000 words</span> per article</span>}
               />
 
+
               <ArticleCard
-                title='Article Writer 1.0'
+                title='Article Writer 2.0'
                 description={[
                   "Use real references to create your articles.",
                   "Get inspired by top ranking competitors."
                 ]}
                 buttonText='REWRITE NOW'
+                LinkTo = '/quick-article-generation'
+                FunctionToCall = {ResetArticleGenerator}
                 footer={<span className="font-semibold">Unlimited usage</span>}
               />
             </div>

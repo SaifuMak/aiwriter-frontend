@@ -3,8 +3,7 @@ import ButtonComponent from './SmallComponents/ButtonComponent';
 import { useSelector } from 'react-redux';
 
 
-
-function GenerateOutline({ GenerateOutlines }) {
+function GenerateOutline({ GenerateOutlines,Label }) {
     const { currentStep,selectedHeadline } = useSelector((state) => state.articleGeneration);
 
     return (
@@ -25,7 +24,7 @@ function GenerateOutline({ GenerateOutlines }) {
                 <div className="mt-5 ">
                 <ButtonComponent
                     onClick={GenerateOutlines}
-                    label="Generate Structure"
+                    label={Label}
                     isVisible={currentStep === 4}
                 />
                 </div>

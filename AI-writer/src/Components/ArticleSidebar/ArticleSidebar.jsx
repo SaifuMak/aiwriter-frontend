@@ -13,7 +13,7 @@ import { setTitle, setToneOfVoice, setPointOfView, setSelectedKeywordsRedux } fr
 import ButtonComponent from '../ArticleGenerationComponents/SmallComponents/ButtonComponent';
 
 
-function ArticleSidebar({ handleBackButtonClick, handleForwardButtonClick, Fetchkeywords, handleSidebarOptionsVisible, GenerateHeadlines, handleOutlineGeneration, GenerateOutlines, HandleOutlinesStructure, GenerateArticle, RegenerateArticle }) {
+function ArticleSidebar({ Label, handleBackClick, handleForwardButtonClick, Fetchkeywords, handleSidebarOptionsVisible, GenerateHeadlines, handleOutlineGeneration, GenerateOutlines, HandleOutlinesStructure, GenerateArticle, RegenerateArticle }) {
     const dispatch = useDispatch();
     const { title, currentStep, selectedKeywords, loading, selectedToneOfVoice, selectedPointOfView, finalArticle, selectedOutlines, selectedHeadline, isManualKeywordsEnabled } = useSelector((state) => state.articleGeneration);
 
@@ -118,7 +118,7 @@ function ArticleSidebar({ handleBackButtonClick, handleForwardButtonClick, Fetch
 
     return (
         <div className="flex flex-col h-full min-h-screen px-4 py-12 xl:px-7 bg-custom-dark ">
-            <h2 className="text-xl xl:text-2xl text-custom-dark-orange">Article Writer 1.0</h2>
+            <h2 className="text-xl xl:text-2xl text-custom-dark-orange">{Label}</h2>
 
 
             <InputComponent
@@ -157,7 +157,7 @@ function ArticleSidebar({ handleBackButtonClick, handleForwardButtonClick, Fetch
             </div>)}
 
             {currentStep === 1 && (<div className="flex items-center mt-10 space-x-16 sm:space-x-2 lg:space-x-5 xl:space-x-7 2xl:space-x-8 ">
-                <div onClick={handleBackButtonClick} className="lg:p-2 sm:p-1 p-1.5 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
+                <div onClick={handleBackClick} className="lg:p-2 sm:p-1 p-1.5 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
                     <RxDoubleArrowLeft className='text-lg lg:text-2xl text-custom-dark-orange' />
                 </div>
 
@@ -227,7 +227,7 @@ function ArticleSidebar({ handleBackButtonClick, handleForwardButtonClick, Fetch
 
 
                     <div className="flex items-center mt-10 space-x-16 sm:space-x-1 lg:space-x-5 xl:space-x-7 2xl:space-x-10 ">
-                        <div onClick={handleBackButtonClick} className="lg:p-2 sm:p-1 p-1.5 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
+                        <div onClick={handleBackClick} className="lg:p-2 sm:p-1 p-1.5 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
                             <RxDoubleArrowLeft className='text-lg lg:text-2xl text-custom-dark-orange' />
                         </div>
 
@@ -243,11 +243,20 @@ function ArticleSidebar({ handleBackButtonClick, handleForwardButtonClick, Fetch
                             isVisible={currentStep === 3}
                         />
 
-                        <ButtonComponent
-                            onClick={GenerateOutlines}
-                            label="Generate Structure"
+                        {Label === 'Article Writer 2.0' ? (<ButtonComponent
+                            onClick={GenerateArticle}
+                            label="Generate Article"
                             isVisible={currentStep === 4}
-                        />
+                        />)
+                        : (
+                                <ButtonComponent
+                                    onClick={GenerateOutlines}
+                                    label="Generate Structure"
+                                    isVisible={currentStep === 4}
+                                />
+                            )
+                        }
+
 
                         <ButtonComponent
                             onClick={GenerateOutlines}
@@ -266,7 +275,9 @@ function ArticleSidebar({ handleBackButtonClick, handleForwardButtonClick, Fetch
                             label="Regenerate Article"
                             isVisible={currentStep === 7}
                         />
-                        {(currentStep === 6 && finalArticle || currentStep === 4 && selectedOutlines.length > 0 || currentStep === 2 && selectedHeadline) && (<div className="flex justify-end flex-grow ">
+
+
+                        {(currentStep === 6 && finalArticle || currentStep === 4 && selectedOutlines.length > 0 || currentStep === 4 && finalArticle || currentStep === 2 && selectedHeadline) && (<div className="flex justify-end flex-grow ">
 
                             <div onClick={handleForwardButtonClick} className="lg:p-2 sm:p-1 p-1.5  border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
                                 <RxDoubleArrowRight className='text-lg lg:text-2xl text-custom-dark-orange' />

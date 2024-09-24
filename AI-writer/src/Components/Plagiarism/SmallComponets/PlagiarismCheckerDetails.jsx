@@ -107,12 +107,10 @@ function PlagiarismCheckerDetails({setPlagiarisedwords, PlagiarisedResult,setSen
       {Array.isArray(PlagiarisedResult) ? (
         PlagiarisedResult.map((data, ind) => (
 
-
-
           <div key={ind} className="border border-[#FB923C] space-y-4 rounded-md p-3 mt-4   w-full">
 
             <div className="flex items-center ">
-              <RadialSeperators />
+              <RadialSeperators percentage = {FindPercentage(data.minwordsmatched, totalWords)} />
               <p className="ml-3 "><span className=" text-[#FF0000] font-semibold">{FindPercentage(data.minwordsmatched, totalWords)}%</span> Plagiarism - {data.minwordsmatched} similar words</p>
             </div>
 

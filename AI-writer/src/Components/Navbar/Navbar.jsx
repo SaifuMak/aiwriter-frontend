@@ -38,7 +38,7 @@ function Navbar({setIsSidedbarOpened,IsSidedbarOpened,setIsMobileArticleSidebarO
 
                 {/* Desktop view  */}
                 <div className="flex items-center justify-center space-x-1 text-sm tracking-wider text-white max-sm:hidden lg:space-x-3 lg:text-lg ">
-                    <span className=" text-custom-dark-orange">Choose a Topic</span>
+                    <span className=" text-custom-dark-orange">Choose a Topic{currentStep}</span>
                     <LongArrow isActive= {keywords.length > 0}/>
                     <span  className={`${selectedHeadline ? 'text-custom-dark-orange':''}`}>Get an Outline</span>
                     <LongArrow isActive={selectedHeadline} />

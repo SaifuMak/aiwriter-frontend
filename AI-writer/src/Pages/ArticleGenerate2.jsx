@@ -11,26 +11,22 @@ import MobileSidebar from '../Components/Sidebar/MobileSidebar'
 import MobileArticleSidebar from '../Components/ArticleSidebar/MobileArticleSidebar'
 import StructureOfArticle from '../Components/ArticleGenerationComponents/StructureOfArticle'
 import ArticleSummary from '../Components/ArticleGenerationComponents/ArticleSummary'
-
 import FinalArticle from '../Components/FinalArticle/FinalArticle'
 import { Toaster, toast } from 'sonner';
-
 import Axiosinstance from '../Axios/Axiosinstance'
 import { setKeywords, previousStep, setTitle, setCurrentStep, setOutlines, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading, ClearOutlines, ClearSelectedOutlines, SetSelectedOutlineKey, setReorderedSelectedOutlines, setFinalArticle, resetFinalArticle, nextStep } from '../Redux/Slices/ArticleGenerationSlice'
 import { useDispatch, useSelector } from 'react-redux';
-
 import { IoIosArrowDropright } from "react-icons/io";
 import ErrorToast from '../Utils/ErrorToast'
-
-
 import { motion } from 'framer-motion';
 
 
-function ArticleGeneration() {
+
+function ArticleGenerate2() {
 
     const dispatch = useDispatch()
 
-    const { selectedKeywords, title, currentStep, selectedOutlines, ReorderedSelectedOutlines, selectedToneOfVoice, selectedPointOfView, selectedHeadline, refTitle, loading } = useSelector((state) => state.articleGeneration);
+    const { selectedKeywords, finalArticle, title, currentStep, selectedOutlines, ReorderedSelectedOutlines, selectedToneOfVoice, selectedPointOfView, selectedHeadline, refTitle, loading } = useSelector((state) => state.articleGeneration);
 
 
 
@@ -49,20 +45,39 @@ function ArticleGeneration() {
 
 
     // other  actions 
-
-
-
-
     const handleBackButtonClick = () => {  //  this decreases the count for the currentstate , allow users to go back 
-        dispatch(previousStep())
+        if (
+            currentStep === 7 &&
+            Array.isArray(selectedOutlines) && selectedOutlines.length === 0 &&
+            Array.isArray(ReorderedSelectedOutlines) && ReorderedSelectedOutlines.length === 0
+        ) {
+            dispatch(setCurrentStep(4));  // Go to step 4
+        }
+        
+        else {
+            dispatch(previousStep())
+
+        }
+
     }
+
 
     const handleForwardButtonClick = () => {  //  this decreases the count for the currentstate , allow users to go back 
         if (currentStep === 7) {
             return
         }
-        dispatch(nextStep())
+        if (currentStep === 4 && finalArticle &&
+            Array.isArray(selectedOutlines) && selectedOutlines.length === 0) {
+            dispatch(setCurrentStep(7));
+
+        }
+        else {
+            dispatch(nextStep())
+
+        }
+
     }
+
 
     const handleSidebarOptionsVisible = () => {
         // we are going to the step 2 after the selection of the keywords , if no keywords return 
@@ -73,10 +88,7 @@ function ArticleGeneration() {
         }
         //   side bar options are only visible  the currrentstep is greater than 1 
         dispatch(setCurrentStep(2))
-
     }
-
-
 
 
     const handleOutlineGeneration = () => {
@@ -87,6 +99,7 @@ function ArticleGeneration() {
         dispatch(setCurrentStep(4))
     }
 
+    
     const HandleOutlinesStructure = () => {
         dispatch(setCurrentStep(6))
 
@@ -95,7 +108,6 @@ function ArticleGeneration() {
 
 
     // api calls 
-
     const Fetchkeywords = async () => {
 
         if (!title) {
@@ -207,10 +219,8 @@ function ArticleGeneration() {
             dispatch(setLoading(false))
             dispatch(setOutlines(response.data.outlines))
             dispatch(setCurrentStep(5))
-
-
-
         }
+
         catch (error) {
             console.log(error)
             dispatch(setLoading(false))
@@ -220,14 +230,14 @@ function ArticleGeneration() {
 
 
     const GenerateArticle = async () => {
-        console.log(items)
-        const IsEmptyStrings = items.filter(data => data.trim() === '');
-        if (IsEmptyStrings.length > 0) {
-            ErrorToast('Oops! There is an empty headline in the list. Please check and update.')
-            return
-        }
-        dispatch(setReorderedSelectedOutlines(items))
-        dispatch(resetFinalArticle())
+        // console.log(items)
+        // const IsEmptyStrings = items.filter(data => data.trim() === '');
+        // if (IsEmptyStrings.length > 0) {
+        //     ErrorToast('Oops! There is an empty headline in the list. Please check and update.')
+        //     return
+        // }
+        // dispatch(setReorderedSelectedOutlines(items))
+        // dispatch(resetFinalArticle())
 
 
         const data = {
@@ -235,13 +245,12 @@ function ArticleGeneration() {
             'keywords': selectedKeywords,
             'tone_of_voice': selectedToneOfVoice,
             'point_of_view': selectedPointOfView,
-            'headlines': items,
         }
+
         dispatch(setLoading(true))
 
-
         try {
-            const response = await Axiosinstance.post('api/generate-article', data)
+            const response = await Axiosinstance.post('api/quickly-generate-article', data)
             const article = response.data.article.replace("```html", "").replace("```", "").trim();
             dispatch(setFinalArticle(article))
             console.log(article)
@@ -260,7 +269,8 @@ function ArticleGeneration() {
     }
 
     const RegenerateArticle = async () => {
-        const reorderedHeadlines = ReorderedSelectedOutlines.flat()
+
+        // const reorderedHeadlines = ReorderedSelectedOutlines.flat()
         dispatch(resetFinalArticle())
 
 
@@ -270,13 +280,12 @@ function ArticleGeneration() {
             'keywords': selectedKeywords,
             'tone_of_voice': selectedToneOfVoice,
             'point_of_view': selectedPointOfView,
-            'headlines': reorderedHeadlines,
         }
         dispatch(setLoading(true))
 
 
         try {
-            const response = await Axiosinstance.post('api/generate-article', data)
+            const response = await Axiosinstance.post('api/quickly-generate-article', data)
             const article = response.data.article.replace("```html", "").replace("```", "").trim();
             dispatch(setFinalArticle(article))
             console.log(article)
@@ -326,9 +335,9 @@ function ArticleGeneration() {
                     {currentStep === 1 && <KeywordsForArticle handleSidebarOptionsVisible={handleSidebarOptionsVisible} />}
 
                     {currentStep === 3 && <GenerateOrRegenerateIdeas GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} />}
-                    {(!loading && currentStep === 4) && <GenerateOutline GenerateOutlines={GenerateOutlines} Label='Generate Structure' />}
-                    {currentStep === 5 && <StructureOfArticle HandleOutlinesStructure={HandleOutlinesStructure} />}
-                    {(!loading && currentStep === 6) && <ArticleSummary setItems={setItems} items={items} GenerateArticle={GenerateArticle} />}
+                    {(!loading && currentStep === 4) && <GenerateOutline GenerateOutlines={GenerateArticle} Label='Generate Article' />}
+                    {/* {currentStep === 5 && <StructureOfArticle HandleOutlinesStructure={HandleOutlinesStructure} />}
+                    {(!loading && currentStep === 6) && <ArticleSummary setItems={setItems} items={items} GenerateArticle={GenerateArticle} />} */}
                     {/* {currentStep === 6 && <Worksheet />} */}
                     {(!loading && currentStep === 7) && <FinalArticle articleHTML={articleHTML} />}
 
@@ -340,4 +349,4 @@ function ArticleGeneration() {
     )
 }
 
-export default ArticleGeneration
+export default ArticleGenerate2

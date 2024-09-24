@@ -8,8 +8,6 @@ import SuccessToast from '../../Utils/SuccessToast';
 
 import PulseLoader from 'react-spinners/PulseLoader';
 
-
-
 function FinalArticle() {
   const { finalArticle } = useSelector((state) => state.articleGeneration); // HTML string from backend
   const [isCopied, setIsCopied] = useState(false);
