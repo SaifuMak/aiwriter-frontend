@@ -8,7 +8,7 @@ import { countWords, countCharacters } from '../../Utils/Helperfunctions'
 
 
 
-function GenerateOrRegenerateIdeas({ GenerateHeadlines,handleOutlineGeneration }) {
+function GenerateOrRegenerateIdeas({ GenerateHeadlines,handleOutlineGeneration,showPopupAndCallAPI }) {
 
 
 
@@ -47,7 +47,7 @@ function GenerateOrRegenerateIdeas({ GenerateHeadlines,handleOutlineGeneration }
             <div className="flex justify-between w-full pt-10 ">
               
                 <ButtonComponent
-                    onClick={GenerateHeadlines}
+                    onClick={()=>showPopupAndCallAPI(GenerateHeadlines)}
                     label="Regenerate Ideas"
                     isVisible={currentStep === 3}
                     isIcon={true}

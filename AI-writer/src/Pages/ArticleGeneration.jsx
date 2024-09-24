@@ -22,6 +22,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IoIosArrowDropright } from "react-icons/io";
 import ErrorToast from '../Utils/ErrorToast'
 
+import AlertPopUp from '../Components/ArticleGenerationComponents/SmallComponents/AlertPopUp'
+
 
 import { motion } from 'framer-motion';
 
@@ -36,6 +38,9 @@ function ArticleGeneration() {
 
     // This is the selected outlines  data 
     const [items, setItems] = useState([]);
+
+    const [AlertPopup, setAlertPopup] = useState(false)
+    const [apiToCall, setApiToCall] = useState(null); 
 
 
     const [articleHTML, setArticleHTML] = useState('');
@@ -90,6 +95,27 @@ function ArticleGeneration() {
     const HandleOutlinesStructure = () => {
         dispatch(setCurrentStep(6))
 
+    }
+
+
+// this function ensures that alert is ignored and cation is to regenarate the content 
+    const handleIgnoreContinue = () => {
+        setAlertPopup(false);
+        if (apiToCall) {
+            apiToCall(); // Call the stored API function
+        }
+    };
+    
+// this function sends the api need to call after the alert popup 
+    const showPopupAndCallAPI = (apiFunction) => {
+        setAlertPopup(true);
+        setApiToCall(() => apiFunction); // Store the API function to be called later
+    }
+
+
+    const HandleClosePopUp = ()=>{
+        setAlertPopup(false)
+        setApiToCall(null)
     }
 
 
@@ -311,7 +337,7 @@ function ArticleGeneration() {
                 {IsSidedbarOpened && (<MobileSidebar IsProfilePopup={IsProfilePopup} setIsSidedbarOpened={setIsSidedbarOpened} setIsProfilePopup={setIsProfilePopup} />)}
 
                 <div className="xl:w-[500px] sm:w-[200px] lg:w-[400px] max-sm:hidden ">
-                    <ArticleSidebar Label='Article Writer 2.0' handleBackClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} GenerateOutlines={GenerateOutlines} HandleOutlinesStructure={HandleOutlinesStructure} GenerateArticle={GenerateArticle} RegenerateArticle={RegenerateArticle} handleForwardButtonClick={handleForwardButtonClick} />
+                    <ArticleSidebar Label='Article Writer 1.0' handleBackClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} GenerateOutlines={GenerateOutlines} HandleOutlinesStructure={HandleOutlinesStructure} GenerateArticle={GenerateArticle} RegenerateArticle={RegenerateArticle} handleForwardButtonClick={handleForwardButtonClick} />
                 </div>
 
 
@@ -325,7 +351,7 @@ function ArticleGeneration() {
 
                     {currentStep === 1 && <KeywordsForArticle handleSidebarOptionsVisible={handleSidebarOptionsVisible} />}
 
-                    {currentStep === 3 && <GenerateOrRegenerateIdeas GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} />}
+                    {currentStep === 3 && <GenerateOrRegenerateIdeas GenerateHeadlines={GenerateHeadlines} showPopupAndCallAPI={showPopupAndCallAPI} handleOutlineGeneration={handleOutlineGeneration} />}
                     {(!loading && currentStep === 4) && <GenerateOutline GenerateOutlines={GenerateOutlines} Label='Generate Structure' />}
                     {currentStep === 5 && <StructureOfArticle HandleOutlinesStructure={HandleOutlinesStructure} />}
                     {(!loading && currentStep === 6) && <ArticleSummary setItems={setItems} items={items} GenerateArticle={GenerateArticle} />}
@@ -333,7 +359,10 @@ function ArticleGeneration() {
                     {(!loading && currentStep === 7) && <FinalArticle articleHTML={articleHTML} />}
 
                 </div>
+
+
                 <Toaster position="bottom-right" />
+               {AlertPopup &&  <AlertPopUp handleIgnoreContinue={handleIgnoreContinue} HandleClosePopUp={HandleClosePopUp} />}
 
             </div>
         </>
