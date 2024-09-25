@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import ArticleSidebar from '../Components/ArticleSidebar/ArticleSidebar'
 import ArticleLoader from '../Components/ArticleGenerationComponents/ArticleLoader'
 import KeywordsForArticle from '../Components/ArticleGenerationComponents/KeywordsForArticle'
@@ -19,7 +19,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IoIosArrowDropright } from "react-icons/io";
 import ErrorToast from '../Utils/ErrorToast'
 import { motion } from 'framer-motion';
-
 import AlertPopUp from '../Components/ArticleGenerationComponents/SmallComponents/AlertPopUp'
 
 function ArticleGenerate2() {
@@ -38,12 +37,21 @@ function ArticleGenerate2() {
 
 
     const [articleHTML, setArticleHTML] = useState('');
+    const [isArticleGenerated, setisArticleGenerated] = useState(false)
+
 
     const [IsSidedbarOpened, setIsSidedbarOpened] = useState(false)
     const [IsMobileArticleSidebarOpened, setIsMobileArticleSidebarOpened] = useState(false)
 
     const [IsProfilePopup, setIsProfilePopup] = useState(false)
     const [tempTitle, setTempTitle] = useState('')
+
+
+    useEffect(() => {
+        dispatch(setLoading(false))
+
+    }, [])
+
 
 
 
@@ -311,7 +319,7 @@ function ArticleGenerate2() {
 
 
         try {
-            const response = await Axiosinstance.post('api/quickly-generate-article', data, )
+            const response = await Axiosinstance.post('api/quickly-generate-article', data,)
             const article = response.data.article.replace("```html", "").replace("```", "").trim();
             dispatch(setFinalArticle(article))
             console.log(article)
@@ -346,7 +354,7 @@ function ArticleGenerate2() {
                 {IsSidedbarOpened && (<MobileSidebar IsProfilePopup={IsProfilePopup} setIsSidedbarOpened={setIsSidedbarOpened} setIsProfilePopup={setIsProfilePopup} />)}
 
                 <div className="xl:w-[500px] sm:w-[200px] lg:w-[400px] max-sm:hidden ">
-                    <ArticleSidebar Label='Article Writer 2.0' showPopupAndCallAPI = {showPopupAndCallAPI} handleBackClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} GenerateOutlines={GenerateOutlines} HandleOutlinesStructure={HandleOutlinesStructure} GenerateArticle={GenerateArticle} RegenerateArticle={RegenerateArticle} handleForwardButtonClick={handleForwardButtonClick} />
+                    <ArticleSidebar Label='Article Writer 2.0' showPopupAndCallAPI={showPopupAndCallAPI} handleBackClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} GenerateOutlines={GenerateOutlines} HandleOutlinesStructure={HandleOutlinesStructure} GenerateArticle={GenerateArticle} RegenerateArticle={RegenerateArticle} handleForwardButtonClick={handleForwardButtonClick} />
                 </div>
 
 
@@ -355,21 +363,23 @@ function ArticleGenerate2() {
                         <MobileArticleSidebar setIsMobileArticleSidebarOpened={setIsMobileArticleSidebarOpened} />
                     </div>)}
 
-                    {(currentStep === 0 || currentStep === 2) && <ArticleLoader />}
-                    {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading) && <ArticleLoader />}
+                    {(currentStep === 0 || currentStep === 2) && <ArticleLoader  />}
+                    {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading) && <ArticleLoader IsQuickWriter={true}  />}
 
                     {currentStep === 1 && <KeywordsForArticle handleSidebarOptionsVisible={handleSidebarOptionsVisible} />}
 
-                    {currentStep === 3 && <GenerateOrRegenerateIdeas showPopupAndCallAPI = {showPopupAndCallAPI} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} />}
+                    {currentStep === 3 && <GenerateOrRegenerateIdeas showPopupAndCallAPI={showPopupAndCallAPI} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} />}
                     {(!loading && currentStep === 4) && <GenerateOutline GenerateOutlines={GenerateArticle} Label='Generate Article' />}
                     {/* {currentStep === 5 && <StructureOfArticle HandleOutlinesStructure={HandleOutlinesStructure} />}
                     {(!loading && currentStep === 6) && <ArticleSummary setItems={setItems} items={items} GenerateArticle={GenerateArticle} />} */}
                     {/* {currentStep === 6 && <Worksheet />} */}
-                    {(!loading && currentStep === 7) && <FinalArticle articleHTML={articleHTML} />}
+                    {/* {(!loading && currentStep === 7) && <FinalArticle articleHTML={articleHTML} />} */}
+                    {(!loading && currentStep === 7) && <FinalArticle articleHTML={articleHTML} isArticleGenerated={isArticleGenerated} setisArticleGenerated={setisArticleGenerated} />}
+
 
                 </div>
                 <Toaster position="bottom-right" />
-               {AlertPopup &&  <AlertPopUp handleIgnoreContinue={handleIgnoreContinue} HandleClosePopUp={HandleClosePopUp} />}
+                {AlertPopup && <AlertPopUp handleIgnoreContinue={handleIgnoreContinue} HandleClosePopUp={HandleClosePopUp} />}
 
 
             </div>

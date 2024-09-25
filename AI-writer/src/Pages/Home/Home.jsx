@@ -5,7 +5,7 @@ import Axiosinstance from '../../Axios/Axiosinstance';
 import { loginSuccess, setLogout } from '../../Redux/Slices/AuthSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
-import {ResetArticleGenerator} from '../../Utils/Helperfunctions'
+import { ResetArticleGenerator } from '../../Utils/Helperfunctions'
 
 
 import Sidebar from '../../Components/Sidebar/Sidebar'
@@ -55,7 +55,7 @@ function Home() {
 
     }
     else {
-    setLoading(true)
+      setLoading(true)
 
       GetLoginStatus();
     }
@@ -72,8 +72,8 @@ function Home() {
         </div>
 
       ) : (
-        <div className="flex justify-center font-poppins ">
-          <div className="2xl:w-2/12 lg:w-3/12 max-lg:hidden ">
+        <div className="flex justify-center h-full font-poppins ">
+          <div className=" 2xl:w-2/12 lg:w-3/12 max-lg:hidden">
             <Sidebar setIsProfilePopup={setIsProfilePopup} />
           </div>
 
@@ -95,7 +95,7 @@ function Home() {
 
 
 
-          <div className="w-full px-6 py-10 md:px-8 xl:px-12 lg:w-10/12">
+          <div className="w-full h-screen px-6 py-10 md:px-8 xl:px-12 lg:w-10/12">
 
             <div className="flex justify-between w-full px-2 py-4 md:py-6 md:px-4 xl:py-8 bg-custom-light-orange rounded-xl ">
 
@@ -118,7 +118,9 @@ function Home() {
                   "Get inspired by top ranking competitors."
                 ]}
                 buttonText='START WRITING'
-                LinkTo = '/article-generation'
+                LinkTo='/article-generation'
+                FunctionToCall={ResetArticleGenerator}
+
                 footer={<span><span className="font-semibold">1000 words</span> per article</span>}
               />
 
@@ -130,12 +132,11 @@ function Home() {
                   "Get inspired by top ranking competitors."
                 ]}
                 buttonText='REWRITE NOW'
-                LinkTo = '/quick-article-generation'
-                FunctionToCall = {ResetArticleGenerator}
+                LinkTo='/quick-article-generation'
+                FunctionToCall={ResetArticleGenerator}
                 footer={<span className="font-semibold">Unlimited usage</span>}
               />
             </div>
-
 
           </div>
         </div>

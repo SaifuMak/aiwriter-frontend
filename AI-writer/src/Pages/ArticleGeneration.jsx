@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ArticleSidebar from '../Components/ArticleSidebar/ArticleSidebar'
 import ArticleLoader from '../Components/ArticleGenerationComponents/ArticleLoader'
 import KeywordsForArticle from '../Components/ArticleGenerationComponents/KeywordsForArticle'
@@ -11,7 +11,6 @@ import MobileSidebar from '../Components/Sidebar/MobileSidebar'
 import MobileArticleSidebar from '../Components/ArticleSidebar/MobileArticleSidebar'
 import StructureOfArticle from '../Components/ArticleGenerationComponents/StructureOfArticle'
 import ArticleSummary from '../Components/ArticleGenerationComponents/ArticleSummary'
-
 import FinalArticle from '../Components/FinalArticle/FinalArticle'
 import { Toaster, toast } from 'sonner';
 
@@ -24,7 +23,6 @@ import ErrorToast from '../Utils/ErrorToast'
 
 import AlertPopUp from '../Components/ArticleGenerationComponents/SmallComponents/AlertPopUp'
 
-
 import { motion } from 'framer-motion';
 
 
@@ -34,16 +32,16 @@ function ArticleGeneration() {
 
     const { selectedKeywords, title, currentStep, selectedOutlines, ReorderedSelectedOutlines, selectedToneOfVoice, selectedPointOfView, selectedHeadline, refTitle, loading } = useSelector((state) => state.articleGeneration);
 
-
-
     // This is the selected outlines  data 
     const [items, setItems] = useState([]);
 
     const [AlertPopup, setAlertPopup] = useState(false)
-    const [apiToCall, setApiToCall] = useState(null); 
+    const [apiToCall, setApiToCall] = useState(null);
 
 
     const [articleHTML, setArticleHTML] = useState('');
+    const [isArticleGenerated, setisArticleGenerated] = useState(false)
+
 
     const [IsSidedbarOpened, setIsSidedbarOpened] = useState(false)
     const [IsMobileArticleSidebarOpened, setIsMobileArticleSidebarOpened] = useState(false)
@@ -54,6 +52,11 @@ function ArticleGeneration() {
 
 
     // other  actions 
+    useEffect(() => {
+        dispatch(setLoading(false))
+
+    }, [])
+
 
 
 
@@ -98,22 +101,22 @@ function ArticleGeneration() {
     }
 
 
-// this function ensures that alert is ignored and cation is to regenarate the content 
+    // this function ensures that alert is ignored and cation is to regenarate the content 
     const handleIgnoreContinue = () => {
         setAlertPopup(false);
         if (apiToCall) {
             apiToCall(); // Call the stored API function
         }
     };
-    
-// this function sends the api need to call after the alert popup 
+
+    // this function sends the api need to call after the alert popup 
     const showPopupAndCallAPI = (apiFunction) => {
         setAlertPopup(true);
         setApiToCall(() => apiFunction); // Store the API function to be called later
     }
 
 
-    const HandleClosePopUp = ()=>{
+    const HandleClosePopUp = () => {
         setAlertPopup(false)
         setApiToCall(null)
     }
@@ -246,7 +249,6 @@ function ArticleGeneration() {
 
 
     const GenerateArticle = async () => {
-        console.log(items)
         const IsEmptyStrings = items.filter(data => data.trim() === '');
         if (IsEmptyStrings.length > 0) {
             ErrorToast('Oops! There is an empty headline in the list. Please check and update.')
@@ -337,7 +339,7 @@ function ArticleGeneration() {
                 {IsSidedbarOpened && (<MobileSidebar IsProfilePopup={IsProfilePopup} setIsSidedbarOpened={setIsSidedbarOpened} setIsProfilePopup={setIsProfilePopup} />)}
 
                 <div className="xl:w-[500px] sm:w-[200px] lg:w-[400px] max-sm:hidden ">
-                    <ArticleSidebar Label='Article Writer 1.0' handleBackClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} GenerateOutlines={GenerateOutlines} HandleOutlinesStructure={HandleOutlinesStructure} GenerateArticle={GenerateArticle} RegenerateArticle={RegenerateArticle} handleForwardButtonClick={handleForwardButtonClick} />
+                    <ArticleSidebar Label='Article Writer 1.0' showPopupAndCallAPI={showPopupAndCallAPI} handleBackClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} GenerateOutlines={GenerateOutlines} HandleOutlinesStructure={HandleOutlinesStructure} GenerateArticle={GenerateArticle} RegenerateArticle={RegenerateArticle} handleForwardButtonClick={handleForwardButtonClick} />
                 </div>
 
 
@@ -346,23 +348,23 @@ function ArticleGeneration() {
                         <MobileArticleSidebar setIsMobileArticleSidebarOpened={setIsMobileArticleSidebarOpened} />
                     </div>)}
 
-                    {(currentStep === 0 || currentStep === 2) && <ArticleLoader />}
-                    {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading) && <ArticleLoader />}
+                    {(currentStep === 0 || currentStep === 2) && <ArticleLoader text='Your copies created by artificial intelligence will appear here.' />}
+                    {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading || currentStep === 5 && loading) && <ArticleLoader />}
 
                     {currentStep === 1 && <KeywordsForArticle handleSidebarOptionsVisible={handleSidebarOptionsVisible} />}
 
                     {currentStep === 3 && <GenerateOrRegenerateIdeas GenerateHeadlines={GenerateHeadlines} showPopupAndCallAPI={showPopupAndCallAPI} handleOutlineGeneration={handleOutlineGeneration} />}
                     {(!loading && currentStep === 4) && <GenerateOutline GenerateOutlines={GenerateOutlines} Label='Generate Structure' />}
-                    {currentStep === 5 && <StructureOfArticle HandleOutlinesStructure={HandleOutlinesStructure} />}
+                    {(currentStep === 5 && !loading) && <StructureOfArticle HandleOutlinesStructure={HandleOutlinesStructure} />}
                     {(!loading && currentStep === 6) && <ArticleSummary setItems={setItems} items={items} GenerateArticle={GenerateArticle} />}
                     {/* {currentStep === 6 && <Worksheet />} */}
-                    {(!loading && currentStep === 7) && <FinalArticle articleHTML={articleHTML} />}
+                    {(!loading && currentStep === 7) && <FinalArticle articleHTML={articleHTML} isArticleGenerated={isArticleGenerated} setisArticleGenerated={setisArticleGenerated} />}
 
                 </div>
 
 
                 <Toaster position="bottom-right" />
-               {AlertPopup &&  <AlertPopUp handleIgnoreContinue={handleIgnoreContinue} HandleClosePopUp={HandleClosePopUp} />}
+                {AlertPopup && <AlertPopUp handleIgnoreContinue={handleIgnoreContinue} HandleClosePopUp={HandleClosePopUp} />}
 
             </div>
         </>

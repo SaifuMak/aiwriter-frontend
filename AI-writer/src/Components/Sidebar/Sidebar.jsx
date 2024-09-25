@@ -6,8 +6,8 @@ import { LuFileEdit } from "react-icons/lu";
 import { GrUploadOption } from "react-icons/gr";
 import { IoMenuOutline } from "react-icons/io5";
 
-import Logo from '../../assets/Images/Logo.png'
 
+import CompleteLogo from '../../assets/Logo/CompleteLogo';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess, setLogout } from '../../Redux/Slices/AuthSlice'
 import { HiOutlineDocumentMagnifyingGlass } from "react-icons/hi2";
@@ -29,21 +29,26 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
 
   return (
 
-    <div className='flex flex-col items-center h-screen px-2 py-16 space-y-12 md:py-10 md:space-y-10 xl:space-y-12 xl:px-4 bg-custom-dark'>
+    <div className='flex flex-col items-center h-full px-2 py-16 space-y-12 md:py-10 md:space-y-10 xl:space-y-12 xl:px-4 bg-custom-dark'>
 
       <section className='w-full border rounded-lg xl:py-2 border-custom-dark-orange border-opacity-60 ' >
 
-        <div className="w-32 h-12 -ml-4 xl:h-16 xl:w-44 ">
-          <img src={Logo} alt="" className="object-cover w-full h-full" />
+        <div className="w-32 mt-2 ml-1 xl:w-44 ">
+          <Link to='/' className='cursor-pointer '>
+            <CompleteLogo />
+          </Link>
+
         </div>
       </section>
 
       <section className="flex flex-col justify-start w-full space-y-1 ">
-        <div className={menustyle}>
+        <Link to='/' className='cursor-pointer '>
+          <div className={menustyle}>
+            <SlHome className='' />
+            <span className="">Home</span>
+          </div>
+        </Link>
 
-          <SlHome className='' />
-          <span className="">Home</span>
-        </div>
 
         <div className={menustyle}>
           <AiOutlineFileSync className='' />
@@ -60,13 +65,15 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
           <span className="">Article Rewriter</span>
         </div>
 
+        <Link to='/plagiarism-checker'>
+          <div className={menustyle}>
+            <HiOutlineDocumentMagnifyingGlass className='' />
+            <span className="">Plagiarism Checker</span>
+          </div>
+        </Link>
 
-        <div className={menustyle}>
-          <HiOutlineDocumentMagnifyingGlass className='' />
-          <Link to='/plagiarism-checker' className="">Plagiarism Checker</Link>
-        </div>
       </section>
-    
+
 
       <section className="w-full px-2 py-5 space-y-2 border rounded-lg xl:space-y-5 xl:px-4 border-custom-dark-orange border-opacity-60 ">
 

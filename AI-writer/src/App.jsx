@@ -16,7 +16,7 @@ import PublicRoutes from './Routes/PublicRoutes'
 import PrivateRoutes from './Routes/PrivateRoutes'
 import Demo from './Pages/Demo'
 import ArticleGenerate2 from './Pages/ArticleGenerate2'
-
+import WorkSheet from './Pages/WorkSheet'
 
 function App() {
 
@@ -67,6 +67,9 @@ function App() {
                 <Route index element={<Demo />} />
               </Route>}
 
+              {<Route path='/demo' element={<PrivateRoutes />}>
+                <Route index element={<              WorkSheet />} />
+              </Route>}
 
               {/* <Route path="/login" element={<Login />} /> */}
               

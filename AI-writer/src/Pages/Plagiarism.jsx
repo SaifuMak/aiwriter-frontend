@@ -11,7 +11,7 @@ import { RiDeleteBin7Line } from "react-icons/ri";
 
 import Axiosinstance from '../Axios/Axiosinstance'
 import { useDispatch, useSelector } from 'react-redux';
-import { setResponse, setContents, resetContents, setTotalWords } from '../Redux/Slices/PlagiarismSlice'
+import { setResponse, setContents, resetContents, setTotalWords,setResults } from '../Redux/Slices/PlagiarismSlice'
 
 import ErrorToast from '../Utils/ErrorToast'
 import CustomToolTip from '../Components/ArticleGenerationComponents/SmallComponents/CustomToolTip'
@@ -220,8 +220,10 @@ function Plagiarism() {
             })
             dispatch(resetContents())
             console.log(response.data.results)
+            dispatch(setResults(response.data.results))
             // dispatch(setContents(response.data.results))
             setPlagiarisedResult(response.data.results)
+
             dispatch(setTotalWords(response.data.TotalWords))
             setisPlagiarismChecked(true)
 
@@ -289,8 +291,8 @@ function Plagiarism() {
 
     return (
         <>
-            <div className="flex justify-center  h-auto bg-[#FEF2E8] font-poppins ">
-                <div className="2xl:w-2/12 lg:w-3/12 max-lg:hidden ">
+            <div className="flex justify-center  h-full bg-[#FEF2E8] font-poppins ">
+                <div className=" 2xl:w-2/12 lg:w-3/12 max-lg:hidden">
                     <Sidebar setIsProfilePopup={setIsProfilePopup} />
                 </div>
 
@@ -309,7 +311,7 @@ function Plagiarism() {
 
 
 
-                <div className="w-full px-4 py-10 md:px-8 xl:px-2 lg:w-10/12">
+                <div className="w-full h-full min-h-screen px-4 py-10 md:px-8 xl:px-2 lg:w-10/12">
 
                     <div className="flex justify-between w-full rounded-xl ">
 
