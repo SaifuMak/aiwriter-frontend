@@ -25,6 +25,9 @@ const PlagiarismSlice = createSlice({
         setResults(state, action) {
             state.result  = action.payload;  // Move to the next step
         },
+        setResetResults(state, action) {
+            state.result  = [];  // Move to the next step
+        },
         resetContents(state) {
             state.contents  = [];  // Move to the next step
         },
@@ -34,5 +37,5 @@ const PlagiarismSlice = createSlice({
 });
 
 
-export const {setResponse,setContents,resetContents,setTotalWords,setResults} = PlagiarismSlice.actions;
+export const {setResponse,setContents,resetContents,setTotalWords,setResults,setResetResults} = PlagiarismSlice.actions;
 export default PlagiarismSlice.reducer;

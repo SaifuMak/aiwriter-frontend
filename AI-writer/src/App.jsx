@@ -67,8 +67,8 @@ function App() {
                 <Route index element={<Demo />} />
               </Route>}
 
-              {<Route path='/demo' element={<PrivateRoutes />}>
-                <Route index element={<              WorkSheet />} />
+              {<Route path='/work' element={<PrivateRoutes />}>
+                <Route index element={<WorkSheet />} />
               </Route>}
 
               {/* <Route path="/login" element={<Login />} /> */}

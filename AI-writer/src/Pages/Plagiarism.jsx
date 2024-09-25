@@ -11,7 +11,7 @@ import { RiDeleteBin7Line } from "react-icons/ri";
 
 import Axiosinstance from '../Axios/Axiosinstance'
 import { useDispatch, useSelector } from 'react-redux';
-import { setResponse, setContents, resetContents, setTotalWords,setResults } from '../Redux/Slices/PlagiarismSlice'
+import { setResponse, setContents, resetContents, setTotalWords,setResults,setResetResults } from '../Redux/Slices/PlagiarismSlice'
 
 import ErrorToast from '../Utils/ErrorToast'
 import CustomToolTip from '../Components/ArticleGenerationComponents/SmallComponents/CustomToolTip'
@@ -210,6 +210,7 @@ function Plagiarism() {
         setUniquePercentage(0)
         setPlagiarismWordsCount('')
         setUniqueWordsCount('')
+        dispatch(setResetResults())
 
 
         try {
