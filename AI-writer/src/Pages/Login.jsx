@@ -11,7 +11,7 @@ import SuccessToast from '../Utils/SuccessToast';
 import ErrorToast from '../Utils/ErrorToast';
 import { useNavigate, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
-
+import CompleteLogo from '../assets/Logo/CompleteLogo';
 
 
 
@@ -72,10 +72,11 @@ function Login() {
             <div className="bg-[#42515F] flex flex-col justify-center h-auto  max-sm:-mt-56  items-center py-8 sm:py-12 px-4 sm:px-10 rounded-md    ">
 
                 <div className="h-12 w-36 xl:h-16 xl:w-48 ">
-                    <img src={Logo} alt="" className="object-cover w-full h-full " />
+                    {/* <img src={Logo} alt="" className="object-cover w-full h-full " /> */}
+                    <CompleteLogo />
                 </div>
 
-                <span className="text-white ">Login to your account</span>
+                <span className="text-white text-lg ">Login to your account</span>
                 {IsAuthenticated && (
                     <span className="">still autheticated </span>
                 )}

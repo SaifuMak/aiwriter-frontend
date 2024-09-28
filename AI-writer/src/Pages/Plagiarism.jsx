@@ -11,7 +11,7 @@ import { RiDeleteBin7Line } from "react-icons/ri";
 
 import Axiosinstance from '../Axios/Axiosinstance'
 import { useDispatch, useSelector } from 'react-redux';
-import { setResponse, setContents, resetContents, setTotalWords,setResults,setResetResults } from '../Redux/Slices/PlagiarismSlice'
+import { setResponse, setContents, resetContents, setTotalWords, setResults, setArticle, ResetArticle, setResetResults } from '../Redux/Slices/PlagiarismSlice'
 
 import ErrorToast from '../Utils/ErrorToast'
 import CustomToolTip from '../Components/ArticleGenerationComponents/SmallComponents/CustomToolTip'
@@ -24,6 +24,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { IoMenuOutline } from "react-icons/io5";
 import '../Components/Plagiarism/css/customScrollbar.css'
 
+import PulseLoader from 'react-spinners/PulseLoader'
+
 
 function Plagiarism() {
     const navigate = useNavigate();
@@ -31,6 +33,9 @@ function Plagiarism() {
 
     const dispatch = useDispatch()
     const fileInputRef = useRef()
+
+    const { result, article } = useSelector((state) => state.Plagiarism);
+
 
 
 
@@ -52,6 +57,7 @@ function Plagiarism() {
     const [IsMobileArticleSidebarOpened, setIsMobileArticleSidebarOpened] = useState(false)
     const [IsProfilePopup, setIsProfilePopup] = useState(false)
     const [tempTitle, setTempTitle] = useState('')
+    const [IsLoading, setIsLoading] = useState(false)
 
     // states that are used  for seeing the result 
     const [PlagiarismPercentage, setPlagiarismPercentage] = useState(0)
@@ -64,20 +70,29 @@ function Plagiarism() {
     const [isPlagiarismChecked, setisPlagiarismChecked] = useState(false)
     const [Plagiarisedwords, setPlagiarisedwords] = useState(null)
     const [Sentences, setSentences] = useState([])
+    const [results, setResult] = useState([])
+    const [PlagiarisedCount, setPlagiarisedCount] = useState(0)
+    const [Isediting, setIsediting] = useState(false)
+
+    const [uniqueSentencesArray, setUniqueSentencesArray] = useState([]);
+    const [uniqueWordsArray, setUniqueWordsArray] = useState([]);
+
+    // const [highlightedArticle, setHighlightedArticle] = useState(article);
+    const [highlightedArticle, setHighlightedArticle] = useState('');
 
 
 
     useEffect(() => {
-        if(!isPlagiarismChecked){
+        if (!isPlagiarismChecked) {
             return
         }
         // Function to handle the beforeunload event
         const handleBeforeUnload = (event) => {
-          
 
-                event.preventDefault(); // This ensures that the prompt shows up in some browsers
-                event.returnValue = ''; // For Chrome, Firefox, and other browsers
-            
+
+            event.preventDefault(); // This ensures that the prompt shows up in some browsers
+            event.returnValue = ''; // For Chrome, Firefox, and other browsers
+
         };
         // Add the event listener when the component mounts
         window.addEventListener('beforeunload', handleBeforeUnload);
@@ -89,30 +104,6 @@ function Plagiarism() {
     }, [isPlagiarismChecked]);
 
 
-    // useEffect(() => {
-    //     // Function to handle back button (popstate) event
-    //     const handlePopState = (event) => {
-    //         if (isPlagiarismChecked) {
-
-    //             // Check if there are unsaved changes or some other condition
-    //             const confirmLeave = window.confirm("You have unsaved changes. Do you really want to leave?");
-
-    //             if (!confirmLeave) {
-    //                 // If the user cancels, push them back to the current page
-    //                 window.history.pushState(null, '', window.location.pathname);
-    //             }
-    //         }
-    //     };
-
-
-    //     // Add the popstate event listener
-    //     window.addEventListener('popstate', handlePopState);
-
-    //     // Clean up the event listener when the component unmounts
-    //     return () => {
-    //         window.removeEventListener('popstate', handlePopState);
-    //     };
-    // }, []); // Add dependencies to ensure re-render on changes
 
 
 
@@ -140,17 +131,24 @@ function Plagiarism() {
             }
         }
 
-        console.log(file);
         // You can handle the file upload logic here
     };
 
+    console.log(result, 'this shows the result -----------------')
 
 
 
-    const splitTextIntoSentences = (text) => {
-        // Split the text based on common sentence-ending punctuation
-        return text.split(/(?<=[.!?])\s+/);
+    const handlePlagiarismResultsContent = (e) => {
+        setIsediting(true)
+        const newValue = e.target.innerText; // Get content from contentEditable
+        const wordCount = countWords(newValue);
+        setwordsCount(wordCount);
+        setContent(newValue); // Save the new content
+        setSelectedFile(null);
+        setuploadedFile(null);
     };
+
+
 
 
     const handlePlagiarismContent = (e) => {
@@ -181,6 +179,7 @@ function Plagiarism() {
 
     const ConfirmPlagiarismCheck = async () => {
 
+
         if (!Content && !uploadedFile) {
             return
         }
@@ -190,7 +189,6 @@ function Plagiarism() {
 
         }
         if (wordsCount < 100 && !uploadedFile) {
-            console.log(wordsCount, '-------------------')
             ErrorToast('The content must contain at least 100 words. ')
             return
 
@@ -205,12 +203,17 @@ function Plagiarism() {
             formData.append('content', Content);
         }
 
+        dispatch(ResetArticle())
 
         setPlagiarismPercentage(0)
         setUniquePercentage(0)
         setPlagiarismWordsCount('')
         setUniqueWordsCount('')
         dispatch(setResetResults())
+        setResult([])
+        dispatch(setArticle(Content))
+        setIsLoading(true)
+
 
 
         try {
@@ -220,65 +223,146 @@ function Plagiarism() {
                 },
             })
             dispatch(resetContents())
-            console.log(response.data.results)
-            dispatch(setResults(response.data.results))
+            setResult(response.data.results)
             // dispatch(setContents(response.data.results))
             setPlagiarisedResult(response.data.results)
+            dispatch(setResults(response.data.results))
+
+
 
             dispatch(setTotalWords(response.data.TotalWords))
             setisPlagiarismChecked(true)
+            setIsLoading(false)
+        setIsediting(false)
+
+
 
         }
 
         catch (error) {
             console.log(error)
             ErrorToast(error.response.data.error)
+            setIsLoading(false)
+
 
         }
     }
 
+    const extractSentences = (html) => {
+        let plainText = html.replace(/<\/?[^>]+(>|$)/g, "");
+        const sentences = plainText.split(/\.|\.\.\./).map(sentence => sentence.trim());
+        return sentences.filter(sentence => sentence.length > 0);
+    };
 
 
-    const highlightContent = (text) => {
-        // Split the content into words
-        // const words = text.split(/\s+/);
-        const normalize = str => str.toLowerCase().replace(/[.,]/g, '').trim();
-        const words = text.split(/\s+/).map(normalize);
 
-        // Normalize the plagiarized words
-        const normalizedPlagiarisedWords = Plagiarisedwords.map(normalize);
-        console.log(words, 'content words ----------------')
-        console.log(Plagiarisedwords, 'plagiarised words first set ')
+    useEffect(() => {
+        if (Content) {
+            const uniqueSentences = new Set();
+
+            const uniqueWordsSet = new Set();
+
+            results.forEach((data) => {
+                const sentences = extractSentences(data.htmlsnippet);
+                sentences.forEach((sentence) => {
 
 
-        return words.map((word, index) => {
+                    const words = sentence
+                        .toLowerCase()  // Convert to lowercase
+                        .split(/\s+/);  // Split by whitespace
 
-            // Check if the word is in the plagiarized words array
+                    words.forEach(word => {
+                        const cleanedWord = word.replace(/[.,!?']/g, '');  // Remove commas and periods
+                        if (cleanedWord.trim().length > 0) {
+                            uniqueWordsSet.add(cleanedWord);
+                        }
+                    });
 
-            const isPlagiarized = normalizedPlagiarisedWords.includes(word);
-            console.log(word, isPlagiarized)
-            return (
-                <span
-                    key={index}
-                    style={{
-                        backgroundColor: isPlagiarized ? '#F9D5D5' : '#D8EFDA',
-                        color: 'black',
-                        padding: '2px',
+                });
+            });
 
-                        marginBottom: '6px',
-                    }}
-                >
-                    {word}{' '}
-                </span>
-            );
+            // const uniqueArray = Array.from(uniqueSentences);
+            // console.log(uniqueArray, 'results array---------------- ')
+
+            // Convert the Set back to an array
+            const uniqueWordsArray = Array.from(uniqueWordsSet);
+
+            // Display the unique words array
+            console.log(uniqueWordsArray, 'removed duplicate words ');
+            setUniqueWordsArray(uniqueWordsArray)
+
+            console.log(Content, 'article provided ')
+            // setUniqueSentencesArray(uniqueArray);
+            // const highlighted = highlightMatches(article, uniqueArray);
+            // console.log(highlighted, 'highlighted artilce ')
+            // setHighlightedArticle(highlighted);
+        }
+    }, [results]);
+
+
+
+
+
+    useEffect(() => {
+        if (!Content || uniqueWordsArray.length === 0 || Isediting) return;
+        const words = Content.split(/\s+/); // Split the article content by whitespace
+        let result = '';
+        let matchBuffer = []; // Buffer to keep track of consecutive matching words
+        let redWordCount = 0;
+
+        words.forEach((word, index) => {
+            console.log(word, 'this is the list of words ');
+
+            // Remove punctuation including both straight and curly apostrophes
+            const cleanedWord = word.toLowerCase().replace(/[.,!?'’]/g, '').trim();
+            console.log(cleanedWord, 'this is the cleaned word');
+
+            if (uniqueWordsArray.includes(cleanedWord)) {
+                console.log(cleanedWord, 'this word is plaigaiarised +++++  ');
+
+                // If the word is in uniqueWordsArray, add it to matchBuffer
+                matchBuffer.push(word);
+                console.log(matchBuffer, 'this is buffer ')
+            } else {
+                // Handle matchBuffer if chain is broken or word is not in uniqueWordsArray
+                if (matchBuffer.length >= 3) {
+                    // Wrap 3 or more consecutive matching words in red
+                    result += `<span style="background-color: #F9D5D5">${matchBuffer.join(' ')}</span> `;
+                    redWordCount += matchBuffer.length; // Increment red word count
+
+                } else if (matchBuffer.length > 0) {
+                    // Wrap fewer than 3 matching words in green (if needed)
+                    result += `<span style="background-color: #D8EFDA">${matchBuffer.join(' ')}</span> `;
+
+                    // result += matchBuffer.join(' ') + ' ';
+                }
+
+                // Reset matchBuffer since the current word is not in the unique array
+                matchBuffer = [];
+                // Append the current non-matching word wrapped in green
+                result += `<span style="background-color: #D8EFDA">${word}</span> `;
+            }
         });
-    }
+
+        // After loop ends, check if there are any remaining words in matchBuffer
+        if (matchBuffer.length >= 3) {
+            result += `<span style="background-color:  #F9D5D5">${matchBuffer.join(' ')}</span>`;
+            redWordCount += matchBuffer.length; // Increment red word count
+
+        } else if (matchBuffer.length > 0) {
+            result += matchBuffer.join(' ');
+        }
+
+        // Set the highlighted article
+        setHighlightedArticle(result.trim());
+        setPlagiarisedCount(redWordCount)
+
+    }, [Content, results, uniqueWordsArray]);
 
 
-    console.log(Sentences, 'senetece arrayyyy *********************')
 
 
-
+   
 
 
 
@@ -325,6 +409,9 @@ function Plagiarism() {
                     {/* <div className="">
                         <Worksheet />
                     </div> */}
+                    {/* <div className=" w-10/12  px-10">
+                        <span className=" text-xl">{Content}</span>
+                    </div> */}
 
 
                     {isPlagiarismChecked && (<div className="flex items-center justify-center ">
@@ -332,7 +419,6 @@ function Plagiarism() {
                             <h2 className="text-2xl font-medium tracking-wide ">Results</h2>
 
                             <div className="flex p-2 mt-4 space-x-4 bg-white rounded-lg md:p-8 max-lg:flex-col">
-
 
                                 <div className="">
                                     <div className="flex justify-center space-x-10 lg:space-x-4 ">
@@ -347,7 +433,7 @@ function Plagiarism() {
                                     </div>
 
                                     <div className="flex flex-col items-center justify-center w-full py-6 mt-4 border-2 rounded-lg border-slate-200">
-                                        <p className="font-semibold">Plagiarised Words: <span className="ml-1 text-red-500 ">{PlagiarismWordsCount}</span> </p>
+                                        <p className="font-semibold">Plagiarised Words: <span className="ml-1 text-red-500 ">{PlagiarisedCount}</span> </p>
                                         <p className="mt-2 font-semibold">Unique Words:<span className="ml-1 text-green-500 ">{UniqueWordsCount}</span> </p>
                                         <div className="w-full mt-4 text-center ">
                                             <span className=" text-[#858484] text-center   text-sm">Scan details: 4:35PM (IST), 30 Aug 2024</span>
@@ -364,7 +450,7 @@ function Plagiarism() {
                                                 <p className="font-semibold tracking-wide text-center text-slate-500 ">Congratulations! Your content is authentic and does not contain any plagiarized material. Keep it up!</p>
                                             </div>
                                         ) : (
-                                            <PlagiarismCheckerDetails PlagiarisedResult={PlagiarisedResult} setPlagiarisedwords={setPlagiarisedwords} setSentences={setSentences} setUniqueWordsCount={setUniqueWordsCount} setPlagiarismWordsCount={setPlagiarismWordsCount} setPlagiarismPercentage={setPlagiarismPercentage} setUniquePercentage={setUniquePercentage} />
+                                            <PlagiarismCheckerDetails wordsCount={wordsCount} PlagiarisedResult={PlagiarisedResult} setPlagiarisedwords={setPlagiarisedwords} setSentences={setSentences} setUniqueWordsCount={setUniqueWordsCount} setPlagiarismWordsCount={setPlagiarismWordsCount} setPlagiarismPercentage={setPlagiarismPercentage} PlagiarisedCount={PlagiarisedCount} setUniquePercentage={setUniquePercentage} />
                                         )}
 
                                     </div>
@@ -383,16 +469,19 @@ function Plagiarism() {
                     <div className="flex items-center justify-center">
                         <div className="w-full mt-10 2xl:px-0 xl:px-10 2xl:w-10/12">
                             <h2 className="text-2xl font-medium tracking-wide ">Plagiarism Checker</h2>
-                            {isPlagiarismChecked && <h2 className="text-2xl font-medium tracking-wide "> Checker</h2>  }
+                            {isPlagiarismChecked && <h2 className="text-2xl font-medium tracking-wide "> Checker</h2>}
                             {/* <button onClick={() => dispatch(resetContents())} className="px-6 py-1 text-white bg-indigo-500 rounded-lg ">Reset</button> */}
                             <div className="p-10 mt-6 space-y-2 bg-white rounded-lg shadow-xl ">
                                 <h5 className="font-semibold ">Paste (Ctrl + V) your article below then click for Plagiarism!</h5>
                                 {Plagiarisedwords ? (
                                     <div className='w-full  text-lg min-h-[400px] outline-none p-8 rounded-lg  bg-slate-50 border border-slate-200'>
-                                        {highlightContent(Content)}
-                                        {/* {Sentences.length > 0 && Sentences.map((data, index)=>(
-                                            <span className="mx-6 mb-4">{index}{data}</span>
-                                        )) } */}
+                                        <div
+                                            className="prose   focus:outline-none"
+                                            contentEditable={true}
+                                            suppressContentEditableWarning={true}
+                                            dangerouslySetInnerHTML={{ __html: highlightedArticle }}
+                                            onInput={handlePlagiarismResultsContent}
+                                        />
 
                                     </div>
                                 ) : (<textarea onChange={handlePlagiarismContent} value={Content} className='w-full resize-none text-lg min-h-[400px] outline-none p-8 rounded-lg  bg-slate-50 border border-slate-200' name="" id="" placeholder='Enter text here to check plagiarism...'>
@@ -422,10 +511,17 @@ function Plagiarism() {
                                     <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} className="" />
                                 </div>
 
-                                <button onClick={ConfirmPlagiarismCheck} className=" max-sm:text-sm font-semibold tracking-wide  bg-custom-dark-orange w-[160px] lg:w-[170px] xl:w-[200px] 2xl:w-[220px] flex justify-center items-center  rounded-md h-[35px] xl:h-[40px] 2xl:h-[45px]  text-white"> Check Plagiarism</button>
-
+                                {IsLoading ? (
+                                    <button className="font-semibold tracking-wide  bg-custom-dark-orange w-[160px] lg:w-[170px] xl:w-[200px] 2xl:w-[220px] flex justify-center items-center  rounded-md h-[35px] xl:h-[40px] 2xl:h-[45px]  text-white">
+                                        <span className=" text-lg">Checking </span> <PulseLoader color="#ffffff" size={6} margin={8} />
+                                    </button>
+                                ) : (
+                                    <button onClick={ConfirmPlagiarismCheck} className=" max-sm:text-sm font-semibold tracking-wide  bg-custom-dark-orange w-[160px] lg:w-[170px] xl:w-[200px] 2xl:w-[220px] flex justify-center items-center  rounded-md h-[35px] xl:h-[40px] 2xl:h-[45px]  text-white"> Check Plagiarism</button>
+                                )}
 
                             </div>
+
+                           
                         </div>
                     </div>
 

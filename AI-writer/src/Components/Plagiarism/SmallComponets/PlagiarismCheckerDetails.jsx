@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { FindPercentage } from '../../../Utils/Helperfunctions'
 
-function PlagiarismCheckerDetails({setPlagiarisedwords, PlagiarisedResult,setSentences, setUniqueWordsCount, setPlagiarismWordsCount, setPlagiarismPercentage, setUniquePercentage }) {
+function PlagiarismCheckerDetails({setPlagiarisedwords,wordsCount, PlagiarisedResult,setSentences, setUniqueWordsCount, setPlagiarismWordsCount, setPlagiarismPercentage, setUniquePercentage }) {
 
   const [uniqueWordsArray, setUniqueWordsArray] = useState([]);
 
@@ -69,20 +69,20 @@ function PlagiarismCheckerDetails({setPlagiarisedwords, PlagiarisedResult,setSen
 
       setPlagiarismWordsCount(plagiarismWordsCount)
 
-      const PlagiarismPercentage = FindPercentage(plagiarismWordsCount, totalWords)
+      const PlagiarismPercentage = FindPercentage(plagiarismWordsCount, wordsCount)
       setPlagiarismPercentage(PlagiarismPercentage)
 
-      const uniqueWordsCount = totalWords - plagiarismWordsCount
+      const uniqueWordsCount = wordsCount - plagiarismWordsCount
       setUniqueWordsCount(uniqueWordsCount)
 
-      const UniquePercentage = FindPercentage(uniqueWordsCount, totalWords)
+      const UniquePercentage = FindPercentage(uniqueWordsCount, wordsCount)
       setUniquePercentage(UniquePercentage)
 
     }
     else {
       setPlagiarismWordsCount(0)
       setUniquePercentage(100)
-      setUniqueWordsCount(totalWords)
+      setUniqueWordsCount(wordsCount)
 
 
 

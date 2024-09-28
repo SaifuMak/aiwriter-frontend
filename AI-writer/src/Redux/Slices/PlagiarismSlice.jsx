@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 
 const initialState = {
+    article : '',
     response : null,
     contents : [],
     totalWords : null,
@@ -31,11 +32,18 @@ const PlagiarismSlice = createSlice({
         resetContents(state) {
             state.contents  = [];  // Move to the next step
         },
+        setArticle(state, action) {
+            state.article  = action.payload;  // Move to the next step
+        },
+        ResetArticle(state) {
+            state.contents  = '';  // Move to the next step
+        },
+
 
     
     },
 });
 
 
-export const {setResponse,setContents,resetContents,setTotalWords,setResults,setResetResults} = PlagiarismSlice.actions;
+export const {setResponse,setContents,setArticle,ResetArticle,resetContents,setTotalWords,setResults,setResetResults} = PlagiarismSlice.actions;
 export default PlagiarismSlice.reducer;
