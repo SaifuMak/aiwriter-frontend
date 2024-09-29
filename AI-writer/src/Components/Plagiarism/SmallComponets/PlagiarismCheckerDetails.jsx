@@ -4,19 +4,14 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { FindPercentage } from '../../../Utils/Helperfunctions'
 
-function PlagiarismCheckerDetails({setPlagiarisedwords,wordsCount, PlagiarisedResult,setSentences, setUniqueWordsCount, setPlagiarismWordsCount, setPlagiarismPercentage, setUniquePercentage }) {
+function PlagiarismCheckerDetails({ setPlagiarisedwords, PlagiarisedCount, wordsCount, PlagiarisedResult, setSentences, setUniqueWordsCount, setPlagiarismWordsCount, setPlagiarismPercentage, setUniquePercentage }) {
 
   const [uniqueWordsArray, setUniqueWordsArray] = useState([]);
 
   const { contents, totalWords } = useSelector((state) => state.Plagiarism);
 
 
-  const splitTextIntoSentences = (text) => {
-    return text
-      .split(/\.{3}|\./) // Split by '...' or '.'
-      .filter(sentence => sentence.trim() !== '') // Remove empty strings or whitespace
-      .map(sentence => sentence.trim()); // Trim each sentence
-  };
+
 
 
 
@@ -26,21 +21,21 @@ function PlagiarismCheckerDetails({setPlagiarisedwords,wordsCount, PlagiarisedRe
     console.log(PlagiarisedResult, '------------------------------')
     const resultsArray = Array.isArray(PlagiarisedResult) ? PlagiarisedResult : [PlagiarisedResult];
 
-    resultsArray.forEach((datas)=>{
+    resultsArray.forEach((datas) => {
       const splitSentence = datas.textsnippet.split(/\.{3}|\./) // Split by '...' or '.' (full stop)
-      .filter(sentence => sentence.trim() !== '') // Remove empty strings or whitespace-only elements
-      .map(sentence => sentence.trim()); // Trim each sentence
+        .filter(sentence => sentence.trim() !== '') // Remove empty strings or whitespace-only elements
+        .map(sentence => sentence.trim()); // Trim each sentence
 
       // console.log(splitSentence, 'sentences============')
-      setSentences(prevSentences => [...prevSentences , ...splitSentence])
+      setSentences(prevSentences => [...prevSentences, ...splitSentence])
     })
-    
+
 
     resultsArray.forEach((data) => {
 
       // const parts = data.textSnippet.split('...').filter(part => part.trim() !== '');
       // console.log(parts,'-------------------------------------sentences ')
-      
+
       // Split textsnippet by spaces and ellipses, then filter unique words
       const uniqueWords = [...new Set(data.textsnippet.split(/\s+|\.{3}/).map(word => word.trim()).filter(word => word))];
       // Combine all unique words into one array
@@ -67,13 +62,17 @@ function PlagiarismCheckerDetails({setPlagiarisedwords,wordsCount, PlagiarisedRe
 
       console.log(plagiarismWordsCount, '0000000000000000000000000000000000000000')
 
-      setPlagiarismWordsCount(plagiarismWordsCount)
+      // setPlagiarismWordsCount(plagiarismWordsCount)
 
-      const PlagiarismPercentage = FindPercentage(plagiarismWordsCount, wordsCount)
+      const PlagiarismPercentage = FindPercentage(PlagiarisedCount, wordsCount)
       setPlagiarismPercentage(PlagiarismPercentage)
 
-      const uniqueWordsCount = wordsCount - plagiarismWordsCount
-      setUniqueWordsCount(uniqueWordsCount)
+      console.log(PlagiarisedCount, 'plagwords count from the details ------------------888888888')
+
+      const uniqueWordsCount = wordsCount - PlagiarisedCount
+      // setUniqueWordsCount(uniqueWordsCount)
+      console.log(uniqueWordsCount, 'uniqueWordsCount count from the details ------------------888888888')
+
 
       const UniquePercentage = FindPercentage(uniqueWordsCount, wordsCount)
       setUniquePercentage(UniquePercentage)
@@ -110,12 +109,15 @@ function PlagiarismCheckerDetails({setPlagiarisedwords,wordsCount, PlagiarisedRe
           <div key={ind} className="border border-[#FB923C] space-y-4 rounded-md p-3 mt-4   w-full">
 
             <div className="flex items-center ">
-              <RadialSeperators percentage = {FindPercentage(data.minwordsmatched, totalWords)} />
+              <RadialSeperators percentage={FindPercentage(data.minwordsmatched, totalWords)} />
               <p className="ml-3 "><span className=" text-[#FF0000] font-semibold">{FindPercentage(data.minwordsmatched, totalWords)}%</span> Plagiarism - {data.minwordsmatched} similar words</p>
             </div>
 
             <div className="flex w-11/12 ">
-              <a href={data.url} className=" ml-1 text-[#0176FF] ">{data.url}</a>
+              <a href={data.url} target="_blank" rel="noopener noreferrer" className="ml-1 text-[#0176FF]">
+                {data.url}
+              </a>
+
             </div>
 
             <ul className="">
@@ -128,7 +130,7 @@ function PlagiarismCheckerDetails({setPlagiarisedwords,wordsCount, PlagiarisedRe
 
           </div>))) : (
 
-        <div  className="border border-[#FB923C] space-y-4 rounded-md p-3 mt-4   w-full">
+        <div className="border border-[#FB923C] space-y-4 rounded-md p-3 mt-4   w-full">
 
           <div className="flex items-center ">
             <RadialSeperators />

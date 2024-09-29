@@ -73,6 +73,7 @@ function Plagiarism() {
     const [results, setResult] = useState([])
     const [PlagiarisedCount, setPlagiarisedCount] = useState(0)
     const [Isediting, setIsediting] = useState(false)
+    const [IsFinishedCalculating, setIsFinishedCalculating] = useState(false)
 
     const [uniqueSentencesArray, setUniqueSentencesArray] = useState([]);
     const [uniqueWordsArray, setUniqueWordsArray] = useState([]);
@@ -134,7 +135,6 @@ function Plagiarism() {
         // You can handle the file upload logic here
     };
 
-    console.log(result, 'this shows the result -----------------')
 
 
 
@@ -288,10 +288,10 @@ function Plagiarism() {
             const uniqueWordsArray = Array.from(uniqueWordsSet);
 
             // Display the unique words array
-            console.log(uniqueWordsArray, 'removed duplicate words ');
+            // console.log(uniqueWordsArray, 'removed duplicate words ');
             setUniqueWordsArray(uniqueWordsArray)
 
-            console.log(Content, 'article provided ')
+            // console.log(Content, 'article provided ')
             // setUniqueSentencesArray(uniqueArray);
             // const highlighted = highlightMatches(article, uniqueArray);
             // console.log(highlighted, 'highlighted artilce ')
@@ -304,25 +304,25 @@ function Plagiarism() {
 
 
     useEffect(() => {
-        if (!Content || uniqueWordsArray.length === 0 || Isediting) return;
+        if (!Content || Isediting) return;
         const words = Content.split(/\s+/); // Split the article content by whitespace
         let result = '';
         let matchBuffer = []; // Buffer to keep track of consecutive matching words
         let redWordCount = 0;
 
         words.forEach((word, index) => {
-            console.log(word, 'this is the list of words ');
+            // console.log(word, 'this is the list of words ');
 
             // Remove punctuation including both straight and curly apostrophes
             const cleanedWord = word.toLowerCase().replace(/[.,!?'’]/g, '').trim();
-            console.log(cleanedWord, 'this is the cleaned word');
+            // console.log(cleanedWord, 'this is the cleaned word');
 
             if (uniqueWordsArray.includes(cleanedWord)) {
-                console.log(cleanedWord, 'this word is plaigaiarised +++++  ');
+                // console.log(cleanedWord, 'this word is plaigaiarised +++++  ');
 
                 // If the word is in uniqueWordsArray, add it to matchBuffer
                 matchBuffer.push(word);
-                console.log(matchBuffer, 'this is buffer ')
+                // console.log(matchBuffer, 'this is buffer ')
             } else {
                 // Handle matchBuffer if chain is broken or word is not in uniqueWordsArray
                 if (matchBuffer.length >= 3) {
@@ -356,6 +356,7 @@ function Plagiarism() {
         // Set the highlighted article
         setHighlightedArticle(result.trim());
         setPlagiarisedCount(redWordCount)
+        setIsFinishedCalculating(true)
 
     }, [Content, results, uniqueWordsArray]);
 
@@ -414,7 +415,7 @@ function Plagiarism() {
                     </div> */}
 
 
-                    {isPlagiarismChecked && (<div className="flex items-center justify-center ">
+                    {(isPlagiarismChecked && IsFinishedCalculating ) && (<div className="flex items-center justify-center ">
                         <div className="w-full mt-4 xl:px-10 2xl:px-0 2xl:w-10/12 ">
                             <h2 className="text-2xl font-medium tracking-wide ">Results</h2>
 
@@ -427,14 +428,14 @@ function Plagiarism() {
                                             <span className="text-lg mt-2 font-semibold tracking-wide text-[#F20000]">Plagiarism</span>
                                         </div>
                                         <div className="flex flex-col items-center justify-center px-6 py-4 border-2 2xl:px-8 border-slate-200 rounded-xl">
-                                            <CircularPercentage percentage={UniquePercentage} pathcolor='#14AE20' textcolor='#14AE20' />
+                                            <CircularPercentage percentage={PlagiarisedCount === 0 ? '100' : UniquePercentage} pathcolor='#14AE20' textcolor='#14AE20' />
                                             <span className="text-lg mt-2 font-semibold tracking-wide text-[#14AE20]">Unique</span>
                                         </div>
                                     </div>
 
                                     <div className="flex flex-col items-center justify-center w-full py-6 mt-4 border-2 rounded-lg border-slate-200">
                                         <p className="font-semibold">Plagiarised Words: <span className="ml-1 text-red-500 ">{PlagiarisedCount}</span> </p>
-                                        <p className="mt-2 font-semibold">Unique Words:<span className="ml-1 text-green-500 ">{UniqueWordsCount}</span> </p>
+                                        <p className="mt-2 font-semibold">Unique Words:<span className="ml-1 text-green-500 ">{wordsCount-PlagiarisedCount}</span> </p>
                                         <div className="w-full mt-4 text-center ">
                                             <span className=" text-[#858484] text-center   text-sm">Scan details: 4:35PM (IST), 30 Aug 2024</span>
                                         </div>
@@ -445,7 +446,7 @@ function Plagiarism() {
                                 <div className="h-full max-lg:mt-10 ">
 
                                     <div className="bg-[rgb(246,247,248)] custom-scrollbar space-y-4 h-[330px] max-h-[330px] overflow-y-auto  flex flex-col justify-start w-full rounded-xl lg:px-3 2xl:px-8">
-                                        {PlagiarismWordsCount === 0 ? (
+                                        {PlagiarisedCount === 0 ? (
                                             <div className="flex items-center justify-center w-full h-full ">
                                                 <p className="font-semibold tracking-wide text-center text-slate-500 ">Congratulations! Your content is authentic and does not contain any plagiarized material. Keep it up!</p>
                                             </div>
