@@ -8,6 +8,7 @@ const initialState = {
     isManualKeywordsEnabled : false,
     keywords: [],
     selectedKeywords: '',
+    isManualHeadlineEnabled : false,
     headlines : [],
     selectedHeadline : '',
     outline: {}, // generated outlines
@@ -88,6 +89,9 @@ const ArticleGenerationSlice = createSlice({
         setWordLimit(state, action) {
             state.selectedWordLimit = action.payload; // Set selected Point of view
         },
+        setisManualHeadlinesEnabled(state){
+            state.isManualHeadlineEnabled = !state.isManualHeadlineEnabled;
+        },
 
         setHeadlines(state, action) {
             state.headlines = action.payload; // Set generated headlines
@@ -158,5 +162,5 @@ const ArticleGenerationSlice = createSlice({
 });
 
 
-export const {nextStep, previousStep,setRefTitle,ResetKeywords,ResetSelectedKeywordsRedux, setHeadlines,setSelectedHeadline,ResetSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setisManualKeywordsEnabled, setToneOfVoice,setPointOfView,setWordLimit, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration,setReorderedSelectedOutlines,setFinalArticle,resetFinalArticle,resetReorderedSelectedOutlines,setIsScrolling,setScrollingfalse } = ArticleGenerationSlice.actions;
+export const {nextStep, previousStep,setRefTitle,ResetKeywords,ResetSelectedKeywordsRedux,setisManualHeadlinesEnabled, setHeadlines,setSelectedHeadline,ResetSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setisManualKeywordsEnabled, setToneOfVoice,setPointOfView,setWordLimit, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration,setReorderedSelectedOutlines,setFinalArticle,resetFinalArticle,resetReorderedSelectedOutlines,setIsScrolling,setScrollingfalse } = ArticleGenerationSlice.actions;
 export default ArticleGenerationSlice.reducer;

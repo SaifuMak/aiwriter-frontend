@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { VscCheck } from "react-icons/vsc";
 import { useDispatch, useSelector } from 'react-redux';
 import ButtonComponent from './SmallComponents/ButtonComponent';
-import { setSelectedHeadline,ResetSelectedHeadline } from '../../Redux/Slices/ArticleGenerationSlice'
+import { setSelectedHeadline, ResetSelectedHeadline, setisManualHeadlinesEnabled } from '../../Redux/Slices/ArticleGenerationSlice'
 
 import { countWords, countCharacters } from '../../Utils/Helperfunctions'
 import { Switch, FormControlLabel } from '@mui/material';
@@ -16,13 +16,13 @@ function GenerateOrRegenerateIdeas({ GenerateHeadlines, handleOutlineGeneration,
 
     const dispatch = useDispatch()
 
-    const { headlines, currentStep, selectedHeadline } = useSelector((state) => state.articleGeneration);
+    const { headlines, currentStep, isManualHeadlineEnabled, selectedHeadline } = useSelector((state) => state.articleGeneration);
 
     const [SelectedOutline, setSelectedOutline] = useState('')
     const [IsManualHeadline, setIsManualHeadline] = useState(false)
 
     const handleSelectedheadline = (headline) => {
-        if(IsManualHeadline){
+        if (isManualHeadlineEnabled) {
             return
         }
         dispatch(setSelectedHeadline(headline))
@@ -30,7 +30,15 @@ function GenerateOrRegenerateIdeas({ GenerateHeadlines, handleOutlineGeneration,
 
     const ToggleEnterHeadline = () => {
         dispatch(ResetSelectedHeadline())
-        setIsManualHeadline(!IsManualHeadline)
+        dispatch(setisManualHeadlinesEnabled())
+    }
+
+    const HandleManualHeadline = (e) => {
+        const text = e.target.value
+        if(countWords(text)> 12){
+            return
+        }
+        dispatch(setSelectedHeadline(text))
     }
 
 
@@ -39,16 +47,16 @@ function GenerateOrRegenerateIdeas({ GenerateHeadlines, handleOutlineGeneration,
     return (
         <div className="w-full px-4 py-10 xl:px-16 space-y-7 ">
             <div className="w-full flex items-center   justify-between">
-               
+
                 <h2 className="text-lg lg:text-2xl xl:text-2xl">Choose a Headline for your Article</h2>
-              
+
                 <div className="flex items-center px-6 py-2 space-x-4 border shadow-md rounded-2xl border-custom-dark-orange">
 
                     <span className="text-lg lg:text-xl xl:text-xl text-custom-black-text ">Enter Your Own Headline</span>
                     <FormControlLabel
                         control={
                             <Switch
-                                checked={IsManualHeadline}
+                                checked={isManualHeadlineEnabled}
                                 onChange={ToggleEnterHeadline}
                                 sx={{
                                     '& .MuiSwitch-switchBase.Mui-checked': {
@@ -60,14 +68,23 @@ function GenerateOrRegenerateIdeas({ GenerateHeadlines, handleOutlineGeneration,
                                 }}
                             />
                         }
-                        label={IsManualHeadline ? 'ON' : 'OFF'}
+                        label={isManualHeadlineEnabled ? 'ON' : 'OFF'}
                     />
 
                 </div>
             </div>
 
+            {isManualHeadlineEnabled && (<div className="w-full  flex flex-col ">
+                <div className="">
+                    <label htmlFor="" className=" text-xl">Enter Your Own Headline</label>
+
+                    <span className="text-sm  ml-2">({countWords(selectedHeadline)} words / 12 words)</span>
+                </div>
+                <input type="text" onChange={HandleManualHeadline} value={selectedHeadline} className=" p-4 rounded-md  border border-slate-300 mt-4 outline-none" />
+            </div>)}
+
             {headlines.map((data, index) => (
-                <div onClick={() => handleSelectedheadline(data)} key={index} className={`w-full cursor-pointer ${IsManualHeadline ? 'opacity-40' : 'hover:shadow-xl'} max-xl:items-center flex ${selectedHeadline === data ? ' bg-custom-lighter-orange' : 'bg-white'}  py-4 lg:py-8 px-4 space-x-4 duration-150  rounded-md  shadow-lg`}>
+                <div onClick={() => handleSelectedheadline(data)} key={index} className={`w-full ${isManualHeadlineEnabled ? 'opacity-40' : 'hover:shadow-xl  cursor-pointer'} max-xl:items-center flex ${selectedHeadline === data ? ' bg-custom-lighter-orange' : 'bg-white'}  py-4 lg:py-8 px-4 space-x-4 duration-150  rounded-md  shadow-lg`}>
 
                     <div className="relative xl:p-1.5 ">
                         {selectedHeadline === data && (<VscCheck className='absolute duration-500 -top-0.5 -right-0.5  xl:text-xl xl:top-1 xl:right-1 ' />)}
