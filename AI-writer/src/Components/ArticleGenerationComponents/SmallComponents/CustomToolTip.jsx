@@ -4,7 +4,7 @@ import Fade from '@mui/material/Fade';
 
 function CustomToolTip({ title, children }) {
     return (
-        <Tooltip title={title} TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} arrow>
+        <Tooltip title={title} TransitionComponent={Fade}  placement="right" TransitionProps={{ timeout: 300 }} arrow >
             {children}
         </Tooltip>
 

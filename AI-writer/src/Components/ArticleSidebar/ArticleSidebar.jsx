@@ -8,14 +8,14 @@ import PulseLoader from 'react-spinners/PulseLoader';
 
 import DropdownComponent from '../DropdownComponent';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTitle, setToneOfVoice, setPointOfView, setSelectedKeywordsRedux } from '../../Redux/Slices/ArticleGenerationSlice'
+import { setTitle, setToneOfVoice, setPointOfView,setWordLimit, setSelectedKeywordsRedux } from '../../Redux/Slices/ArticleGenerationSlice'
 
 import ButtonComponent from '../ArticleGenerationComponents/SmallComponents/ButtonComponent';
 
 
-function ArticleSidebar({ Label,showPopupAndCallAPI, handleBackClick, handleForwardButtonClick, Fetchkeywords, handleSidebarOptionsVisible, GenerateHeadlines, handleOutlineGeneration, GenerateOutlines, HandleOutlinesStructure, GenerateArticle, RegenerateArticle }) {
+function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleForwardButtonClick, Fetchkeywords, handleSidebarOptionsVisible, GenerateHeadlines, handleOutlineGeneration, GenerateOutlines, HandleOutlinesStructure, GenerateArticle, RegenerateArticle }) {
     const dispatch = useDispatch();
-    const { title, currentStep, selectedKeywords, loading, selectedToneOfVoice, selectedPointOfView, finalArticle, selectedOutlines, selectedHeadline, isManualKeywordsEnabled } = useSelector((state) => state.articleGeneration);
+    const { title, currentStep, selectedKeywords, loading, selectedToneOfVoice, selectedPointOfView,selectedWordLimit, finalArticle, selectedOutlines, selectedHeadline, isManualKeywordsEnabled } = useSelector((state) => state.articleGeneration);
 
 
     // const [selectedTopicOrKeywords, setselectedTopicOrKeywords] = useState('')
@@ -31,6 +31,8 @@ function ArticleSidebar({ Label,showPopupAndCallAPI, handleBackClick, handleForw
 
     const [QualityType, setQualityType] = useState('')
     const [QualityTypeDroptype, setQualityTypeDroptype] = useState(false)
+    const [WordsCountDroptype, setWordsCountDroptype] = useState(false)
+
 
 
     const handleTopicsOrKeywords = (e) => {
@@ -93,6 +95,16 @@ function ArticleSidebar({ Label,showPopupAndCallAPI, handleBackClick, handleForw
         setQualityTypeDroptype(false);
     };
 
+    const handleWordsCountToggle = () => {
+        setWordsCountDroptype(!WordsCountDroptype);
+    };
+
+    const handleWordsCount = (option)=>{
+        dispatch(setWordLimit(option))
+        setWordsCountDroptype(false)
+
+    }
+
 
 
 
@@ -111,6 +123,20 @@ function ArticleSidebar({ Label,showPopupAndCallAPI, handleBackClick, handleForw
         'Premium',
         'Superior',
     ]
+
+    const WordsOptions = [
+        '500',
+        '1000',
+        '1500',
+        '2000',
+        '2500',
+        '3000',
+
+
+
+
+    ]
+
 
 
 
@@ -224,9 +250,22 @@ function ArticleSidebar({ Label,showPopupAndCallAPI, handleBackClick, handleForw
 
                     />
 
+                    <DropdownComponent
+                        label='Word Limit'
+                        IsToolTip = {true}
+                        ToolTipInfo = 'Choose the word limit for your final article.'
+                        options={WordsOptions}
+                        IsOpened={WordsCountDroptype}
+                        ToggleAction={handleWordsCountToggle}
+                        value={selectedWordLimit}
+                        HandleSelection={handleWordsCount}
+                        isActive={currentStep < 6}
+
+                    />
 
 
-                    <div className="flex items-center mt-10 space-x-16 sm:space-x-1 lg:space-x-5 xl:space-x-7 2xl:space-x-10 ">
+
+                    <div className="flex items-center mt-10  pb-10 space-x-16 sm:space-x-1 lg:space-x-5 xl:space-x-7 2xl:space-x-10 ">
                         <div onClick={handleBackClick} className="lg:p-2 sm:p-1 p-1.5 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
                             <RxDoubleArrowLeft className='text-lg lg:text-2xl text-custom-dark-orange' />
                         </div>
@@ -248,7 +287,7 @@ function ArticleSidebar({ Label,showPopupAndCallAPI, handleBackClick, handleForw
                             label="Generate Article"
                             isVisible={currentStep === 4}
                         />)
-                        : (
+                            : (
                                 <ButtonComponent
                                     onClick={GenerateOutlines}
                                     label="Generate Structure"
@@ -271,7 +310,7 @@ function ArticleSidebar({ Label,showPopupAndCallAPI, handleBackClick, handleForw
                         />
 
                         <ButtonComponent
-                            onClick={()=>showPopupAndCallAPI(RegenerateArticle)}
+                            onClick={() => showPopupAndCallAPI(RegenerateArticle)}
                             label="Regenerate Article"
                             isVisible={currentStep === 7}
                         />

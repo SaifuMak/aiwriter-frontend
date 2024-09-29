@@ -1,13 +1,17 @@
 import React from 'react'
 import { MdKeyboardArrowUp } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import { MdInfoOutline } from "react-icons/md";
+import CustomToolTip from './ArticleGenerationComponents/SmallComponents/CustomToolTip';
 
-function DropdownComponent({ label, options, IsOpened, value, ToggleAction, HandleSelection, isActive }) {
+function DropdownComponent({ label, options, IsOpened, IsToolTip=false , ToolTipInfo, value, ToggleAction, HandleSelection, isActive }) {
 
 
     return (
         <div className="relative w-full mt-8">
-           <label className="inline-block mb-1 text-sm text-white lg:text-base xl:text-lg ">{label}</label>
+               <CustomToolTip title={ToolTipInfo}>
+           <label className="inline-flex items-center mb-1 text-sm text-white lg:text-base xl:text-lg ">{label} {IsToolTip && <MdInfoOutline className='text-white ml-1 text-sm font-bold' />}</label>
+           </CustomToolTip>
             <div
                 className={`relative w-full px-4 py-1.5 lg:py-2 xl:py-2.5 bg-[#42515F] border border-custom-dark-orange border-opacity-55  rounded-md ${isActive ? 'cursor-pointer': 'cursor-not-allowed'} `}
                 onClick={isActive ? ToggleAction : null}
