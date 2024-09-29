@@ -14,7 +14,7 @@ import ArticleSummary from '../Components/ArticleGenerationComponents/ArticleSum
 import FinalArticle from '../Components/FinalArticle/FinalArticle'
 import { Toaster, toast } from 'sonner';
 import Axiosinstance from '../Axios/Axiosinstance'
-import { setKeywords, previousStep, setTitle, setCurrentStep, setOutlines, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading, ClearOutlines, ClearSelectedOutlines, SetSelectedOutlineKey, setReorderedSelectedOutlines, setFinalArticle, resetFinalArticle, nextStep } from '../Redux/Slices/ArticleGenerationSlice'
+import { setKeywords, previousStep, setTitle,ResetKeywords,ResetSelectedKeywordsRedux, setCurrentStep, setOutlines, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading, ClearOutlines, ClearSelectedOutlines, SetSelectedOutlineKey, setReorderedSelectedOutlines, setFinalArticle, resetFinalArticle, nextStep } from '../Redux/Slices/ArticleGenerationSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import { IoIosArrowDropright } from "react-icons/io";
 import ErrorToast from '../Utils/ErrorToast'
@@ -183,6 +183,46 @@ function ArticleGenerate2() {
         }
         else {
             dispatch(setCurrentStep(1))
+
+        }
+    }
+
+
+    const Regeneratekeywords = async () => {
+
+        if (!title) {
+            ErrorToast('Please enter title')
+            return
+        }
+
+        const data = {
+            'topic': title,
+        }
+
+
+
+        try {
+            dispatch(ResetKeywords())
+            dispatch(ResetSelectedKeywordsRedux())
+
+
+            dispatch(setLoading(true))
+            const response = await Axiosinstance.post('api/generate-keywords', data)
+            const articles = response.data.article
+            const keywordsArray = articles
+                ? articles.split('\n').map(item => item.replace(/^\d+\.\s*/, '').trim())
+                : [];
+            console.log(keywordsArray, '///////////////////')
+
+
+            dispatch(setKeywords(keywordsArray))
+            dispatch(setCurrentStep(1))
+            dispatch(setLoading(false))
+
+        }
+        catch (error) {
+            console.log(error)
+            dispatch(setLoading(false))
 
         }
     }
@@ -364,9 +404,9 @@ function ArticleGenerate2() {
                     </div>)}
 
                     {(currentStep === 0 || currentStep === 2) && <ArticleLoader  />}
-                    {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading) && <ArticleLoader IsQuickWriter={true}  />}
+                    {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading || currentStep === 1 && loading) && <ArticleLoader IsQuickWriter={true}  />}
 
-                    {currentStep === 1 && <KeywordsForArticle handleSidebarOptionsVisible={handleSidebarOptionsVisible} />}
+                    {currentStep === 1 && <KeywordsForArticle handleSidebarOptionsVisible={handleSidebarOptionsVisible} Regeneratekeywords={Regeneratekeywords} />}
 
                     {currentStep === 3 && <GenerateOrRegenerateIdeas showPopupAndCallAPI={showPopupAndCallAPI} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} />}
                     {(!loading && currentStep === 4) && <GenerateOutline GenerateOutlines={GenerateArticle} Label='Generate Article' />}

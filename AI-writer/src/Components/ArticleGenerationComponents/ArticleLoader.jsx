@@ -17,9 +17,23 @@ function ArticleLoader({ text, IsQuickWriter }) {
             <Lottie animationData={animationData} className="w-full h-full" />
             <div className="flex items-center justify-center">
               {currentStep === 0 && (<span className="mt-10 text-center px-4 text-[#585858] ">Kickoff Your Article by Entering Your Topic</span>)}
+              {(currentStep === 1 && !IsQuickWriter )&& (<span className="mt-10 text-center px-4 text-[#585858] "> Your keywords are being generated</span>)}
+
               {currentStep === 2 && (<span className="mt-10 text-center px-4 text-[#585858] ">Generated Ideas Will Show Up Here</span>)}
               {IsQuickWriter ? (
-                currentStep === 4  && <span className="mt-10 text-center px-4 text-[#585858] ">Your article is being crafted. We appreciate your patience.</span>
+                  <>
+                  {currentStep === 1 && (
+                    <span className="mt-10 text-center px-4 text-[#585858]">
+                      Your keywords are being generated.
+                    </span>
+                  )}
+                  {currentStep === 4 && (
+                    <span className="mt-10 text-center px-4 text-[#585858]">
+                      Your article is being crafted. We appreciate your patience.
+                    </span>
+                  )}
+                </>
+              
 
 
               ) : (

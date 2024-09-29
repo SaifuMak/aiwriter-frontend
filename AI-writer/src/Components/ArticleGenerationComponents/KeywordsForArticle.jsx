@@ -5,7 +5,7 @@ import { setKeywords, setSelectedKeywordsRedux, setisManualKeywordsEnabled } fro
 import { Switch, FormControlLabel } from '@mui/material';
 
 
-function KeywordsForArticle({ handleSidebarOptionsVisible }) {
+function KeywordsForArticle({ handleSidebarOptionsVisible,Regeneratekeywords }) {
     const dispatch = useDispatch()
     const [isOn, setIsOn] = useState(false);
     const [selectedTopic, setselectedTopic] = useState('')
@@ -127,9 +127,13 @@ function KeywordsForArticle({ handleSidebarOptionsVisible }) {
                     </tbody>
                 </table>
             </div>
-            <div className="flex items-center justify-center ">
-
+            <div className="flex  justify-end ">
+                <div className="flex  justify-between  w-7/12">
+                    <button onClick={Regeneratekeywords} className="px-6 py-1.5 mt-5 font-semibold tracking-wide text-center text-white rounded-lg hover:bg-hover-button-color bg-custom-dark-orange">Regenerate Keywords</button>
                 <button onClick={handleSidebarOptionsVisible} className="px-6 py-1.5 mt-5 font-semibold tracking-wide text-center text-white rounded-lg hover:bg-hover-button-color bg-custom-dark-orange">Next</button>
+
+                </div>
+
             </div>
         </div>
 

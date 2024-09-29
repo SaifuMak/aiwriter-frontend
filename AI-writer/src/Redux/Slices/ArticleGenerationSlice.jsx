@@ -59,6 +59,11 @@ const ArticleGenerationSlice = createSlice({
         setKeywords(state, action) {
             state.keywords = action.payload; // Set keywords generated
         },
+        
+        ResetKeywords(state) {
+            state.keywords = []; // Set keywords generated
+        },
+
 
         setisManualKeywordsEnabled(state){
             state.isManualKeywordsEnabled = !state.isManualKeywordsEnabled;
@@ -66,6 +71,9 @@ const ArticleGenerationSlice = createSlice({
 
         setSelectedKeywordsRedux(state, action) {
             state.selectedKeywords = action.payload; // Set keywords selected
+        },
+        ResetSelectedKeywordsRedux(state) {
+            state.selectedKeywords = ''; // Set keywords selected
         },
 
         setToneOfVoice(state, action) {
@@ -142,5 +150,5 @@ const ArticleGenerationSlice = createSlice({
 });
 
 
-export const {nextStep, previousStep,setRefTitle,setHeadlines,setSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setisManualKeywordsEnabled, setToneOfVoice,setPointOfView, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration,setReorderedSelectedOutlines,setFinalArticle,resetFinalArticle,resetReorderedSelectedOutlines,setIsScrolling,setScrollingfalse } = ArticleGenerationSlice.actions;
+export const {nextStep, previousStep,setRefTitle,ResetKeywords,ResetSelectedKeywordsRedux, setHeadlines,setSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setisManualKeywordsEnabled, setToneOfVoice,setPointOfView, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration,setReorderedSelectedOutlines,setFinalArticle,resetFinalArticle,resetReorderedSelectedOutlines,setIsScrolling,setScrollingfalse } = ArticleGenerationSlice.actions;
 export default ArticleGenerationSlice.reducer;

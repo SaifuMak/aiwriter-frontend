@@ -7,5 +7,4 @@ const Axiosinstance = axios.create({
   withCredentials: true, // Allows cookies to be sent with requests
 });
 
-
 export default Axiosinstance;

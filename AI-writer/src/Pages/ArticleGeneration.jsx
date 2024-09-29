@@ -15,7 +15,7 @@ import FinalArticle from '../Components/FinalArticle/FinalArticle'
 import { Toaster, toast } from 'sonner';
 
 import Axiosinstance from '../Axios/Axiosinstance'
-import { setKeywords, previousStep, setTitle, setCurrentStep, setOutlines, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading, ClearOutlines, ClearSelectedOutlines, SetSelectedOutlineKey, setReorderedSelectedOutlines, setFinalArticle, resetFinalArticle, nextStep } from '../Redux/Slices/ArticleGenerationSlice'
+import { setKeywords, previousStep, setTitle, ResetKeywords,ResetSelectedKeywordsRedux, setCurrentStep, setOutlines, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading, ClearOutlines, ClearSelectedOutlines, SetSelectedOutlineKey, setReorderedSelectedOutlines, setFinalArticle, resetFinalArticle, nextStep } from '../Redux/Slices/ArticleGenerationSlice'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { IoIosArrowDropright } from "react-icons/io";
@@ -124,6 +124,45 @@ function ArticleGeneration() {
 
 
     // api calls 
+
+    const Regeneratekeywords = async () => {
+
+        if (!title) {
+            ErrorToast('Please enter title')
+            return
+        }
+
+        const data = {
+            'topic': title,
+        }
+
+
+
+        try {
+            dispatch(ResetKeywords())
+            dispatch(ResetSelectedKeywordsRedux())
+
+            dispatch(setLoading(true))
+            const response = await Axiosinstance.post('api/generate-keywords', data)
+            const articles = response.data.article
+            const keywordsArray = articles
+                ? articles.split('\n').map(item => item.replace(/^\d+\.\s*/, '').trim())
+                : [];
+            console.log(keywordsArray, '///////////////////')
+
+
+            dispatch(setKeywords(keywordsArray))
+            dispatch(setCurrentStep(1))
+            dispatch(setLoading(false))
+
+        }
+        catch (error) {
+            console.log(error)
+            dispatch(setLoading(false))
+
+        }
+    }
+
 
     const Fetchkeywords = async () => {
 
@@ -349,9 +388,9 @@ function ArticleGeneration() {
                     </div>)}
 
                     {(currentStep === 0 || currentStep === 2) && <ArticleLoader text='Your copies created by artificial intelligence will appear here.' />}
-                    {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading || currentStep === 5 && loading) && <ArticleLoader />}
+                    {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading || currentStep === 5 && loading || currentStep === 1 && loading) && <ArticleLoader />}
 
-                    {currentStep === 1 && <KeywordsForArticle handleSidebarOptionsVisible={handleSidebarOptionsVisible} />}
+                    {currentStep === 1 && <KeywordsForArticle handleSidebarOptionsVisible={handleSidebarOptionsVisible} Regeneratekeywords={Regeneratekeywords} />}
 
                     {currentStep === 3 && <GenerateOrRegenerateIdeas GenerateHeadlines={GenerateHeadlines} showPopupAndCallAPI={showPopupAndCallAPI} handleOutlineGeneration={handleOutlineGeneration} />}
                     {(!loading && currentStep === 4) && <GenerateOutline GenerateOutlines={GenerateOutlines} Label='Generate Structure' />}
