@@ -304,14 +304,7 @@ function ArticleGenerate2() {
 
 
     const GenerateArticle = async () => {
-        // console.log(items)
-        // const IsEmptyStrings = items.filter(data => data.trim() === '');
-        // if (IsEmptyStrings.length > 0) {
-        //     ErrorToast('Oops! There is an empty headline in the list. Please check and update.')
-        //     return
-        // }
-        // dispatch(setReorderedSelectedOutlines(items))
-        // dispatch(resetFinalArticle())
+       
 
 
         const data = {
