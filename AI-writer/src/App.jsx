@@ -18,6 +18,8 @@ import Demo from './Pages/Demo'
 import ArticleGenerate2 from './Pages/ArticleGenerate2'
 import WorkSheet from './Pages/WorkSheet'
 
+import WriterStep from './Pages/WriterStep'
+
 function App() {
 
   return (
@@ -71,6 +73,10 @@ function App() {
                 <Route index element={<WorkSheet />} />
               </Route>}
 
+              {<Route path='/choose-article-writer' element={<PrivateRoutes />}>
+                <Route index element={<WriterStep />} />
+              </Route>}
+              
               {/* <Route path="/login" element={<Login />} /> */}
               
               {/* <Route path="/password-change" element={<PasswordChange />} /> */}

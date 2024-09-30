@@ -109,9 +109,9 @@ function Home() {
             </div>
 
 
-            <div className="grid grid-cols-1 gap-12 mt-6 md:grid-cols-2 2xl:gap-20">
+            <div className="grid grid-cols-1 gap-16 mt-10 md:grid-cols-2 2xl:gap-x-32">
 
-              <ArticleCard
+              {/* <ArticleCard
                 title='Article Writer 1.0'
                 description={[
                   "Use real references to create your articles.",
@@ -135,15 +135,15 @@ function Home() {
                 LinkTo='/quick-article-generation'
                 FunctionToCall={ResetArticleGenerator}
                 footer={<span className="font-semibold">Unlimited usage</span>}
-              />
+              /> */}
 
-              {/* <CardComponent
+              <CardComponent
                 title='Article Writer '
                 description={[
                   'Our most powerful Article Writer where you can plan entire structure of the content.'
                 ]}
                 buttonText='START WRITING'
-                LinkTo='/quick-article-generation'
+                LinkTo='/choose-article-writer'
               // FunctionToCall={ResetArticleGenerator}
               />
 
@@ -159,14 +159,14 @@ function Home() {
               />
 
               <CardComponent
-                title='Article Writer '
+                title='Plagiarism Checker '
                 description={[
-                  'Our most powerful Article Writer where you can plan entire structure of the content'
+                  'Check your content for plagiarism and find if its unique or copied from anywhere.'
                 ]}
                 buttonText='CHECK NOW'
-                LinkTo='/quick-article-generation'
+                LinkTo='/plagiarism-checker'
               // FunctionToCall={ResetArticleGenerator}
-              /> */}
+              />
             </div>
 
           </div>
