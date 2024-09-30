@@ -25,7 +25,7 @@ function ArticleGenerate2() {
 
     const dispatch = useDispatch()
 
-    const { selectedKeywords, finalArticle, title, currentStep, selectedOutlines, ReorderedSelectedOutlines, selectedToneOfVoice, selectedPointOfView, selectedHeadline, refTitle, loading } = useSelector((state) => state.articleGeneration);
+    const { selectedKeywords, finalArticle, title, currentStep, selectedOutlines,selectedWordLimit, ReorderedSelectedOutlines, selectedToneOfVoice, selectedPointOfView, selectedHeadline, refTitle, loading } = useSelector((state) => state.articleGeneration);
 
 
 
@@ -312,6 +312,8 @@ function ArticleGenerate2() {
             'keywords': selectedKeywords,
             'tone_of_voice': selectedToneOfVoice,
             'point_of_view': selectedPointOfView,
+            'wordlimit':selectedWordLimit,
+
         }
 
         dispatch(setLoading(true))
@@ -347,6 +349,8 @@ function ArticleGenerate2() {
             'keywords': selectedKeywords,
             'tone_of_voice': selectedToneOfVoice,
             'point_of_view': selectedPointOfView,
+            'wordlimit':selectedWordLimit,
+            
         }
         dispatch(setLoading(true))
 

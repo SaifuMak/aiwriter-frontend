@@ -30,7 +30,7 @@ function ArticleGeneration() {
 
     const dispatch = useDispatch()
 
-    const { selectedKeywords, title, currentStep, selectedOutlines, ReorderedSelectedOutlines, selectedToneOfVoice, selectedPointOfView, selectedHeadline, refTitle, loading } = useSelector((state) => state.articleGeneration);
+    const { selectedKeywords, title, currentStep, selectedOutlines, ReorderedSelectedOutlines, selectedToneOfVoice, selectedPointOfView, selectedHeadline,selectedWordLimit, refTitle, loading } = useSelector((state) => state.articleGeneration);
 
     // This is the selected outlines  data 
     const [items, setItems] = useState([]);
@@ -303,6 +303,7 @@ function ArticleGeneration() {
             'tone_of_voice': selectedToneOfVoice,
             'point_of_view': selectedPointOfView,
             'headlines': items,
+            'wordlimit':selectedWordLimit,
         }
         dispatch(setLoading(true))
 
@@ -338,6 +339,8 @@ function ArticleGeneration() {
             'tone_of_voice': selectedToneOfVoice,
             'point_of_view': selectedPointOfView,
             'headlines': reorderedHeadlines,
+            'wordlimit':selectedWordLimit,
+
         }
         dispatch(setLoading(true))
 
