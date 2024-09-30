@@ -303,7 +303,7 @@ function ArticleGeneration() {
             'tone_of_voice': selectedToneOfVoice,
             'point_of_view': selectedPointOfView,
             'headlines': items,
-            'wordlimit':selectedWordLimit,
+            // 'wordlimit':selectedWordLimit,
         }
         dispatch(setLoading(true))
 
@@ -339,7 +339,7 @@ function ArticleGeneration() {
             'tone_of_voice': selectedToneOfVoice,
             'point_of_view': selectedPointOfView,
             'headlines': reorderedHeadlines,
-            'wordlimit':selectedWordLimit,
+            // 'wordlimit':selectedWordLimit,
 
         }
         dispatch(setLoading(true))

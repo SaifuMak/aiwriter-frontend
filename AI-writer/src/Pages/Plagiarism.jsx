@@ -233,7 +233,7 @@ function Plagiarism() {
             dispatch(setTotalWords(response.data.TotalWords))
             setisPlagiarismChecked(true)
             setIsLoading(false)
-        setIsediting(false)
+            setIsediting(false)
 
 
 
@@ -362,15 +362,13 @@ function Plagiarism() {
 
 
 
+    const resultsRef = useRef(null);
 
-   
-
-
-
-
-
-
-
+    useEffect(() => {
+        if (isPlagiarismChecked && IsFinishedCalculating) {
+            resultsRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [isPlagiarismChecked, IsFinishedCalculating]);
 
 
 
@@ -410,74 +408,25 @@ function Plagiarism() {
                     {/* <div className="">
                         <Worksheet />
                     </div> */}
-                    {/* <div className=" w-10/12  px-10">
-                        <span className=" text-xl">{Content}</span>
+                    {/* <div className="w-10/12 px-10 ">
+                        <span className="text-xl ">{Content}</span>
                     </div> */}
 
 
-                    {(isPlagiarismChecked && IsFinishedCalculating ) && (<div className="flex items-center justify-center ">
-                        <div className="w-full mt-4 xl:px-10 2xl:px-0 2xl:w-10/12 ">
-                            <h2 className="text-2xl font-medium tracking-wide ">Results</h2>
 
-                            <div className="flex p-2 mt-4 space-x-4 bg-white rounded-lg md:p-8 max-lg:flex-col">
-
-                                <div className="">
-                                    <div className="flex justify-center space-x-10 lg:space-x-4 ">
-                                        <div className="flex flex-col items-center justify-center px-6 py-4 border-2 2xl:px-8 border-slate-200 rounded-xl">
-                                            <CircularPercentage percentage={PlagiarismPercentage} pathcolor='#FF0000' textcolor='#F20000' />
-                                            <span className="text-lg mt-2 font-semibold tracking-wide text-[#F20000]">Plagiarism</span>
-                                        </div>
-                                        <div className="flex flex-col items-center justify-center px-6 py-4 border-2 2xl:px-8 border-slate-200 rounded-xl">
-                                            <CircularPercentage percentage={PlagiarisedCount === 0 ? '100' : UniquePercentage} pathcolor='#14AE20' textcolor='#14AE20' />
-                                            <span className="text-lg mt-2 font-semibold tracking-wide text-[#14AE20]">Unique</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex flex-col items-center justify-center w-full py-6 mt-4 border-2 rounded-lg border-slate-200">
-                                        <p className="font-semibold">Plagiarised Words: <span className="ml-1 text-red-500 ">{PlagiarisedCount}</span> </p>
-                                        <p className="mt-2 font-semibold">Unique Words:<span className="ml-1 text-green-500 ">{wordsCount-PlagiarisedCount}</span> </p>
-                                        <div className="w-full mt-4 text-center ">
-                                            <span className=" text-[#858484] text-center   text-sm">Scan details: 4:35PM (IST), 30 Aug 2024</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div className="h-full max-lg:mt-10 ">
-
-                                    <div className="bg-[rgb(246,247,248)] custom-scrollbar space-y-4 h-[330px] max-h-[330px] overflow-y-auto  flex flex-col justify-start w-full rounded-xl lg:px-3 2xl:px-8">
-                                        {PlagiarisedCount === 0 ? (
-                                            <div className="flex items-center justify-center w-full h-full ">
-                                                <p className="font-semibold tracking-wide text-center text-slate-500 ">Congratulations! Your content is authentic and does not contain any plagiarized material. Keep it up!</p>
-                                            </div>
-                                        ) : (
-                                            <PlagiarismCheckerDetails wordsCount={wordsCount} PlagiarisedResult={PlagiarisedResult} setPlagiarisedwords={setPlagiarisedwords} setSentences={setSentences} setUniqueWordsCount={setUniqueWordsCount} setPlagiarismWordsCount={setPlagiarismWordsCount} setPlagiarismPercentage={setPlagiarismPercentage} PlagiarisedCount={PlagiarisedCount} setUniquePercentage={setUniquePercentage} />
-                                        )}
-
-                                    </div>
-
-
-                                    <div className="flex justify-between mt-4 lg:px-10">
-                                        <button className="2xl:px-4 px-2 max-sm:text-xs text-nowrap text-white rounded-lg py-1.5 2xl:py-2 bg-[#14AE20]">Rewrite my content</button>
-                                        <button className="2xl:px-4 px-2  max-sm:text-xs  text-nowrap text-white rounded-lg py-1.5 2xl:py-2 bg-[#213343]">Download Report</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>)}
 
 
                     <div className="flex items-center justify-center">
                         <div className="w-full mt-10 2xl:px-0 xl:px-10 2xl:w-10/12">
                             <h2 className="text-2xl font-medium tracking-wide ">Plagiarism Checker</h2>
-                            {isPlagiarismChecked && <h2 className="text-2xl font-medium tracking-wide "> Checker</h2>}
+                            {/* {isPlagiarismChecked && <h2 className="text-2xl font-medium tracking-wide "> Checker</h2>} */}
                             {/* <button onClick={() => dispatch(resetContents())} className="px-6 py-1 text-white bg-indigo-500 rounded-lg ">Reset</button> */}
                             <div className="p-10 mt-6 space-y-2 bg-white rounded-lg shadow-xl ">
                                 <h5 className="font-semibold ">Paste (Ctrl + V) your article below then click for Plagiarism!</h5>
                                 {Plagiarisedwords ? (
                                     <div className='w-full  text-lg min-h-[400px] outline-none p-8 rounded-lg  bg-slate-50 border border-slate-200'>
                                         <div
-                                            className="prose   focus:outline-none"
+                                            className="prose focus:outline-none"
                                             contentEditable={true}
                                             suppressContentEditableWarning={true}
                                             dangerouslySetInnerHTML={{ __html: highlightedArticle }}
@@ -514,7 +463,7 @@ function Plagiarism() {
 
                                 {IsLoading ? (
                                     <button className="font-semibold tracking-wide  bg-custom-dark-orange w-[160px] lg:w-[170px] xl:w-[200px] 2xl:w-[220px] flex justify-center items-center  rounded-md h-[35px] xl:h-[40px] 2xl:h-[45px]  text-white">
-                                        <span className=" text-lg">Checking </span> <PulseLoader color="#ffffff" size={6} margin={8} />
+                                        <span className="text-lg ">Checking </span> <PulseLoader color="#ffffff" size={6} margin={8} />
                                     </button>
                                 ) : (
                                     <button onClick={ConfirmPlagiarismCheck} className=" max-sm:text-sm font-semibold tracking-wide  bg-custom-dark-orange w-[160px] lg:w-[170px] xl:w-[200px] 2xl:w-[220px] flex justify-center items-center  rounded-md h-[35px] xl:h-[40px] 2xl:h-[45px]  text-white"> Check Plagiarism</button>
@@ -522,9 +471,61 @@ function Plagiarism() {
 
                             </div>
 
-                           
                         </div>
                     </div>
+
+                    {(isPlagiarismChecked && IsFinishedCalculating) && (<div
+                        ref={resultsRef}
+                        className="flex items-center justify-center mt-20 ">
+                        <div className="w-full mt-4 xl:px-10 2xl:px-0 2xl:w-10/12 ">
+                            <h2 className="text-2xl font-medium tracking-wide ">Results</h2>
+
+                            <div className="flex p-2 mt-4 space-x-4 bg-white rounded-lg md:p-8 max-lg:flex-col">
+
+                                <div className="">
+                                    <div className="flex justify-center space-x-10 lg:space-x-4 ">
+                                        <div className="flex flex-col items-center justify-center px-6 py-4 border-2 2xl:px-8 border-slate-200 rounded-xl">
+                                            <CircularPercentage percentage={PlagiarismPercentage} pathcolor='#FF0000' textcolor='#F20000' />
+                                            <span className="text-lg mt-2 font-semibold tracking-wide text-[#F20000]">Plagiarism</span>
+                                        </div>
+                                        <div className="flex flex-col items-center justify-center px-6 py-4 border-2 2xl:px-8 border-slate-200 rounded-xl">
+                                            <CircularPercentage percentage={PlagiarisedCount === 0 ? '100' : UniquePercentage} pathcolor='#14AE20' textcolor='#14AE20' />
+                                            <span className="text-lg mt-2 font-semibold tracking-wide text-[#14AE20]">Unique</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col items-center justify-center w-full py-6 mt-4 border-2 rounded-lg border-slate-200">
+                                        <p className="font-semibold">Plagiarised Words: <span className="ml-1 text-red-500 ">{PlagiarisedCount}</span> </p>
+                                        <p className="mt-2 font-semibold">Unique Words:<span className="ml-1 text-green-500 ">{wordsCount - PlagiarisedCount}</span> </p>
+                                        <div className="w-full mt-4 text-center ">
+                                            <span className=" text-[#858484] text-center   text-sm">Scan details: 4:35PM (IST), 30 Aug 2024</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div className="h-full max-lg:mt-10 ">
+
+                                    <div className="bg-[rgb(246,247,248)] custom-scrollbar space-y-4 h-[330px] max-h-[330px] overflow-y-auto  flex flex-col justify-start w-full rounded-xl lg:px-3 2xl:px-8">
+                                        {PlagiarisedCount === 0 ? (
+                                            <div className="flex items-center justify-center w-full h-full ">
+                                                <p className="font-semibold tracking-wide text-center text-slate-500 ">Congratulations! Your content is authentic and does not contain any plagiarized material. Keep it up!</p>
+                                            </div>
+                                        ) : (
+                                            <PlagiarismCheckerDetails wordsCount={wordsCount} PlagiarisedResult={PlagiarisedResult} setPlagiarisedwords={setPlagiarisedwords} setSentences={setSentences} setUniqueWordsCount={setUniqueWordsCount} setPlagiarismWordsCount={setPlagiarismWordsCount} setPlagiarismPercentage={setPlagiarismPercentage} PlagiarisedCount={PlagiarisedCount} setUniquePercentage={setUniquePercentage} />
+                                        )}
+
+                                    </div>
+
+
+                                    <div className="flex justify-between mt-4 lg:px-10">
+                                        <button className="2xl:px-4 px-2 max-sm:text-xs text-nowrap text-white rounded-lg py-1.5 2xl:py-2 bg-[#14AE20]">Rewrite my content</button>
+                                        <button className="2xl:px-4 px-2  max-sm:text-xs  text-nowrap text-white rounded-lg py-1.5 2xl:py-2 bg-[#213343]">Download Report</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>)}
 
 
 
