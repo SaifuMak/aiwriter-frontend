@@ -1,13 +1,19 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import { VscCheck } from "react-icons/vsc";
+import {setArticleWriterSelected} from '../Redux/Slices/SelectedToolSlice'
+import { useDispatch, useSelector } from 'react-redux';
 
 
 
-function SelectionCard({ title, description,setSelectedArticleWriter,isSelected, buttonText, LinkTo, FunctionToCall, buttonAction, footer }) {
+function SelectionCard({ title, description,isSelected, buttonText, LinkTo, FunctionToCall, buttonAction, footer }) {
      
+    
+
+    const dispatch = useDispatch()
+    
     const HandleArticleSelection =(LinkTo)=>{
-        setSelectedArticleWriter(LinkTo)
+       dispatch(setArticleWriterSelected(LinkTo))
      }
 
 
@@ -29,7 +35,7 @@ function SelectionCard({ title, description,setSelectedArticleWriter,isSelected,
                     ))}
                 </div>
                 <div className="mt-4">
-                    <span className="font-medium  max-lg:text-sm xl:text-lg">{footer}</span>
+                    <span className="font-medium max-lg:text-sm xl:text-lg">{footer}</span>
                 </div>
 
                 {/* <div className="">

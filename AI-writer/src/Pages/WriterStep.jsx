@@ -5,12 +5,40 @@ import ProfileDetails from '../Components/Profile/ProfileDetails'
 import { IoMenuOutline } from "react-icons/io5";
 import SelectionCard from '../Components/SelectionCard';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {  setArticleWriterSelected,setFinalArticleWriterSelected } from '../Redux/Slices/SelectedToolSlice'
+import { resetArticleGeneration } from '../Redux/Slices/ArticleGenerationSlice'
 
 
 function WriterStep() {
+    const dispatch = useDispatch()
+
     const [IsSidebarVisible, setIsSidebarVisible] = useState(false)
     const [IsProfilePopup, setIsProfilePopup] = useState(false)
-    const [SelectedArticleWriter, setSelectedArticleWriter] = useState('/article-generation')
+    // const [SelectedArticleWriter, setSelectedArticleWriter] = useState('/article-generation')
+   
+    // const [SelectedArticleWriter, setSelectedArticleWriter] = useState(
+    //     localStorage.getItem('SelectedArticleWriter') || '/article-generation'
+    //   );
+
+    //   const [FinalSelectedArticleWriter, setFinalSelectedArticleWriter] = useState(
+    //     localStorage.getItem('FinalSelectedArticleWriter') || '/article-generation'
+    //   );
+
+    const { ArticleWriterSelected, FinalArticleWriterSelected } = useSelector((state) => state.SelectedTool);
+
+    const StateManagementOfArticleWriter = () => {
+      
+
+        if (ArticleWriterSelected !== FinalArticleWriterSelected) {
+            dispatch(resetArticleGeneration())
+            dispatch(setFinalArticleWriterSelected(ArticleWriterSelected))
+        }
+        else{
+            dispatch(setFinalArticleWriterSelected(ArticleWriterSelected))
+
+        }
+    }
 
 
 
@@ -43,6 +71,8 @@ function WriterStep() {
 
                 <div className="items-center justify-center w-full mt-10">
                     <h1 className="text-3xl text-center ">How do you want your content written?</h1>
+                  
+
                 </div>
 
 
@@ -57,8 +87,8 @@ function WriterStep() {
                         buttonText='START WRITING'
                         LinkTo='/article-generation'
                         footer='Uses about 1000-1500 words per article'
-                        setSelectedArticleWriter={setSelectedArticleWriter}
-                        isSelected = {SelectedArticleWriter === '/article-generation'}
+                        setSelectedArticleWriter={setArticleWriterSelected}
+                        isSelected={ArticleWriterSelected === '/article-generation'}
 
                     // FunctionToCall={ResetArticleGenerator}
                     />
@@ -71,15 +101,15 @@ function WriterStep() {
                         buttonText='START WRITING'
                         LinkTo='/quick-article-generation'
                         footer='Set word limit as per your needs'
-                        setSelectedArticleWriter={setSelectedArticleWriter}
-                        isSelected = {SelectedArticleWriter === '/quick-article-generation'}
+                        setSelectedArticleWriter={setArticleWriterSelected}
+                        isSelected={ArticleWriterSelected === '/quick-article-generation'}
                     // FunctionToCall={ResetArticleGenerator}
                     />
                 </div>
 
 
                 <div className="flex items-center justify-center w-full mt-20 ">
-                    <Link to={SelectedArticleWriter || ''} className="" >
+                    <Link to={ArticleWriterSelected || '#'} onClick={StateManagementOfArticleWriter} className="" >
                         <button className="xl:px-8 xl:py-2.5 px-4 py-1.5 xl:text-lg xl:font-semibold text-white rounded-md bg-custom-dark-orange">START WRITING</button>
                     </Link>
                 </div>

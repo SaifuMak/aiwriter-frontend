@@ -2,6 +2,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
+    // SelectedArticleWriter : '/article-generation',
+    // FinalSelectedArticleWriter : '/article-generation',
     currentStep: 0,  // Start at step 0 by default
     title: '',
     refTitle :'',
@@ -33,6 +35,14 @@ const ArticleGenerationSlice = createSlice({
     name: 'ArticleGeneration',
     initialState,
     reducers: {
+        // setSelectedArticleWriter(state,action){
+        //     state.SelectedArticleWriter = action.payload;
+        // },
+
+        // setFinalSelectedArticleWriter(state,action){
+        //     state.FinalSelectedArticleWriter = action.payload;
+        // },
+
         nextStep(state) {
             state.currentStep += 1;  // Move to the next step
         },
@@ -149,18 +159,20 @@ const ArticleGenerationSlice = createSlice({
             state.finalArticle = ''; // Reset to the initial value
         },
 
-        resetArticleGeneration() {
-            return initialState;  // Reset to initial state
-        },
+       
         setIsScrolling(state){
             state.IsScrolled = true;
         },
         setScrollingfalse(state){
             state.IsScrolled = false;
-        }
+        },
+
+        resetArticleGeneration() {
+            return initialState;  // Reset to initial state
+        },
     },
 });
 
 
-export const {nextStep, previousStep,setRefTitle,ResetKeywords,ResetSelectedKeywordsRedux,setisManualHeadlinesEnabled, setHeadlines,setSelectedHeadline,ResetSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setisManualKeywordsEnabled, setToneOfVoice,setPointOfView,setWordLimit, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration,setReorderedSelectedOutlines,setFinalArticle,resetFinalArticle,resetReorderedSelectedOutlines,setIsScrolling,setScrollingfalse } = ArticleGenerationSlice.actions;
+export const { nextStep, previousStep,setRefTitle,ResetKeywords,ResetSelectedKeywordsRedux,setisManualHeadlinesEnabled, setHeadlines,setSelectedHeadline,ResetSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setisManualKeywordsEnabled, setToneOfVoice,setPointOfView,setWordLimit, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration,setReorderedSelectedOutlines,setFinalArticle,resetFinalArticle,resetReorderedSelectedOutlines,setIsScrolling,setScrollingfalse } = ArticleGenerationSlice.actions;
 export default ArticleGenerationSlice.reducer;

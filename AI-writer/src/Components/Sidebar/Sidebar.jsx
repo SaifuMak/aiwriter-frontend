@@ -9,8 +9,11 @@ import { IoMenuOutline } from "react-icons/io5";
 
 import CompleteLogo from '../../assets/Logo/CompleteLogo';
 import { useDispatch, useSelector } from 'react-redux';
+import { setSelectedPage } from '../../Redux/Slices/NavigationSlice'
 import { loginSuccess, setLogout } from '../../Redux/Slices/AuthSlice'
 import { HiOutlineDocumentMagnifyingGlass } from "react-icons/hi2";
+
+
 
 import { Link } from 'react-router-dom';
 
@@ -19,12 +22,19 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
 
   const dispatch = useDispatch()
   const { IsAuthenticated, Username, Email } = useSelector(state => state.auth);
+  const { pageSelected } = useSelector(state => state.Navigation);
 
 
 
-  const menustyle = 'flex items-center  lg:text-base xl:text-base text-white space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer  hover:text-custom-dark-orange'
 
 
+  const getMenuStyle =(page)=>{
+    return page === pageSelected ? 'text-custom-dark-orange bg-[#FFFFFF1A]' : 'text-white'
+  }
+
+  const HandlePageChange = (page)=>{
+   dispatch(setSelectedPage(page))
+  }
 
 
   return (
@@ -42,35 +52,39 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
       </section>
 
       <section className="flex flex-col justify-start w-full space-y-1 ">
-        <Link to='/' className='cursor-pointer '>
-          <div className={menustyle}>
+        <Link to='/' onClick={()=>HandlePageChange('Home')} className='cursor-pointer '>
+          <div  className={`flex items-center  lg:text-base xl:text-base  space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer ${getMenuStyle('Home')}  hover:text-custom-dark-orange`}>
             <SlHome className='' />
             <span className="">Home</span>
           </div>
         </Link>
 
 
-        <div className={menustyle}>
+        <div className='flex items-center  lg:text-base xl:text-base text-white space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer  hover:text-custom-dark-orange'>
           <AiOutlineFileSync className='' />
           <span className="">History</span>
         </div>
 
-        <div className={menustyle}>
+
+        <Link to='/choose-article-writer' onClick={()=>HandlePageChange('Article Writer')} className='cursor-pointer '>
+        <div  className={`flex items-center  lg:text-base xl:text-base  space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer ${getMenuStyle('Article Writer')}  hover:text-custom-dark-orange`}>
           <LuFileEdit className='' />
           <span className="">Article Writer</span>
         </div>
+        </Link>
 
-        <div className={menustyle}>
+
+        <div className='flex items-center  lg:text-base xl:text-base text-white space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer  hover:text-custom-dark-orange'>
           <LuFileEdit className='' />
           <span className="">Article Rewriter</span>
         </div>
 
-        <Link to='/plagiarism-checker'>
+        {/* <Link to='/plagiarism-checker'>
           <div className={menustyle}>
             <HiOutlineDocumentMagnifyingGlass className='' />
             <span className="">Plagiarism Checker</span>
           </div>
-        </Link>
+        </Link> */}
 
       </section>
 

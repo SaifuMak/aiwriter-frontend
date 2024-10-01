@@ -57,7 +57,6 @@ function Navbar({ setIsSidedbarOpened, IsSidedbarOpened, setIsMobileArticleSideb
                     <span className={`${IsOutline ? 'text-custom-dark-orange' : ''}`}> Outline</span>
                     <ShortArrow isActive={IsOutline || currentStep === 7} />
                     <span className={`${selectedOutlines.length > 0 || currentStep === 7 ? 'text-custom-dark-orange' : ''}`}>Generate Article</span>
-
                 </div>
 
                 <RxCross1 onClick={() => dispatch(resetArticleGeneration())} className='p-1 text-2xl font-semibold transition-transform duration-300 transform rounded-full cursor-pointer sm:text-3xl hover:rotate-90 hover:bg-slate-700 text-custom-dark-orange ' />
