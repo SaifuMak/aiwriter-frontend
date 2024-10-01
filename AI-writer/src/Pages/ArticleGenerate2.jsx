@@ -303,6 +303,7 @@ function ArticleGenerate2() {
     }
 
 
+
     const GenerateArticle = async () => {
        
 
@@ -415,7 +416,8 @@ function ArticleGenerate2() {
 
 
                 </div>
-                <Toaster position="bottom-right" />
+            {/* <Toaster  /> */}
+
                 {AlertPopup && <AlertPopUp handleIgnoreContinue={handleIgnoreContinue} HandleClosePopUp={HandleClosePopUp} />}
 
 

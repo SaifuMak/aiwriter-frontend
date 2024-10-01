@@ -380,7 +380,7 @@ function ArticleGeneration() {
 
                 {IsSidedbarOpened && (<MobileSidebar IsProfilePopup={IsProfilePopup} setIsSidedbarOpened={setIsSidedbarOpened} setIsProfilePopup={setIsProfilePopup} />)}
 
-                <div className="xl:w-[500px] sm:w-[200px] lg:w-[400px] max-sm:hidden ">
+                <div className="xl:w-[500px] sm:w-[200px] lg:w-[400px]  max-sm:hidden  ">
                     <ArticleSidebar Label='Article Writer 1.0' showPopupAndCallAPI={showPopupAndCallAPI} handleBackClick={handleBackButtonClick} Fetchkeywords={Fetchkeywords} handleSidebarOptionsVisible={handleSidebarOptionsVisible} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} GenerateOutlines={GenerateOutlines} HandleOutlinesStructure={HandleOutlinesStructure} GenerateArticle={GenerateArticle} RegenerateArticle={RegenerateArticle} handleForwardButtonClick={handleForwardButtonClick} />
                 </div>
 
@@ -405,7 +405,9 @@ function ArticleGeneration() {
                 </div>
 
 
-                <Toaster position="bottom-right" />
+                {/* <Toaster position="bottom-right" /> */}
+            {/* <Toaster  /> */}
+
                 {AlertPopup && <AlertPopUp handleIgnoreContinue={handleIgnoreContinue} HandleClosePopUp={HandleClosePopUp} />}
 
             </div>

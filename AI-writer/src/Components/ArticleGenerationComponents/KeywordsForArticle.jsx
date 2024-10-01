@@ -3,6 +3,7 @@ import { VscCheck } from "react-icons/vsc";
 import { useDispatch, useSelector } from 'react-redux';
 import { setKeywords, setSelectedKeywordsRedux, setisManualKeywordsEnabled } from '../../Redux/Slices/ArticleGenerationSlice'
 import { Switch, FormControlLabel } from '@mui/material';
+import { Toaster, toast } from 'sonner';
 
 
 function KeywordsForArticle({ handleSidebarOptionsVisible,Regeneratekeywords }) {
@@ -69,7 +70,7 @@ function KeywordsForArticle({ handleSidebarOptionsVisible,Regeneratekeywords }) 
 
     return (
 
-        <div className="w-full px-4 py-10 space-y-4 xl:px-16 ">
+        <div className="w-full px-4 py-10 space-y-4  xl:px-16">
             <div className="flex items-center justify-between ">
                 <h2 className="text-lg lg:text-2xl xl:text-2xl">Choose keywords for your Article</h2>
                 <div className="flex items-center px-6 py-2 space-x-4 border shadow-md rounded-2xl border-custom-dark-orange">
@@ -127,14 +128,19 @@ function KeywordsForArticle({ handleSidebarOptionsVisible,Regeneratekeywords }) 
                     </tbody>
                 </table>
             </div>
-            <div className="flex  justify-end ">
-                <div className="flex  justify-between  w-7/12">
+            <div className="flex justify-end ">
+                <div className="flex justify-between w-7/12">
                     <button onClick={Regeneratekeywords} className="px-6 py-1.5 mt-5 font-semibold tracking-wide text-center text-white rounded-lg hover:bg-hover-button-color bg-custom-dark-orange">Regenerate Keywords</button>
                 <button onClick={handleSidebarOptionsVisible} className="px-6 py-1.5 mt-5 font-semibold tracking-wide text-center text-white rounded-lg hover:bg-hover-button-color bg-custom-dark-orange">Next</button>
 
                 </div>
 
             </div>
+
+            
+          <Toaster  />
+
+
         </div>
 
     )

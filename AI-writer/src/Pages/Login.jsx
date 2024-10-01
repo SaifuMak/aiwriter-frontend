@@ -60,7 +60,7 @@ function Login() {
         }
 
         catch (error) {
-            ErrorToast('Incorrect email or password')
+            ErrorToast('Incorrect email or password',true)
         }
         console.log(Email, Password)
     }
@@ -76,7 +76,7 @@ function Login() {
                     <CompleteLogo />
                 </div>
 
-                <span className="text-white text-lg ">Login to your account</span>
+                <span className="text-lg text-white ">Login to your account</span>
                 {IsAuthenticated && (
                     <span className="">still autheticated </span>
                 )}

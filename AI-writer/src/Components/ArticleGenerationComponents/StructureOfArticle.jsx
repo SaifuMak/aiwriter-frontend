@@ -5,7 +5,7 @@ import { setIsIndividualOutlines, setSelectedOutlines, RemoveSelectedOutlines, S
 import ButtonComponent from './SmallComponents/ButtonComponent';
 import { motion } from 'framer-motion';
 import { countWords, countCharacters, calculateTotalWords, calculateTotalCharacters } from '../../Utils/Helperfunctions'
-
+import { Toaster, toast } from 'sonner';
 
 
 
@@ -130,6 +130,8 @@ function StructureOfArticle({ HandleOutlinesStructure }) {
                     </div>
                 ))}
             </div>
+            <Toaster  />
+
 
 
 

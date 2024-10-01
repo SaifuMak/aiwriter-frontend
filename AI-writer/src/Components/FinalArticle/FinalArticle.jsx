@@ -7,6 +7,9 @@ import { countWords } from '../../Utils/Helperfunctions';
 import SuccessToast from '../../Utils/SuccessToast';
 import ArticleLoader from '../ArticleGenerationComponents/ArticleLoader';
 import PulseLoader from 'react-spinners/PulseLoader';
+import { Toaster, toast } from 'sonner';
+
+
 
 function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
   const { finalArticle } = useSelector((state) => state.articleGeneration); // HTML string from backend
@@ -182,6 +185,7 @@ function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
         <ArticleLoader text='An error occurred. Please attempt to regenerate the article. ' />
 
       )}
+         <Toaster  />
 
     </>
   );

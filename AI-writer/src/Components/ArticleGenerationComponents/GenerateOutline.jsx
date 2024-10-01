@@ -2,6 +2,8 @@ import React from 'react'
 import ButtonComponent from './SmallComponents/ButtonComponent';
 import { useSelector } from 'react-redux';
 
+import { Toaster, toast } from 'sonner';
+
 
 function GenerateOutline({ GenerateOutlines,Label }) {
     const { currentStep,selectedHeadline } = useSelector((state) => state.articleGeneration);
@@ -29,6 +31,7 @@ function GenerateOutline({ GenerateOutlines,Label }) {
                 />
                 </div>
             </div>
+            <Toaster  />
         </div>
     )
 }

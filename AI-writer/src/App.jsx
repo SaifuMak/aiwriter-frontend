@@ -17,6 +17,7 @@ import PrivateRoutes from './Routes/PrivateRoutes'
 import Demo from './Pages/Demo'
 import ArticleGenerate2 from './Pages/ArticleGenerate2'
 import WorkSheet from './Pages/WorkSheet'
+import { Toaster, toast } from 'sonner';
 
 import WriterStep from './Pages/WriterStep'
 
@@ -28,7 +29,9 @@ function App() {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <Router>
+
             <Routes>
+
 
               {/* <Route path="/" element={<Home />} /> */}
 

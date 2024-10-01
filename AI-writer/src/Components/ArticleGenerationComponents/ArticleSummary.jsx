@@ -9,7 +9,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useDrag, useDrop } from 'react-dnd';
 import ReorderableList from './ReorderableList';
 import ButtonComponent from './SmallComponents/ButtonComponent';
-
+import { Toaster, toast } from 'sonner';
 
 function ArticleSummary({ setItems, items, GenerateArticle }) {
     const dispatch = useDispatch()
@@ -32,6 +32,7 @@ function ArticleSummary({ setItems, items, GenerateArticle }) {
 
 
     return (
+        <div className="w-full ">
         <div className="w-full px-4 py-10 lg:tracking-wide max-lg:text-sm 2xl:w-10/12 xl:w-11/12 xl:px-16 space-y-7">
             <div className="flex justify-between">
                 <h2 className="text-lg lg:text-2xl xl:text-2xl">Article Summary</h2>
@@ -58,6 +59,9 @@ function ArticleSummary({ setItems, items, GenerateArticle }) {
                     <ReorderableList setItems={setItems} items={items} />
                 </DndProvider>
             </div>
+        </div>
+        <Toaster  />
+
         </div>
     );
 }

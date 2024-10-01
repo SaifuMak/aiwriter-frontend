@@ -5,6 +5,7 @@ import Lottie from 'lottie-react';
 import animationData from '../../assets/LottieFiles/RocketAnimation.json'
 import { useDispatch, useSelector } from 'react-redux';
 
+import { Toaster, toast } from 'sonner';
 
 function ArticleLoader({ text, IsQuickWriter }) {
   const { currentStep, loading } = useSelector((state) => state.articleGeneration);
@@ -17,11 +18,11 @@ function ArticleLoader({ text, IsQuickWriter }) {
             <Lottie animationData={animationData} className="w-full h-full" />
             <div className="flex items-center justify-center">
               {currentStep === 0 && (<span className="mt-10 text-center px-4 text-[#585858] ">Kickoff Your Article by Entering Your Topic</span>)}
-              {(currentStep === 1 && !IsQuickWriter )&& (<span className="mt-10 text-center px-4 text-[#585858] "> Your keywords are being generated</span>)}
+              {(currentStep === 1 && !IsQuickWriter) && (<span className="mt-10 text-center px-4 text-[#585858] "> Your keywords are being generated</span>)}
 
               {currentStep === 2 && (<span className="mt-10 text-center px-4 text-[#585858] ">Generated Ideas Will Show Up Here</span>)}
               {IsQuickWriter ? (
-                  <>
+                <>
                   {currentStep === 1 && (
                     <span className="mt-10 text-center px-4 text-[#585858]">
                       Your keywords are being generated.
@@ -33,11 +34,11 @@ function ArticleLoader({ text, IsQuickWriter }) {
                     </span>
                   )}
                 </>
-              
+
 
 
               ) : (
-              (currentStep === 4 || currentStep === 5) && (<span className="mt-10 text-center px-4 text-[#585858] ">Loading your structure outlines. Just a moment!</span>)
+                (currentStep === 4 || currentStep === 5) && (<span className="mt-10 text-center px-4 text-[#585858] ">Loading your structure outlines. Just a moment!</span>)
 
 
               )}
@@ -50,14 +51,13 @@ function ArticleLoader({ text, IsQuickWriter }) {
               <img src={Rocketloader} alt="" className="w-full h-full p-3 " />
             </div>
             <span className="  text-nowrap w-full text-center px-4 text-[#585858]">{text}</span>
+
           </div>
 
 
         )}
       </div>
-
-
-
+     {!loading &&  <Toaster />  }
 
     </div>
   )
