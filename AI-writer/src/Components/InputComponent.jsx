@@ -1,11 +1,13 @@
 import React from 'react'
 import DotIcon from '../assets/Icons/DotIcon'
+import TextareaAutosize from 'react-textarea-autosize';
 
 
 function InputComponent({ label, placeholder, count, onChange, value, isOptional, isActive }) {
     return (
 
         <section className="flex flex-col w-full mt-8 space-y-2">
+
             <div className="flex items-center justify-between ">
                 <div className="flex items-center justify-center">
                     <DotIcon />
@@ -14,10 +16,19 @@ function InputComponent({ label, placeholder, count, onChange, value, isOptional
                 </div>
                 <span className="text-[#E6E6E6]  max-lg:text-sm ml-1">{count}</span>
             </div>
+
             {/* <textarea type="text" onChange={onChange} value= {value} disabled={isActive} className={`px-4 py-1.5 ${isActive ? 'cursor-not-allowed' : ''}  rounded-md outline-none bg-fuchsia-100 text-sm lg:text-base  lg:py-2 xl:py-2.5 `} placeholder={placeholder} /> */}
-            <div className="flex items-center justify-center w-full">
-                <textarea type="text" onChange={onChange} value={value} disabled={isActive} className={`px-4 ${isActive ? 'cursor-not-allowed' : ''}  rounded-md w-full min-h-10 pt-1   outline-none   bg-white  text-sm lg:text-base   `} style={{ resize: 'none' }} placeholder={placeholder} />
+            {/* <div className="flex items-center justify-center w-full bg-red-100">
+                <textarea type="text" onChange={onChange} value={value} disabled={isActive} className={`px-4 ${isActive ? 'cursor-not-allowed' : ''}  rounded-md w-full min-h-10 pt-1 flex items-center justify-center    outline-none   bg-indigo-100  text-sm lg:text-base   `} style={{ resize: 'none' }} placeholder={placeholder} />
+            </div> */}
+
+      
+
+             <div className="flex items-center w-full bg-white rounded-md ">
+                <TextareaAutosize type="text" onChange={onChange} value={value} disabled={isActive}className={`px-4 py-1.5 ${isActive ? 'cursor-not-allowed' : ''} w-full  rounded-md outline-none  text-sm lg:text-base  lg:py-2 xl:py-3  `} style={{ resize: 'none' }} placeholder={placeholder} />
             </div>
+
+
         </section>
     )
 }
