@@ -1,40 +1,52 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import InputComponent from '../InputComponent'
 import { MdOutlineKeyboardDoubleArrowLeft } from "react-icons/md";
 import { RxDoubleArrowLeft } from "react-icons/rx";
 import { RxDoubleArrowRight } from "react-icons/rx";
 import PulseLoader from 'react-spinners/PulseLoader';
 
-
 import DropdownComponent from '../DropdownComponent';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTitle, setToneOfVoice, setPointOfView,setWordLimit, setSelectedKeywordsRedux } from '../../Redux/Slices/ArticleGenerationSlice'
+import { setTitle, setToneOfVoice, setPointOfView, setWordLimit, setSelectedKeywordsRedux } from '../../Redux/Slices/ArticleGenerationSlice'
 
 import ButtonComponent from '../ArticleGenerationComponents/SmallComponents/ButtonComponent';
 
 
 function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleForwardButtonClick, Fetchkeywords, handleSidebarOptionsVisible, GenerateHeadlines, handleOutlineGeneration, GenerateOutlines, HandleOutlinesStructure, GenerateArticle, RegenerateArticle }) {
     const dispatch = useDispatch();
-    const { title, currentStep, selectedKeywords, loading, selectedToneOfVoice, selectedPointOfView,selectedWordLimit, finalArticle, selectedOutlines, selectedHeadline, isManualKeywordsEnabled } = useSelector((state) => state.articleGeneration);
+    const { title, currentStep, selectedKeywords, loading, selectedToneOfVoice, selectedPointOfView, selectedWordLimit, finalArticle, selectedOutlines, selectedHeadline, isManualKeywordsEnabled } = useSelector((state) => state.articleGeneration);
 
 
     // const [selectedTopicOrKeywords, setselectedTopicOrKeywords] = useState('')
     // const [keywordsChange, setKeywordsChange] = useState('')
-    const [selectedCallToAction, setCallToAction] = useState('')
+    // const [selectedCallToAction, setCallToAction] = useState('')
+
+    const [QualityType, setQualityType] = useState('')
 
 
-    const [ToneOfVoiceDropdown, setToneOfVoiceDropdown] = useState(false)
+
+    // const [ToneOfVoiceDropdown, setToneOfVoiceDropdown] = useState(false)
     // const [ToneOfVoice, setToneOfVoice] = useState('Professional')
 
     // const [PointOfView, setPointOfView] = useState('Second-Person (You)')
-    const [PointOfViewDropdown, setPointOfViewDropdown] = useState(false)
+    // const [PointOfViewDropdown, setPointOfViewDropdown] = useState(false)
 
-    const [QualityType, setQualityType] = useState('')
-    const [QualityTypeDroptype, setQualityTypeDroptype] = useState(false)
-    const [WordsCountDroptype, setWordsCountDroptype] = useState(false)
-
+    // const [QualityTypeDroptype, setQualityTypeDroptype] = useState(false)
+    // const [WordsCountDroptype, setWordsCountDroptype] = useState(false)
 
 
+    const [activeDropdown, setActiveDropdown] = useState(null); // Single state to track active dropdown
+
+
+
+   
+    
+    const handleToggleDropdown = (dropdown) => {
+        // setActiveDropdown(null)
+        setActiveDropdown((prev) => (prev === dropdown ? null : dropdown));
+    };
+
+    
     const handleTopicsOrKeywords = (e) => {
         const newValue = e.target.value;
         if (newValue.length <= 200) {
@@ -51,57 +63,41 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
         }
     }
 
-    // const handleChangeKeywords = (e) => {
-    //     const newValue = e.target.value;
-    //     if (newValue.length <= 200) {
-    //         setKeywordsChange(newValue);
-    //     }
-    // }
-
-
-
-    // const handleCallToAction = (e) => {
-    //     const newValue = e.target.value;
-    //     if (newValue.length <= 200) {
-    //         setCallToAction(newValue);
-    //     }
-    // }
-
-
-
-    const handleToneOfVoiceToggle = () => {
-        setToneOfVoiceDropdown(!ToneOfVoiceDropdown);
-    };
+   
     const handleToneOfVoiceSelection = (option) => {
         dispatch(setToneOfVoice(option));
-        setToneOfVoiceDropdown(false);
+        setActiveDropdown(null)
+
     };
 
 
-    const handlePointOfViewToggle = () => {
-        setPointOfViewDropdown(!PointOfViewDropdown);
-    };
+    // const handlePointOfViewToggle = () => {
+    //     setPointOfViewDropdown(!PointOfViewDropdown);
+    // };
     const handlePointOfViewSelection = (option) => {
         dispatch(setPointOfView(option));
-        setPointOfViewDropdown(false);
+        setActiveDropdown(null)
+
     };
 
-    const handleQualityToggle = () => {
-        setQualityTypeDroptype(!QualityTypeDroptype);
-    };
+    // const handleQualityToggle = () => {
+    //     setQualityTypeDroptype(!QualityTypeDroptype);
+    // };
 
     const handleQualitySelection = (option) => {
         setQualityType(option);
-        setQualityTypeDroptype(false);
+        setActiveDropdown(null)
+
     };
 
-    const handleWordsCountToggle = () => {
-        setWordsCountDroptype(!WordsCountDroptype);
-    };
+    // const handleWordsCountToggle = () => {
+    //     setWordsCountDroptype(!WordsCountDroptype);
+    // };
 
-    const handleWordsCount = (option)=>{
+    const handleWordsCount = (option) => {
         dispatch(setWordLimit(option))
-        setWordsCountDroptype(false)
+        setActiveDropdown(null)
+
 
     }
 
@@ -138,12 +134,78 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
     ]
 
 
+    const sidebarRef = useRef(null)
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+                setActiveDropdown(null)
+
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [])
+
+
+    // useEffect(() => {
+    //     const handleSidebarClick = () => {
+           
+    //         setActiveDropdown(null)
+
+    //     };
+
+    //     const sidebar = sidebarRef.current;
+    //     if (sidebar) {
+    //         sidebar.addEventListener('click', handleSidebarClick);
+    //     }
+        
+    //     return () => {
+    //         if (sidebar) {
+    //             sidebar.removeEventListener('click', handleSidebarClick);
+    //         }
+    //     };
+    // }, []);
+
+
+    // useEffect(() => {
+    //     function handleClickOutside(event) {
+    //         if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+    //             setActiveDropdown(null) // Close dropdowns if clicked outside
+    //         }
+    //     }
+
+    //     const handleSidebarClick = (event) => {
+    //         // Check if the click is on a dropdown or dropdown option
+    //         if (!event.target.closest('.dropdown-item')) {
+    //             setActiveDropdown(null) // Close dropdowns if clicked in sidebar
+    //         }
+    //     };
+
+    //     document.addEventListener('mousedown', handleClickOutside);
+    //     const sidebar = sidebarRef.current;
+    //     if (sidebar) {
+    //         sidebar.addEventListener('click', handleSidebarClick);
+    //     }
+
+    //     return () => {
+    //         document.removeEventListener('mousedown', handleClickOutside);
+    //         if (sidebar) {
+    //             sidebar.removeEventListener('click', handleSidebarClick);
+    //         }
+    //     };
+    // }, []);
+
+
 
 
 
 
     return (
-        <div className="flex flex-col h-full min-h-screen px-4 py-12 xl:px-7 bg-custom-dark ">
+        <div ref={sidebarRef} className="flex flex-col h-full min-h-screen px-4 py-12 xl:px-7 bg-custom-dark ">
             <h2 className="text-xl xl:text-2xl text-custom-dark-orange">{Label}</h2>
 
 
@@ -210,8 +272,8 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
                     <DropdownComponent
                         label='Tone of voice'
                         options={ToneOfVoiceOptions}
-                        IsOpened={ToneOfVoiceDropdown}
-                        ToggleAction={handleToneOfVoiceToggle}
+                        IsOpened={activeDropdown === 'ToneOfVoice'}
+                        ToggleAction={() => handleToggleDropdown('ToneOfVoice')}
                         value={selectedToneOfVoice}
                         HandleSelection={handleToneOfVoiceSelection}
                         isActive={currentStep < 3}
@@ -221,8 +283,8 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
                     <DropdownComponent
                         label='Point of view'
                         options={PointOfViewOptions}
-                        IsOpened={PointOfViewDropdown}
-                        ToggleAction={handlePointOfViewToggle}
+                        IsOpened={activeDropdown === 'PointOfView'}
+                        ToggleAction={() => handleToggleDropdown('PointOfView')}
                         value={selectedPointOfView}
                         HandleSelection={handlePointOfViewSelection}
                         isActive={currentStep < 3}
@@ -242,21 +304,23 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
                     <DropdownComponent
                         label='Quality type'
                         options={QualitiesOptions}
-                        IsOpened={QualityTypeDroptype}
-                        ToggleAction={handleQualityToggle}
+                        IsOpened={activeDropdown === 'QualityType'}
+                        ToggleAction={() => handleToggleDropdown('QualityType')}
+
                         value={QualityType}
                         HandleSelection={handleQualitySelection}
                         isActive={currentStep < 3}
-
                     />
+
 
                     <DropdownComponent
                         label='Word Limit'
-                        IsToolTip = {true}
-                        ToolTipInfo = 'Choose the word limit for your final article.'
+                        IsToolTip={true}
+                        ToolTipInfo='Choose the word limit for your final article.'
                         options={WordsOptions}
-                        IsOpened={WordsCountDroptype}
-                        ToggleAction={handleWordsCountToggle}
+                        IsOpened={activeDropdown === 'WordLimit'}
+                        ToggleAction={() => handleToggleDropdown('WordLimit')}
+
                         value={selectedWordLimit}
                         HandleSelection={handleWordsCount}
                         isActive={currentStep < 6}
@@ -265,7 +329,7 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
 
 
 
-                    <div className="flex items-center mt-10  pb-10 space-x-16 sm:space-x-1 lg:space-x-5 xl:space-x-7 2xl:space-x-10 ">
+                    <div className="flex items-center pb-10 mt-10 space-x-16 sm:space-x-1 lg:space-x-5 xl:space-x-7 2xl:space-x-10 ">
                         <div onClick={handleBackClick} className="lg:p-2 sm:p-1 p-1.5 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
                             <RxDoubleArrowLeft className='text-lg lg:text-2xl text-custom-dark-orange' />
                         </div>
