@@ -12,7 +12,7 @@ function ErrorToast(message, IsInCenter=false,IsmarginLeft=false ) {
     const defaultOptions = {
         unstyled: true,
             classNames: {
-              toast: `bg-[#E53E3E]    flex ${IsmarginLeft ? 'sm:ml-12' : 'ml-0'}   px-6 py-3.5 text-center max-w-sm sm:max-w-xl whitespace-normal   rounded-full  text-white `,
+              toast: `bg-[#E53E3E]    flex ${IsmarginLeft ? 'sm:ml-12' : 'ml-0'} text-base   px-4 py-3.5 text-center max-w-sm sm:max-w-xl whitespace-normal   rounded-full  text-white `,
               title: 'text-white text-base',
               actionButton: 'bg-[#E53E3E]',
           
