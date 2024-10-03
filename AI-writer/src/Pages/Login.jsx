@@ -41,6 +41,7 @@ function Login() {
     }
 
     const loginSubmit = async () => {
+        toast.dismiss()
         if (!Password || !Email) {
             ErrorToast('Fields cannot be empty  ', true, true)
             return
@@ -52,7 +53,6 @@ function Login() {
         }
 
         try {
-            toast.dismiss()
             // setIsLoading(true)
             const response = await Axiosinstance.post('api/login', data)
             dispatch(loginSuccess({}));
