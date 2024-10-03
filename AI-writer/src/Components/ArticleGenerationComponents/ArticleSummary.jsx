@@ -13,7 +13,7 @@ import { Toaster, toast } from 'sonner';
 
 function ArticleSummary({ setItems, items, GenerateArticle }) {
     const dispatch = useDispatch()
-    const { selectedHeadline, selectedOutlines, currentStep, ReorderedSelectedOutlines } = useSelector((state) => state.articleGeneration);
+    const { selectedHeadline, selectedOutlines,loading, currentStep, ReorderedSelectedOutlines } = useSelector((state) => state.articleGeneration);
 
 
     useEffect(() => {
@@ -60,7 +60,7 @@ function ArticleSummary({ setItems, items, GenerateArticle }) {
                 </DndProvider>
             </div>
         </div>
-        <Toaster  />
+        {!loading &&  <Toaster />  }
 
         </div>
     );

@@ -70,10 +70,10 @@ function PasswordChange() {
     catch (error) {
       if (error.response && error.response.status === 403) {
         // Handle session expired
-        ErrorToast('Session expired. Please log in again.');
+        ErrorToast('Session expired. Please log in again.',true ,true);
       }
       else {
-        ErrorToast(error.response.data.message);
+        ErrorToast(error.response.data.message,true, true);
       }
 
       setIsLoading(false)

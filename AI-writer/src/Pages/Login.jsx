@@ -26,6 +26,7 @@ function Login() {
     const [Email, setEmail] = useState('')
     const [Password, setPassword] = useState('')
     const [isPasswordVisible, setisPasswordVisible] = useState(false)
+    const [IsLoading, setIsLoading] = useState(false)
 
     const handleEmail = (e) => {
         setEmail(e.target.value.trim())
@@ -41,7 +42,7 @@ function Login() {
 
     const loginSubmit = async () => {
         if (!Password || !Email) {
-            ErrorToast('Fields cannot be empty ')
+            ErrorToast('Fields cannot be empty  ', true, true)
             return
         }
 
@@ -51,6 +52,8 @@ function Login() {
         }
 
         try {
+            toast.dismiss()
+            // setIsLoading(true)
             const response = await Axiosinstance.post('api/login', data)
             dispatch(loginSuccess({}));
 
@@ -60,15 +63,20 @@ function Login() {
         }
 
         catch (error) {
-            ErrorToast('Incorrect email or password',true)
+            // setIsLoading(false)
+
+            ErrorToast('Incorrect email or password', true, true)
+
         }
         console.log(Email, Password)
+        setIsLoading(false)
+
     }
 
 
 
     return (
-        <div className="flex items-center justify-center h-screen bg-custom-dark font-poppins">
+        <div className="flex items-center justify-center w-full h-screen bg-custom-dark font-poppins">
             <div className="bg-[#42515F] flex flex-col justify-center h-auto  max-sm:-mt-56  items-center py-8 sm:py-12 px-4 sm:px-10 rounded-md    ">
 
                 <div className="h-12 w-36 xl:h-16 xl:w-48 ">
@@ -101,7 +109,7 @@ function Login() {
                 <Link to='/forgot-password' className="mt-8 cursor-pointer text-custom-dark-orange ">Forgot password?</Link>
 
             </div>
-            <Toaster position="bottom-right" />
+            <Toaster />
         </div>
 
 

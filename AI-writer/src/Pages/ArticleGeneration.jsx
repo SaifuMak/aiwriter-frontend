@@ -73,9 +73,10 @@ function ArticleGeneration() {
     }
 
     const handleSidebarOptionsVisible = () => {
+        toast.dismiss()
         // we are going to the step 2 after the selection of the keywords , if no keywords return 
         if (!selectedKeywords.trim()) {
-            ErrorToast('Please select any keywords')
+            ErrorToast('Please select any keywords to proceed.')
 
             return
         }
@@ -88,8 +89,10 @@ function ArticleGeneration() {
 
 
     const handleOutlineGeneration = () => {
+        toast.dismiss()
+
         if (!selectedHeadline.trim()) {
-            ErrorToast('Please select any Headline')
+            ErrorToast('Please select a headline to proceed.')
             return
         }
         dispatch(setCurrentStep(4))
@@ -126,9 +129,11 @@ function ArticleGeneration() {
     // api calls 
 
     const Regeneratekeywords = async () => {
+        toast.dismiss()
+
 
         if (!title) {
-            ErrorToast('Please enter title')
+            ErrorToast('Please enter a title to proceed.')
             return
         }
 
@@ -165,9 +170,11 @@ function ArticleGeneration() {
 
 
     const Fetchkeywords = async () => {
+        toast.dismiss()
+
 
         if (!title) {
-            ErrorToast('Please enter title')
+            ErrorToast('Please enter a title to proceed.')
             return
         }
 
@@ -211,9 +218,11 @@ function ArticleGeneration() {
 
 
     const GenerateHeadlines = async () => {
+        toast.dismiss()
+
 
         if (!title || !selectedKeywords || !selectedToneOfVoice || !selectedPointOfView) {
-            ErrorToast('Please fill all  fields')
+            ErrorToast('Please fill all required fields.')
             return
         }
 
@@ -239,7 +248,7 @@ function ArticleGeneration() {
         catch (error) {
             console.log(error)
             dispatch(setLoading(false))
-            ErrorToast('Limit reached! Please try after 20 seconds')
+            ErrorToast('Limit reached! Please try after 20 seconds.')
 
         }
         console.log(title, selectedKeywords, selectedToneOfVoice, selectedPointOfView)
@@ -247,9 +256,12 @@ function ArticleGeneration() {
     }
 
     const GenerateOutlines = async () => {
+        toast.dismiss()
+
 
         if (!title || !selectedKeywords || !selectedToneOfVoice || !selectedPointOfView) {
-            ErrorToast('Please fill all  fields')
+            ErrorToast('Please fill all required fields')
+
             return
         }
 
@@ -288,6 +300,8 @@ function ArticleGeneration() {
 
 
     const GenerateArticle = async () => {
+        toast.dismiss()
+
         const IsEmptyStrings = items.filter(data => data.trim() === '');
         if (IsEmptyStrings.length > 0) {
             ErrorToast('Oops! There is an empty headline in the list. Please check and update.')
@@ -328,6 +342,8 @@ function ArticleGeneration() {
     }
 
     const RegenerateArticle = async () => {
+        toast.dismiss()
+        
         const reorderedHeadlines = ReorderedSelectedOutlines.flat()
         dispatch(resetFinalArticle())
 

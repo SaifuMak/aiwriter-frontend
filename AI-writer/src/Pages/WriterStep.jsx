@@ -12,6 +12,8 @@ import SuccessToast from '../Utils/SuccessToast';
 import ErrorToast from '../Utils/ErrorToast';
 import { Toaster, toast } from 'sonner';
 
+
+
 function WriterStep() {
     const dispatch = useDispatch()
 
@@ -42,11 +44,7 @@ function WriterStep() {
         }
     }
 
-    const handleAlert =()=>{
-        SuccessToast('Your content has been generated!')
-        // ErrorToast('Your content has been generated!')
-
-    }
+    
 
 
 
@@ -81,7 +79,6 @@ function WriterStep() {
 
                 <div className="items-center justify-center w-full mt-10">
                     <h1 className="text-3xl text-center ">How do you want your content written?</h1>
-                     <button onClick={handleAlert} className="px-5 py-1 text-white bg-slate-500">click</button>
                   
 
                 </div>

@@ -8,18 +8,18 @@ function SuccessToast(message) {
     const defaultOptions = {
         unstyled: true,
             classNames: {
-              toast: 'bg-[#44AA55] text-nowrap flex  px-8 py-4 text-center text-lg  rounded-full  text-white',
-              title: 'text-white text-xl',
+              toast: 'bg-[#44AA55] flex  px-6 py-3.5 text-center text-sm  max-w-xl whitespace-normal rounded-full  text-white',
+              title: 'text-white text-base ',
               actionButton: 'bg-[#44AA55]',
             //   cancelButton: 'bg-[#44AA55]',
             //   closeButton: 'bg-[#44AA55]', // Remove background with bg-transparent
             },
         duration: 5000, // Set duration in milliseconds (e.g., 4000ms = 4 seconds)
-        position: 'bottom-center', // Can be 'top-left', 'top-right', 'bottom-left', 'bottom-right'
+        position: 'bottom-right', // Can be 'top-left', 'top-right', 'bottom-left', 'bottom-right'
         action: {
             label: (
                 <AiOutlineClose
-                    className="ml-6 text-2xl text-white cursor-pointer "
+                    className="ml-2 text-2xl text-white cursor-pointer "
                     style={{ background: '#44AA55', padding: '2px', borderRadius: '50%' }}
                 />
             ), // Close icon styling with transparent background

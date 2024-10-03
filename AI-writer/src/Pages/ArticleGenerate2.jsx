@@ -20,6 +20,7 @@ import { IoIosArrowDropright } from "react-icons/io";
 import ErrorToast from '../Utils/ErrorToast'
 import { motion } from 'framer-motion';
 import AlertPopUp from '../Components/ArticleGenerationComponents/SmallComponents/AlertPopUp'
+import {showGenericError} from '../Utils/ErrorMessages'
 
 function ArticleGenerate2() {
 
@@ -116,7 +117,7 @@ function ArticleGenerate2() {
     const handleSidebarOptionsVisible = () => {
         // we are going to the step 2 after the selection of the keywords , if no keywords return 
         if (!selectedKeywords.trim()) {
-            ErrorToast('Please select any keywords')
+            ErrorToast('Please select any keywords to proceed.')
 
             return
         }
@@ -127,7 +128,7 @@ function ArticleGenerate2() {
 
     const handleOutlineGeneration = () => {
         if (!selectedHeadline.trim()) {
-            ErrorToast('Please select any Headline')
+            ErrorToast('Please select a headline to proceed.')
             return
         }
         dispatch(setCurrentStep(4))
@@ -145,7 +146,7 @@ function ArticleGenerate2() {
     const Fetchkeywords = async () => {
 
         if (!title) {
-            ErrorToast('Please enter title')
+            ErrorToast('Please enter a title to proceed.')
             return
         }
 
@@ -178,6 +179,7 @@ function ArticleGenerate2() {
             catch (error) {
                 console.log(error)
                 dispatch(setLoading(false))
+                showGenericError()
 
             }
         }
@@ -191,7 +193,7 @@ function ArticleGenerate2() {
     const Regeneratekeywords = async () => {
 
         if (!title) {
-            ErrorToast('Please enter title')
+            ErrorToast('Please enter a title to proceed.')
             return
         }
 
@@ -223,6 +225,8 @@ function ArticleGenerate2() {
         catch (error) {
             console.log(error)
             dispatch(setLoading(false))
+            showGenericError()
+            
 
         }
     }
@@ -231,7 +235,7 @@ function ArticleGenerate2() {
     const GenerateHeadlines = async () => {
 
         if (!title || !selectedKeywords || !selectedToneOfVoice || !selectedPointOfView) {
-            ErrorToast('Please fill all  fields')
+            ErrorToast('Please fill all required fields.')
             return
         }
 
@@ -267,7 +271,7 @@ function ArticleGenerate2() {
     const GenerateOutlines = async () => {
 
         if (!title || !selectedKeywords || !selectedToneOfVoice || !selectedPointOfView) {
-            ErrorToast('Please fill all  fields')
+            ErrorToast('Please fill all required fields.')
             return
         }
 
@@ -298,7 +302,8 @@ function ArticleGenerate2() {
         catch (error) {
             console.log(error)
             dispatch(setLoading(false))
-            ErrorToast('Request timed out or failed, please try again ')
+            showGenericError()
+
         }
     }
 
@@ -332,7 +337,8 @@ function ArticleGenerate2() {
         catch (error) {
             console.log(error)
             dispatch(setLoading(false))
-            ErrorToast('An error occured')
+            showGenericError()
+
 
         }
 
@@ -368,7 +374,8 @@ function ArticleGenerate2() {
         catch (error) {
             console.log(error)
             dispatch(setLoading(false))
-            ErrorToast('An error occured')
+            showGenericError()
+
 
         }
 
