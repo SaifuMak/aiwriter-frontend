@@ -127,6 +127,8 @@ function ArticleGenerate2() {
 
 
     const handleOutlineGeneration = () => {
+        toast.dismiss()
+
         if (!selectedHeadline.trim()) {
             ErrorToast('Please select a headline to proceed.')
             return
@@ -144,6 +146,8 @@ function ArticleGenerate2() {
 
     // api calls 
     const Fetchkeywords = async () => {
+        toast.dismiss()
+
 
         if (!title) {
             ErrorToast('Please enter a title to proceed.')
@@ -191,6 +195,8 @@ function ArticleGenerate2() {
 
 
     const Regeneratekeywords = async () => {
+        toast.dismiss()
+
 
         if (!title) {
             ErrorToast('Please enter a title to proceed.')
@@ -233,6 +239,8 @@ function ArticleGenerate2() {
 
 
     const GenerateHeadlines = async () => {
+        toast.dismiss()
+
 
         if (!title || !selectedKeywords || !selectedToneOfVoice || !selectedPointOfView) {
             ErrorToast('Please fill all required fields.')
@@ -269,6 +277,8 @@ function ArticleGenerate2() {
     }
 
     const GenerateOutlines = async () => {
+        toast.dismiss()
+
 
         if (!title || !selectedKeywords || !selectedToneOfVoice || !selectedPointOfView) {
             ErrorToast('Please fill all required fields.')
@@ -310,6 +320,8 @@ function ArticleGenerate2() {
 
 
     const GenerateArticle = async () => {
+        toast.dismiss()
+
        
 
 
@@ -345,6 +357,8 @@ function ArticleGenerate2() {
     }
 
     const RegenerateArticle = async () => {
+        toast.dismiss()
+
 
         // const reorderedHeadlines = ReorderedSelectedOutlines.flat()
         dispatch(resetFinalArticle())
