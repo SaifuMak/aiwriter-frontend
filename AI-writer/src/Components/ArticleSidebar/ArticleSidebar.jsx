@@ -144,6 +144,7 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
             }
         }
 
+        
         document.addEventListener('mousedown', handleClickOutside)
         return () => {
             document.removeEventListener('mousedown', handleClickOutside)
@@ -151,6 +152,8 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
     }, [])
 
 
+
+    
     // useEffect(() => {
     //     const handleSidebarClick = () => {
            
