@@ -39,14 +39,14 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
 
 
 
-   
-    
+
+
     const handleToggleDropdown = (dropdown) => {
         // setActiveDropdown(null)
         setActiveDropdown((prev) => (prev === dropdown ? null : dropdown));
     };
 
-    
+
     const handleTopicsOrKeywords = (e) => {
         const newValue = e.target.value;
         if (newValue.length <= 200) {
@@ -63,7 +63,7 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
         }
     }
 
-   
+
     const handleToneOfVoiceSelection = (option) => {
         dispatch(setToneOfVoice(option));
         setActiveDropdown(null)
@@ -144,7 +144,7 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
             }
         }
 
-        
+
         document.addEventListener('mousedown', handleClickOutside)
         return () => {
             document.removeEventListener('mousedown', handleClickOutside)
@@ -153,10 +153,10 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
 
 
 
-    
+
     // useEffect(() => {
     //     const handleSidebarClick = () => {
-           
+
     //         setActiveDropdown(null)
 
     //     };
@@ -165,7 +165,7 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
     //     if (sidebar) {
     //         sidebar.addEventListener('click', handleSidebarClick);
     //     }
-        
+
     //     return () => {
     //         if (sidebar) {
     //             sidebar.removeEventListener('click', handleSidebarClick);
@@ -209,7 +209,15 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
 
     return (
         <div ref={sidebarRef} className="flex flex-col h-full min-h-screen px-4 py-12 xl:px-7 bg-custom-dark ">
-            <h2 className="text-xl xl:text-2xl text-custom-dark-orange">{Label}</h2>
+           
+            <div className="flex items-center justify-between ">
+                <h2 className="text-xl xl:text-2xl xl:p-1.5 p-1 text-custom-dark-orange">{Label}</h2>
+
+              {currentStep > 0 && (  <div onClick={handleBackClick} className="xl:p-1.5 max-sm:hidden  p-1 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
+                    <RxDoubleArrowLeft className='text-lg lg:text-xl xl:text-2xl text-custom-dark-orange' />
+                </div>)}
+                
+            </div>
 
 
             <InputComponent
@@ -333,7 +341,7 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
 
 
                     <div className="flex items-center pb-10 mt-10 space-x-16 sm:space-x-1 lg:space-x-5 xl:space-x-7 2xl:space-x-10 ">
-                        <div onClick={handleBackClick} className="lg:p-2 sm:p-1 p-1.5 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
+                        <div onClick={handleBackClick} className="xl:p-1.5 p-1 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
                             <RxDoubleArrowLeft className='text-lg lg:text-2xl text-custom-dark-orange' />
                         </div>
 

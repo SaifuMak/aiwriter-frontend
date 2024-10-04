@@ -58,6 +58,9 @@ function ArticleGenerate2() {
 
     // other  actions 
     const handleBackButtonClick = () => {  //  this decreases the count for the currentstate , allow users to go back 
+       if(currentStep === 0){
+        return
+       }
         if (
             currentStep === 7 &&
             Array.isArray(selectedOutlines) && selectedOutlines.length === 0 &&
@@ -422,7 +425,7 @@ function ArticleGenerate2() {
                         <MobileArticleSidebar setIsMobileArticleSidebarOpened={setIsMobileArticleSidebarOpened} />
                     </div>)}
 
-                    {(currentStep === 0 || currentStep === 2) && <ArticleLoader  />}
+                    {(currentStep === 0 || currentStep === 2) && <ArticleLoader text='Your copies created by artificial intelligence will appear here.'   />}
                     {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading || currentStep === 1 && loading) && <ArticleLoader IsQuickWriter={true}  />}
 
                     {currentStep === 1 && <KeywordsForArticle handleSidebarOptionsVisible={handleSidebarOptionsVisible} Regeneratekeywords={Regeneratekeywords} />}

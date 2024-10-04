@@ -4,8 +4,9 @@ import Rocketloader from '../../assets/Images/ArticleRocketLoader.png'
 import Lottie from 'lottie-react';
 import animationData from '../../assets/LottieFiles/RocketAnimation.json'
 import { useDispatch, useSelector } from 'react-redux';
-
 import { Toaster, toast } from 'sonner';
+
+
 
 function ArticleLoader({ text, IsQuickWriter }) {
   const { currentStep, loading } = useSelector((state) => state.articleGeneration);
