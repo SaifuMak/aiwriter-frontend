@@ -15,7 +15,7 @@ import FinalArticle from '../Components/FinalArticle/FinalArticle'
 import { Toaster, toast } from 'sonner';
 
 import Axiosinstance from '../Axios/Axiosinstance'
-import { setKeywords, previousStep, setTitle, ResetKeywords,ResetSelectedKeywordsRedux, setCurrentStep, setOutlines, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading, ClearOutlines, ClearSelectedOutlines, SetSelectedOutlineKey, setReorderedSelectedOutlines, setFinalArticle, resetFinalArticle, nextStep } from '../Redux/Slices/ArticleGenerationSlice'
+import { setKeywords, previousStep, setTitle, ResetKeywords,ResetSelectedKeywordsRedux, setCurrentStep, setOutlines, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading, ClearOutlines, ClearSelectedOutlines, SetSelectedOutlineKey, setReorderedSelectedOutlines, setFinalArticle, resetFinalArticle,ResetIsArticleLoadingCompleted, nextStep } from '../Redux/Slices/ArticleGenerationSlice'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { IoIosArrowDropright } from "react-icons/io";
@@ -309,6 +309,8 @@ function ArticleGeneration() {
         }
         dispatch(setReorderedSelectedOutlines(items))
         dispatch(resetFinalArticle())
+        dispatch(ResetIsArticleLoadingCompleted(false))
+
 
 
         const data = {
@@ -346,6 +348,8 @@ function ArticleGeneration() {
         
         const reorderedHeadlines = ReorderedSelectedOutlines.flat()
         dispatch(resetFinalArticle())
+        dispatch(ResetIsArticleLoadingCompleted(false))
+
 
 
 

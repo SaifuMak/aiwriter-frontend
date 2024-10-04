@@ -21,7 +21,7 @@ function ArticleLoader({ text, IsQuickWriter }) {
               {currentStep === 0 && (<span className="mt-10 text-center px-4 text-[#585858] ">Kickoff Your Article by Entering Your Topic</span>)}
               {(currentStep === 1 && !IsQuickWriter) && (<span className="mt-10 text-center px-4 text-[#585858] "> Your keywords are being generated</span>)}
 
-              {currentStep === 2 && (<span className="mt-10 text-center px-4 text-[#585858] ">Generated Ideas Will Show Up Here</span>)}
+              {currentStep === 2 && (<span className="mt-10 text-center px-4 text-[#585858] ">Generated headlines will show up here</span>)}
               {IsQuickWriter ? (
                 <>
                   {currentStep === 1 && (

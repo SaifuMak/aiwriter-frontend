@@ -8,7 +8,7 @@ function SuccessToast(message) {
     const defaultOptions = {
         unstyled: true,
             classNames: {
-              toast: 'bg-[#44AA55] flex  px-6 py-3.5 text-center text-sm  max-w-sm sm:max-w-xl whitespace-normal rounded-full  text-white',
+              toast: 'bg-[#44AA55] flex  px-3 py-2.5 text-center text-sm  max-w-sm sm:max-w-xl whitespace-normal rounded-full  text-white',
               title: 'text-white text-base ',
               actionButton: 'bg-[#44AA55]',
             //   cancelButton: 'bg-[#44AA55]',

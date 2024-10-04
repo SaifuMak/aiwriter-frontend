@@ -2,7 +2,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import {resetArticleGeneration} from '../Redux/Slices/ArticleGenerationSlice'
 
 export function countWords(text) {
-    return text.split(/\s+/).filter(Boolean).length; // Split by whitespace and filter out empty strings
+    // return text.split(/\s+/).filter(Boolean).length; // Split by whitespace and filter out empty strings
+    const plainText = text.replace(/<[^>]+>/g, '');
+    
+    // Count words in the plain text
+    return plainText.split(/\s+/).filter(Boolean).length;
 }
 
 // Utility function to calculate the number of characters

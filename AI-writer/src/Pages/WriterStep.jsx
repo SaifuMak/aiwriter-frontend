@@ -17,6 +17,9 @@ import { Toaster, toast } from 'sonner';
 function WriterStep() {
     const dispatch = useDispatch()
 
+  const { IsArticleLoadingCompleted } = useSelector((state) => state.articleGeneration); // HTML string from backend
+
+
     const [IsSidebarVisible, setIsSidebarVisible] = useState(false)
     const [IsProfilePopup, setIsProfilePopup] = useState(false)
     // const [SelectedArticleWriter, setSelectedArticleWriter] = useState('/article-generation')
@@ -38,6 +41,12 @@ function WriterStep() {
             dispatch(resetArticleGeneration())
             dispatch(setFinalArticleWriterSelected(ArticleWriterSelected))
         }
+        else if(ArticleWriterSelected && IsArticleLoadingCompleted ){
+             dispatch(resetArticleGeneration())
+            dispatch(setFinalArticleWriterSelected(ArticleWriterSelected))
+
+        }
+        
         else{
             dispatch(setFinalArticleWriterSelected(ArticleWriterSelected))
 

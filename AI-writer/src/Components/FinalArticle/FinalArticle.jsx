@@ -8,11 +8,13 @@ import SuccessToast from '../../Utils/SuccessToast';
 import ArticleLoader from '../ArticleGenerationComponents/ArticleLoader';
 import PulseLoader from 'react-spinners/PulseLoader';
 import { Toaster, toast } from 'sonner';
-
-
+import {setIsArticleLoadingCompleted} from '../../Redux/Slices/ArticleGenerationSlice'
 
 function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
-  const { finalArticle } = useSelector((state) => state.articleGeneration); // HTML string from backend
+const dispatch = useDispatch()
+
+
+  const { finalArticle,IsArticleLoadingCompleted } = useSelector((state) => state.articleGeneration); // HTML string from backend
   const [isCopied, setIsCopied] = useState(false);
 
   const [visibleHTML, setVisibleHTML] = useState(''); // Visible part of HTML (simulating typing effect)
@@ -25,7 +27,7 @@ function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
 
   const ArticleGenerated = () => {
     if(finalArticle){
-    SuccessToast('Generation complete! Your article is ready.');
+    SuccessToast('Generation completed! Your article is ready.');
 
 
     }
@@ -45,15 +47,45 @@ function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
       const timer = setTimeout(() => {
         setVisibleHTML(finalArticle.slice(0, index + 1)); // Reveal the HTML progressively
         setIndex(index + 1);
-      }, 4); // Speed of typing
+      }, 10); // Speed of typing
       return () => clearTimeout(timer);
     }
-    if (index === finalArticle.length && !isArticleGenerated) {
-      setisArticleGenerated(true); // Set flag to prevent duplicate messages
+    if (index === finalArticle.length && !IsArticleLoadingCompleted) {
+      // setisArticleGenerated(true); // Set flag to prevent duplicate messages
+      dispatch(setIsArticleLoadingCompleted(true))
       ArticleGenerated(); // Call the function to show the message
     }
 
   }, [index, finalArticle]);
+
+
+
+
+  // Setting up the web worker
+  // useEffect(() => {
+  //   console.log('entereddd')
+  //   worker.onmessage = (event) => {
+  //     const { visibleHTML, complete } = event.data;
+  //     setVisibleHTML((prev) => prev + visibleHTML); // Append the new part of the article
+  //     if (complete) {
+  //       setisArticleGenerated(true);
+  //       ArticleGenerated();
+  //     }
+  //   };
+
+  //   // Start the web worker when finalArticle changes
+  //   if (finalArticle) {
+  //     worker.postMessage({ finalArticle });
+  //   }
+
+  //   // Clean up the worker on component unmount
+  //   return () => {
+  //     worker.terminate();
+  //   };
+  // }, [finalArticle]);
+
+ 
+  
 
 
 
@@ -115,6 +147,9 @@ function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
   }, []);
 
 
+ 
+
+
 
 
   // useEffect(() => {
@@ -138,21 +173,33 @@ function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
   const wordCount = countWords(visibleHTML);
   const characterCount = index;
 
+  const FinalWordCount = countWords(finalArticle)
+  const FinalCharectorCount = finalArticle.length
+
 
   return (
     <>
       {finalArticle.length > 0 ? (
 
         <div className="relative article-container font-poppins">
-          {visibleHTML && (<div className="flex items-center px-4 mt-10 sm:px-10 xl:px-20 2xl:px-28">
+          {visibleHTML && !IsArticleLoadingCompleted ?  (<div className="flex items-center px-4 mt-10 sm:px-10 xl:px-20 2xl:px-28">
             <span className="flex justify-center w-10 ">{wordCount}</span>
             <span className="">words</span>
             <span className="ml-1">/</span>
             <span className="flex justify-center w-10 ml-1">  {characterCount}</span>
             <span className="ml-1 ">characters</span>
-          </div>)}
+          </div>)
+          :(
+            <div className="flex items-center px-4 mt-10 sm:px-10 xl:px-20 2xl:px-28">
+            <span className="flex justify-center w-10 ">{FinalWordCount}</span>
+            <span className="">words</span>
+            <span className="ml-1">/</span>
+            <span className="flex justify-center w-10 ml-1">{FinalCharectorCount}</span>
+            <span className="ml-1 ">characters</span>
+          </div>
+          )}
 
-          {isArticleGenerated && (<motion.button
+          {IsArticleLoadingCompleted && (<motion.button
             drag
             dragConstraints={{ top: 0, bottom: 600, left: 0, right: 0 }} // Adjust the constraints as needed
             className="fixed right-10 flex items-center justify-center px-5 py-1 space-x-1 top-24 sm:top-[250px] rounded-3xl bg-custom-dark"
@@ -167,13 +214,26 @@ function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
 
 
           {/* Render the progressively revealed HTML with styles */}
-          <div
+
+          {IsArticleLoadingCompleted ? (
+             <div
+             className="px-4 py-10 min-h-[900px] max-h-[900px] sm:px-10 xl:px-20 2xl:px-28 article-content"
+             dangerouslySetInnerHTML={{ __html: finalArticle }} // This renders the HTML progressively
+             style={{ overflowY: 'auto' }} // Ensure the container scrolls
+           />
+
+          ) : (
+            <div
             ref={contentRef}
             className="px-4 py-10 min-h-[780px] max-h-[780px] sm:px-10 xl:px-20 2xl:px-28 article-content"
             dangerouslySetInnerHTML={{ __html: visibleHTML }} // This renders the HTML progressively
             style={{ overflowY: 'auto' }} // Ensure the container scrolls
           />
-          {!isArticleGenerated && (<div className="flex items-center justify-center ">
+
+          )}
+         
+          
+          {!IsArticleLoadingCompleted && (<div className="flex items-center justify-center ">
             <div className="flex items-center px-3 text-nowrap"> <span className="text-xl font-semibold text-custom-black-text">Your content is being cooked</span>
               <PulseLoader className='ml-2' /></div>
           </div>)}

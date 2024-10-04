@@ -1,76 +1,85 @@
 .article-container {
-   
-    line-height: 1.6;
-    padding: 20px;
-    
-    padding: 10px;
-  }
-  
-  .article-container h1 {
-    color: black;
-    font-weight: 500;
-    font-size: 2.3rem;
-    margin-bottom: 1rem;
-  }
-  
-  .article-container p {
-    color: #343434;
-    font-size: 1.2rem;
-    margin-bottom: 1.2rem;
-  
-  }
-  
-  .article-container h2 {
-    color: black;
-    font-size: 1.6rem;
-    margin-top: 3.5rem;
-    margin-bottom: 1rem;
-  }
+  line-height: 1.6;
+  padding: 20px;
+}
 
-  .article-container ul {
-    list-style: none; /* Remove default list styling */
-    padding: 0;
-    margin: 0;
+.article-container h1 {
+  /* color: #000;  */
+  font-weight: 500;
+  font-size: 2.3rem;
+  margin-bottom: 1rem;
+}
+
+.article-container p {
+  /* color: #343434;  */
+  font-size: 18px;
+  margin-bottom: 1.2rem;
+}
+
+.article-container h2 {
+  /* color: #000;  */
+  font-size: 1.6rem;
+  margin-top: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.article-container h3 {
+  /* color: #000; */
+  font-size: 1.2rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.article-container ul {
+  list-style: none; /* Remove default list styling */
+  padding: 0;
+  margin: 0;
 }
 
 .article-container li {
-    position: relative;
-    padding-left: 1em; /* Space for custom bullet */
-    margin-bottom: 1rem;
-    font-size: 1.2rem; /* Consistent with paragraph text size */
-    color: #343434;
-    
-  
+  position: relative;
+  padding-left: 1em;
+  margin-bottom: 1rem;
+  font-size: 18px;
+  /* color: #343434; */
 }
 
 .article-container li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0.4em;
-    height: 0.4em;
-    background-color: #FB923C; /* Custom bullet color */
-    border-radius: 50%;
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0.4em;
+  height: 0.4em;
+  background-color: #FB923C; /* Custom bullet color */
+  border-radius: 50%;
 }
 
 .article-container li span {
-    font-weight: 500;
-    color: #FB923C; /* Color for the bullet point title */
+  font-weight: 500;
+  color: #FB923C;
 }
 
-.article-container li::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(50%);
-    width: 0.8em;
-    height: 0.8em;
-    background-color: transparent;
-    border-radius: 50%;
-    
-
+.article-container pre{
+  background-color: #333; /* Black background for code */
+  color:  white; /* White text for contrast */
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+  font-size: 16px;
+  margin: 20px 0;
+  display: block;
 }
-  
+
+.article-container code {
+  background-color: #333; /* Black background for code */
+  color:  white; /* White text for contrast */
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+  font-size: 16px;
+  margin: 20px 0;
+  display: block;
+}
+

@@ -209,14 +209,14 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
 
     return (
         <div ref={sidebarRef} className="flex flex-col h-full min-h-screen px-4 py-12 xl:px-7 bg-custom-dark ">
-           
+
             <div className="flex items-center justify-between ">
                 <h2 className="text-xl xl:text-2xl xl:p-1.5 p-1 text-custom-dark-orange">{Label}</h2>
 
-              {currentStep > 0 && (  <div onClick={handleBackClick} className="xl:p-1.5 max-sm:hidden  p-1 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
+                {currentStep > 0 && (<div onClick={handleBackClick} className="xl:p-1.5 max-sm:hidden  p-1 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
                     <RxDoubleArrowLeft className='text-lg lg:text-xl xl:text-2xl text-custom-dark-orange' />
                 </div>)}
-                
+
             </div>
 
 
@@ -276,7 +276,7 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
                         placeholder="Enter Keywords....."
                         count={`${selectedKeywords && selectedKeywords.length}/200`}
                         isOptional={false}
-                        isActive={currentStep > 2}
+                        isActive={currentStep > 7}
                     />
 
 
@@ -287,7 +287,7 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
                         ToggleAction={() => handleToggleDropdown('ToneOfVoice')}
                         value={selectedToneOfVoice}
                         HandleSelection={handleToneOfVoiceSelection}
-                        isActive={currentStep < 3}
+                        isActive={currentStep < 8}
 
                     />
 
@@ -298,7 +298,7 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
                         ToggleAction={() => handleToggleDropdown('PointOfView')}
                         value={selectedPointOfView}
                         HandleSelection={handlePointOfViewSelection}
-                        isActive={currentStep < 3}
+                        isActive={currentStep < 8}
 
                     />
 
@@ -320,11 +320,11 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
 
                         value={QualityType}
                         HandleSelection={handleQualitySelection}
-                        isActive={currentStep < 3}
+                        isActive={currentStep < 8}
                     />
 
 
-                    <DropdownComponent
+                    {Label === 'Article Writer 2.0' && (<DropdownComponent
                         label='Word Limit'
                         IsToolTip={true}
                         ToolTipInfo='Choose the word limit for your final article.'
@@ -334,9 +334,9 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
 
                         value={selectedWordLimit}
                         HandleSelection={handleWordsCount}
-                        isActive={currentStep < 6}
+                        isActive={currentStep < 8}
 
-                    />
+                    />)}
 
 
 
@@ -347,7 +347,7 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
 
                         <ButtonComponent
                             onClick={GenerateHeadlines}
-                            label="Generate Ideas"
+                            label="Generate Headlines"
                             isVisible={currentStep === 2}
                         />
 

@@ -14,7 +14,7 @@ import ArticleSummary from '../Components/ArticleGenerationComponents/ArticleSum
 import FinalArticle from '../Components/FinalArticle/FinalArticle'
 import { Toaster, toast } from 'sonner';
 import Axiosinstance from '../Axios/Axiosinstance'
-import { setKeywords, previousStep, setTitle,ResetKeywords,ResetSelectedKeywordsRedux, setCurrentStep, setOutlines, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading, ClearOutlines, ClearSelectedOutlines, SetSelectedOutlineKey, setReorderedSelectedOutlines, setFinalArticle, resetFinalArticle, nextStep } from '../Redux/Slices/ArticleGenerationSlice'
+import { setKeywords, previousStep, setTitle,ResetKeywords,ResetSelectedKeywordsRedux, setCurrentStep, setOutlines, setSelectedHeadline, setRefTitle, setHeadlines, resetArticleGeneration, setLoading, ClearOutlines, ClearSelectedOutlines, SetSelectedOutlineKey, setReorderedSelectedOutlines,ResetIsArticleLoadingCompleted, setFinalArticle, resetFinalArticle, nextStep } from '../Redux/Slices/ArticleGenerationSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import { IoIosArrowDropright } from "react-icons/io";
 import ErrorToast from '../Utils/ErrorToast'
@@ -338,6 +338,7 @@ function ArticleGenerate2() {
         }
 
         dispatch(setLoading(true))
+        dispatch(ResetIsArticleLoadingCompleted(false))
 
         try {
             const response = await Axiosinstance.post('api/quickly-generate-article', data,)
@@ -365,6 +366,8 @@ function ArticleGenerate2() {
 
         // const reorderedHeadlines = ReorderedSelectedOutlines.flat()
         dispatch(resetFinalArticle())
+        dispatch(ResetIsArticleLoadingCompleted(false))
+
 
 
 
