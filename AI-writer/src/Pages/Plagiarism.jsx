@@ -261,8 +261,14 @@ function Plagiarism() {
             const uniqueSentences = new Set();
 
             const uniqueWordsSet = new Set();
+            console.log('upto here it is fine ')
+            console.log('Type of results:', typeof results);
+            console.log('Value of results:', results);
 
-            results.forEach((data) => {
+            console.log(results)
+            const resultArray = Array.isArray(results) ? results : [results];
+            // const resultArray = Object.values(results);
+            resultArray.forEach((data) => {
                 const sentences = extractSentences(data.htmlsnippet);
                 sentences.forEach((sentence) => {
 

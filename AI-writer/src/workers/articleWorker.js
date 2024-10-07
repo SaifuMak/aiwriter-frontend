@@ -1,30 +1,26 @@
-// articleWorker.js
-let article = '';
-let index = 0;
-let timerId = null;
+// src/articleWorker.js
 
-self.onmessage = (event) => {
-  // Initialize the article and reset the index
-  article = event.data.article;
-  index = 0;
+self.onmessage = (e) => {
+  const { article, index } = e.data;
+  const dat = e.data
+  console.log(dat,'recieved the data , iam the worker ')
+  let newIndex = index;
 
-  // Clear any existing timer
-  clearTimeout(timerId);
+  // Simulate typing effect
+  const interval = setInterval(() => {
+    newIndex++;
+    
+    // Post progressively updated HTML back to the main thread
+    self.postMessage({
+      visibleHTML: article.slice(0, newIndex),
+      newIndex,
+    });
 
-  const revealText = () => {
-    if (index < article.length) {
-      self.postMessage(article.slice(0, index + 1)); // Send the current visible part of the article back to the main thread
-      index++;
-      timerId = setTimeout(revealText, 4); // Speed of typing
-    } else {
-      self.postMessage({ completed: true }); // Indicate completion
+    // Stop when the article is fully rendered
+    if (newIndex >= article.length) {
+      clearInterval(interval);
+      self.postMessage({visibleHTML: article, // Ensure the final message has the full article
+        newIndex,  done: true });
     }
-  };
-
-  revealText(); // Start the typing effect
-};
-
-// Clean up on worker termination
-self.onclose = () => {
-  clearTimeout(timerId);
+  }, 10); // Adjust the speed of typing effect (10ms per character)
 };

@@ -8,13 +8,15 @@ import SuccessToast from '../../Utils/SuccessToast';
 import ArticleLoader from '../ArticleGenerationComponents/ArticleLoader';
 import PulseLoader from 'react-spinners/PulseLoader';
 import { Toaster, toast } from 'sonner';
-import {setIsArticleLoadingCompleted} from '../../Redux/Slices/ArticleGenerationSlice'
+import { setIsArticleLoadingCompleted } from '../../Redux/Slices/ArticleGenerationSlice'
+
+
 
 function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
-const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
 
-  const { finalArticle,IsArticleLoadingCompleted } = useSelector((state) => state.articleGeneration); // HTML string from backend
+  const { finalArticle, IsArticleLoadingCompleted } = useSelector((state) => state.articleGeneration); // HTML string from backend
   const [isCopied, setIsCopied] = useState(false);
 
   const [visibleHTML, setVisibleHTML] = useState(''); // Visible part of HTML (simulating typing effect)
@@ -26,10 +28,8 @@ const dispatch = useDispatch()
 
 
   const ArticleGenerated = () => {
-    if(finalArticle){
-    SuccessToast('Generation completed! Your article is ready.');
-
-
+    if (finalArticle) {
+      SuccessToast('Generation completed! Your article is ready.');
     }
   };
 
@@ -41,65 +41,71 @@ const dispatch = useDispatch()
     });
   };
 
+
+
   // Simulate typing effect
+  // useEffect(() => {
+  //   if (index < finalArticle.length) {
+  //     const timer = setTimeout(() => {
+  //       setVisibleHTML(finalArticle.slice(0, index + 1)); // Reveal the HTML progressively
+  //       setIndex(index + 1);
+  //     }, 10); // Speed of typing
+  //     return () => clearTimeout(timer);
+  //   }
+  //   if (index === finalArticle.length && !IsArticleLoadingCompleted) {
+  //     // setisArticleGenerated(true); // Set flag to prevent duplicate messages
+  //     dispatch(setIsArticleLoadingCompleted(true))
+  //     ArticleGenerated(); // Call the function to show the message
+  //   }
+  // }, [index, finalArticle]);
+
+  // worker.postMessage('i have sent message to the worker ');
+
+
+
   useEffect(() => {
-    if (index < finalArticle.length) {
-      const timer = setTimeout(() => {
-        setVisibleHTML(finalArticle.slice(0, index + 1)); // Reveal the HTML progressively
-        setIndex(index + 1);
-      }, 10); // Speed of typing
-      return () => clearTimeout(timer);
-    }
-    if (index === finalArticle.length && !IsArticleLoadingCompleted) {
-      // setisArticleGenerated(true); // Set flag to prevent duplicate messages
-      dispatch(setIsArticleLoadingCompleted(true))
-      ArticleGenerated(); // Call the function to show the message
+    if (IsArticleLoadingCompleted) {
+      return
     }
 
-  }, [index, finalArticle]);
+    const worker = new Worker(new URL('../../workers/articleWorker.js', import.meta.url));
+
+
+    if (finalArticle && finalArticle.length > 0) {
+      
+
+      worker.postMessage({ article: finalArticle, index: 0 });
+      // worker.postMessage('i have sent message to the worker ');
 
 
 
 
-  // Setting up the web worker
-  // useEffect(() => {
-  //   console.log('entereddd')
-  //   worker.onmessage = (event) => {
-  //     const { visibleHTML, complete } = event.data;
-  //     setVisibleHTML((prev) => prev + visibleHTML); // Append the new part of the article
-  //     if (complete) {
-  //       setisArticleGenerated(true);
-  //       ArticleGenerated();
-  //     }
-  //   };
 
-  //   // Start the web worker when finalArticle changes
-  //   if (finalArticle) {
-  //     worker.postMessage({ finalArticle });
-  //   }
+      worker.onmessage = (e) => {
+        const { visibleHTML: newHTML, newIndex, done } = e.data;
+        setVisibleHTML(newHTML);
+        setIndex(newIndex);
 
-  //   // Clean up the worker on component unmount
-  //   return () => {
-  //     worker.terminate();
-  //   };
-  // }, [finalArticle]);
+        // Once done, dispatch completion action and show success toast
+        if (done) {
+          console.log('finished processing')
+          dispatch(setIsArticleLoadingCompleted(true));
+          ArticleGenerated();
+        }
+      };
+    }
 
- 
-  
+
+    return () => {
+      // Clean up Web Worker
+      worker.terminate();
+    };
+  }, [finalArticle]);
 
 
 
-  // Automatically scroll to the bottom when content updates
-  // useEffect(() => {
-  //   if(isManualyScrolled){
-  //     return
-  //   }
 
 
-  //   if (contentRef.current  ) {
-  //     contentRef.current.scrollTop = contentRef.current.scrollHeight;
-  //   }
-  // }, [visibleHTML]);
 
   useEffect(() => {
     if (isManualyScrolled) {
@@ -115,7 +121,6 @@ const dispatch = useDispatch()
         behavior: 'smooth',
       });
     }
-
 
   }, [visibleHTML, isManualyScrolled]);
 
@@ -147,28 +152,6 @@ const dispatch = useDispatch()
   }, []);
 
 
- 
-
-
-
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     dispatch(setIsScrolling())
-  //   };
-
-  //   const scrollElement = contentRef.current;
-  //   if (scrollElement) {
-  //     scrollElement.addEventListener('scroll', handleScroll);
-  //   }
-
-  //   return () => {
-  //     if (scrollElement) {
-  //       scrollElement.removeEventListener('scroll', handleScroll);
-  //     }
-  //   };
-  // }, []);
-
 
   const wordCount = countWords(visibleHTML);
   const characterCount = index;
@@ -182,22 +165,22 @@ const dispatch = useDispatch()
       {finalArticle.length > 0 ? (
 
         <div className="relative article-container font-poppins">
-          {visibleHTML && !IsArticleLoadingCompleted ?  (<div className="flex items-center px-4 mt-10 sm:px-10 xl:px-20 2xl:px-28">
+          {visibleHTML && !IsArticleLoadingCompleted ? (<div className="flex items-center px-4 mt-10 sm:px-10 xl:px-20 2xl:px-28">
             <span className="flex justify-center w-10 ">{wordCount}</span>
             <span className="">words</span>
             <span className="ml-1">/</span>
             <span className="flex justify-center w-10 ml-1">  {characterCount}</span>
             <span className="ml-1 ">characters</span>
           </div>)
-          :(
-            <div className="flex items-center px-4 mt-10 sm:px-10 xl:px-20 2xl:px-28">
-            <span className="flex justify-center w-10 ">{FinalWordCount}</span>
-            <span className="">words</span>
-            <span className="ml-1">/</span>
-            <span className="flex justify-center w-10 ml-1">{FinalCharectorCount}</span>
-            <span className="ml-1 ">characters</span>
-          </div>
-          )}
+            : (
+              <div className="flex items-center px-4 mt-10 sm:px-10 xl:px-20 2xl:px-28">
+                <span className="flex justify-center w-10 ">{FinalWordCount}</span>
+                <span className="">words</span>
+                <span className="ml-1">/</span>
+                <span className="flex justify-center w-10 ml-1">{FinalCharectorCount}</span>
+                <span className="ml-1 ">characters</span>
+              </div>
+            )}
 
           {IsArticleLoadingCompleted && (<motion.button
             drag
@@ -216,23 +199,23 @@ const dispatch = useDispatch()
           {/* Render the progressively revealed HTML with styles */}
 
           {IsArticleLoadingCompleted ? (
-             <div
-             className="px-4 py-10 min-h-[900px] max-h-[900px] sm:px-10 xl:px-20 2xl:px-28 article-content"
-             dangerouslySetInnerHTML={{ __html: finalArticle }} // This renders the HTML progressively
-             style={{ overflowY: 'auto' }} // Ensure the container scrolls
-           />
+            <div
+              className="px-4 py-10 min-h-[900px] max-h-[900px] sm:px-10 xl:px-20 2xl:px-28 article-content"
+              dangerouslySetInnerHTML={{ __html: finalArticle }} // This renders the HTML progressively
+              style={{ overflowY: 'auto' }} // Ensure the container scrolls
+            />
 
           ) : (
             <div
-            ref={contentRef}
-            className="px-4 py-10 min-h-[780px] max-h-[780px] sm:px-10 xl:px-20 2xl:px-28 article-content"
-            dangerouslySetInnerHTML={{ __html: visibleHTML }} // This renders the HTML progressively
-            style={{ overflowY: 'auto' }} // Ensure the container scrolls
-          />
+              ref={contentRef}
+              className="px-4 py-10 min-h-[780px] max-h-[780px] sm:px-10 xl:px-20 2xl:px-28 article-content"
+              dangerouslySetInnerHTML={{ __html: visibleHTML }} // This renders the HTML progressively
+              style={{ overflowY: 'auto' }} // Ensure the container scrolls
+            />
 
           )}
-         
-          
+
+
           {!IsArticleLoadingCompleted && (<div className="flex items-center justify-center ">
             <div className="flex items-center px-3 text-nowrap"> <span className="text-xl font-semibold text-custom-black-text">Your content is being cooked</span>
               <PulseLoader className='ml-2' /></div>
@@ -245,7 +228,7 @@ const dispatch = useDispatch()
         <ArticleLoader text='An error occurred. Please attempt to regenerate the article. ' />
 
       )}
-         <Toaster  />
+      <Toaster />
 
     </>
   );
