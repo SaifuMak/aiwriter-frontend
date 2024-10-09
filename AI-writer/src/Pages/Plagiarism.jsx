@@ -11,30 +11,28 @@ import { RiDeleteBin7Line } from "react-icons/ri";
 
 import Axiosinstance from '../Axios/Axiosinstance'
 import { useDispatch, useSelector } from 'react-redux';
-import { setResponse, setContents, resetContents, setTotalWords, setResults, setArticle, ResetArticle, setResetResults } from '../Redux/Slices/PlagiarismSlice'
+import { resetContents, setTotalWords, setResults, setArticle, ResetArticle, setResetResults, setWinstonResult, ResetWinstonResult } from '../Redux/Slices/PlagiarismSlice'
 
 import ErrorToast from '../Utils/ErrorToast'
 import CustomToolTip from '../Components/ArticleGenerationComponents/SmallComponents/CustomToolTip'
 import { FaRegFile } from "react-icons/fa6";
 import { countWords } from '../Utils/Helperfunctions'
 import CircularPercentage from '../Components/ArticleGenerationComponents/SmallComponents/CircularPercentage'
-import PlagiarismCheckerDetails from '../Components/Plagiarism/SmallComponets/PlagiarismCheckerDetails'
-import { useNavigate, useLocation } from 'react-router-dom';
 
+import PlagiarismDetails from '../Components/Plagiarism/SmallComponets/PlagiarismDetails'
 import { IoMenuOutline } from "react-icons/io5";
 import '../Components/Plagiarism/css/customScrollbar.css'
-
 import PulseLoader from 'react-spinners/PulseLoader'
+import { FindPercentage } from '../Utils/Helperfunctions'
 
 
 function Plagiarism() {
-    const navigate = useNavigate();
-    const location = useLocation();
 
     const dispatch = useDispatch()
     const fileInputRef = useRef()
 
-    const { result, article } = useSelector((state) => state.Plagiarism);
+    // const { results, article } = useSelector((state) => state.Plagiarism);
+
 
 
 
@@ -42,11 +40,15 @@ function Plagiarism() {
 
 
     // This is the selected outlines  data 
-    const [items, setItems] = useState([]);
     const [IsSidebarVisible, setIsSidebarVisible] = useState(false)
     const [SelectedFile, setSelectedFile] = useState(null)
     const [uploadedFile, setuploadedFile] = useState(null)
     const [wordsCount, setwordsCount] = useState(0)
+
+    const [checkedTime, setCheckedTime] = useState(null)
+    const [checkedDate, setCheckedDate] = useState(null)
+
+
 
 
 
@@ -56,8 +58,8 @@ function Plagiarism() {
     const [IsSidedbarOpened, setIsSidedbarOpened] = useState(false)
     const [IsMobileArticleSidebarOpened, setIsMobileArticleSidebarOpened] = useState(false)
     const [IsProfilePopup, setIsProfilePopup] = useState(false)
-    const [tempTitle, setTempTitle] = useState('')
     const [IsLoading, setIsLoading] = useState(false)
+
 
     // states that are used  for seeing the result 
     const [PlagiarismPercentage, setPlagiarismPercentage] = useState(0)
@@ -75,11 +77,13 @@ function Plagiarism() {
     const [Isediting, setIsediting] = useState(false)
     const [IsFinishedCalculating, setIsFinishedCalculating] = useState(false)
 
-    const [uniqueSentencesArray, setUniqueSentencesArray] = useState([]);
+    // const [uniqueSentencesArray, setUniqueSentencesArray] = useState([]);
     const [uniqueWordsArray, setUniqueWordsArray] = useState([]);
 
     // const [highlightedArticle, setHighlightedArticle] = useState(article);
     const [highlightedArticle, setHighlightedArticle] = useState('');
+
+    const [PlagiarisedUrl, setPlagiarisedUrl] = useState([])
 
 
 
@@ -89,7 +93,6 @@ function Plagiarism() {
         }
         // Function to handle the beforeunload event
         const handleBeforeUnload = (event) => {
-
 
             event.preventDefault(); // This ensures that the prompt shows up in some browsers
             event.returnValue = ''; // For Chrome, Firefox, and other browsers
@@ -106,7 +109,7 @@ function Plagiarism() {
 
 
 
-
+    console.log(results, 'resultssss from the----------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ ')
 
 
     const handleClick = () => {
@@ -177,23 +180,27 @@ function Plagiarism() {
     }
 
 
+
+
     const ConfirmPlagiarismCheck = async () => {
 
 
         if (!Content && !uploadedFile) {
             return
         }
-        if (wordsCount > 3000 && !uploadedFile) {
-            ErrorToast('The content exceeds the 3000-word limit.')
-            return
 
-        }
-        if (wordsCount < 100 && !uploadedFile) {
-            ErrorToast('The content must contain at least 100 words. ')
-            return
+        // if (wordsCount > 3000 && !uploadedFile) {
+        //     ErrorToast('The content exceeds the 3000-word limit.')
+        //     return
 
-        }
+        // }
+        // if (wordsCount < 100 && !uploadedFile) {
+        //     ErrorToast('The content must contain at least 100 words. ')
+        //     return
 
+        // }
+
+        setIsLoading(true)
 
         const formData = new FormData();
         if (uploadedFile) {
@@ -203,8 +210,8 @@ function Plagiarism() {
             formData.append('content', Content);
         }
 
-        dispatch(ResetArticle())
 
+        dispatch(ResetArticle())
         setPlagiarismPercentage(0)
         setUniquePercentage(0)
         setPlagiarismWordsCount('')
@@ -212,28 +219,45 @@ function Plagiarism() {
         dispatch(setResetResults())
         setResult([])
         dispatch(setArticle(Content))
-        setIsLoading(true)
+        setPlagiarisedUrl([])
+
+        toast.dismiss()
+        setIsFinishedCalculating(false)
+        setisPlagiarismChecked(false)
 
 
 
         try {
-            const response = await Axiosinstance.post('api/plagiarism-check', formData, {
+            const response = await Axiosinstance.post('api/plagiarism-check-winston', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             })
+            if (!Content) {
+                const RequestedArticle = response.data.article_text
+                setContent(RequestedArticle)
+                const wordCount = countWords(RequestedArticle);
+                setwordsCount(wordCount);
+            }
+
+
+            setCheckedTime(response.data.current_time)
+            setCheckedDate(response.data.current_date)
+            dispatch(ResetWinstonResult())
             dispatch(resetContents())
             setResult(response.data.results)
+
+
             // dispatch(setContents(response.data.results))
             setPlagiarisedResult(response.data.results)
             dispatch(setResults(response.data.results))
-
 
 
             dispatch(setTotalWords(response.data.TotalWords))
             setisPlagiarismChecked(true)
             setIsLoading(false)
             setIsediting(false)
+            dispatch(setWinstonResult(response.data.results))
 
 
 
@@ -248,11 +272,7 @@ function Plagiarism() {
         }
     }
 
-    const extractSentences = (html) => {
-        let plainText = html.replace(/<\/?[^>]+(>|$)/g, "");
-        const sentences = plainText.split(/\.|\.\.\./).map(sentence => sentence.trim());
-        return sentences.filter(sentence => sentence.length > 0);
-    };
+
 
 
 
@@ -266,42 +286,41 @@ function Plagiarism() {
             console.log('Value of results:', results);
 
             console.log(results)
+
             const resultArray = Array.isArray(results) ? results : [results];
             // const resultArray = Object.values(results);
             resultArray.forEach((data) => {
-                const sentences = extractSentences(data.htmlsnippet);
-                sentences.forEach((sentence) => {
+                if (data.plagiarismFound) {
+                    data.plagiarismFound.map((item, ind) => {
+                        // console.log(item.sequence, 'this is those sentences ')
+
+                        const words = item.sequence
+                            .toLowerCase()  // Convert to lowercase
+                            .split(/\s+/);  // Split by whitespace
+
+                        words.forEach(word => {
+                            const cleanedWord = word.replace(/[.,!?'’,)'′'`“”‘’`````]/g, '');  // Remove commas and periods
+                            if (cleanedWord.trim().length > 0) {
+                                console.log(cleanedWord, 'cleaned word ')
+                                uniqueWordsSet.add(cleanedWord);
+                            }
+                        });
 
 
-                    const words = sentence
-                        .toLowerCase()  // Convert to lowercase
-                        .split(/\s+/);  // Split by whitespace
+                    })
+                }
 
-                    words.forEach(word => {
-                        const cleanedWord = word.replace(/[.,!?']/g, '');  // Remove commas and periods
-                        if (cleanedWord.trim().length > 0) {
-                            uniqueWordsSet.add(cleanedWord);
-                        }
-                    });
 
-                });
             });
 
-            // const uniqueArray = Array.from(uniqueSentences);
-            // console.log(uniqueArray, 'results array---------------- ')
+
 
             // Convert the Set back to an array
             const uniqueWordsArray = Array.from(uniqueWordsSet);
 
-            // Display the unique words array
-            // console.log(uniqueWordsArray, 'removed duplicate words ');
             setUniqueWordsArray(uniqueWordsArray)
 
-            // console.log(Content, 'article provided ')
-            // setUniqueSentencesArray(uniqueArray);
-            // const highlighted = highlightMatches(article, uniqueArray);
-            // console.log(highlighted, 'highlighted artilce ')
-            // setHighlightedArticle(highlighted);
+
         }
     }, [results]);
 
@@ -320,7 +339,9 @@ function Plagiarism() {
             // console.log(word, 'this is the list of words ');
 
             // Remove punctuation including both straight and curly apostrophes
-            const cleanedWord = word.toLowerCase().replace(/[.,!?'’]/g, '').trim();
+            // const cleanedWord = word.toLowerCase().replace(/[.,!?'’]/g, '').trim();
+            const cleanedWord = word.toLowerCase().replace(/[.,!?'’,)'′'`“”‘’`````]/g, '').trim();
+
             // console.log(cleanedWord, 'this is the cleaned word');
 
             if (uniqueWordsArray.includes(cleanedWord)) {
@@ -362,6 +383,7 @@ function Plagiarism() {
         // Set the highlighted article
         setHighlightedArticle(result.trim());
         setPlagiarisedCount(redWordCount)
+        console.log(redWordCount, 'palgwords *****************************************************')
         setIsFinishedCalculating(true)
 
     }, [Content, results, uniqueWordsArray]);
@@ -375,6 +397,66 @@ function Plagiarism() {
             resultsRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
     }, [isPlagiarismChecked, IsFinishedCalculating]);
+
+    console.log(PlagiarisedUrl, 'this is the url hoding the url *************************** ')
+
+
+
+    useEffect(() => {
+
+        const urls = results.filter(data => data.score === 0).map(data => data.url);
+
+        console.log(results, 'this is the result that is the plagiarised--------  ')
+
+        console.log(urls, 'these are the urls that got matched--------(((((((())))))))))))----------------- ')
+        // setPlagiarisedUrl(prevUrls => [...prevUrls, ...urls])
+        setPlagiarisedUrl(prevUrls => {
+            // Combine the previous URLs and new URLs
+            const combinedUrls = [...prevUrls, ...urls];
+
+            // Use a Set to remove duplicates
+            const uniqueUrls = Array.from(new Set(combinedUrls));
+
+            return uniqueUrls;
+        });
+
+
+
+        if (results.length > 0) {
+
+            // setPlagiarismWordsCount(plagiarismWordsCount)
+
+            const PlagiarismPercentage = FindPercentage(PlagiarisedCount, wordsCount)
+            console.log(PlagiarismPercentage, 'PlagiarismPercentage  from the details ------------------77777777777777777777')
+
+            setPlagiarismPercentage(PlagiarismPercentage)
+
+            console.log(PlagiarisedCount, 'plagwords count from the details ------------------888888888')
+
+            const uniqueWordsCount = wordsCount - PlagiarisedCount
+            // setUniqueWordsCount(uniqueWordsCount)
+            console.log(uniqueWordsCount, 'uniqueWordsCount count from the details ------------------888888888')
+
+
+            const UniquePercentage = FindPercentage(uniqueWordsCount, wordsCount)
+            // const UniquePercentage = FindPercentage((wordsCount - PlagiarisedCount), wordsCount)
+
+            setUniquePercentage(UniquePercentage)
+
+        }
+        else {
+            console.log(PlagiarisedCount, ' plg count and this  has entered the else block  ------------------81212121212121212')
+
+            // setPlagiarismWordsCount(0)
+            setPlagiarismPercentage(0)
+
+            setUniquePercentage(100)
+            setUniqueWordsCount(wordsCount)
+
+        }
+
+    }, [results,IsFinishedCalculating])
+
 
 
 
@@ -411,25 +493,14 @@ function Plagiarism() {
                         </div>
                     </div>
 
-                    {/* <div className="">
-                        <Worksheet />
-                    </div> */}
-                    {/* <div className="w-10/12 px-10 ">
-                        <span className="text-xl ">{Content}</span>
-                    </div> */}
-
-
-
-
-
                     <div className="flex items-center justify-center">
                         <div className="w-full mt-10 2xl:px-0 xl:px-10 2xl:w-10/12">
                             <h2 className="text-2xl font-medium tracking-wide ">Plagiarism Checker</h2>
                             {/* {isPlagiarismChecked && <h2 className="text-2xl font-medium tracking-wide "> Checker</h2>} */}
                             {/* <button onClick={() => dispatch(resetContents())} className="px-6 py-1 text-white bg-indigo-500 rounded-lg ">Reset</button> */}
                             <div className="p-10 mt-6 space-y-2 bg-white rounded-lg shadow-xl ">
-                                <h5 className="font-semibold ">Paste (Ctrl + V) your article below then click for Plagiarism!</h5>
-                                {Plagiarisedwords ? (
+                                <h5 className="font-semibold ">Paste (Ctrl + V) your article below then click for Plagiarism!{PlagiarisedCount}</h5>
+                                {PlagiarisedCount > 0 ? (
                                     <div className='w-full  text-lg min-h-[400px] outline-none p-8 rounded-lg  bg-slate-50 border border-slate-200'>
                                         <div
                                             className="prose focus:outline-none"
@@ -445,7 +516,7 @@ function Plagiarism() {
 
                                 <div className="flex items-center justify-between w-full h-10 ">
                                     <p className={`${wordsCount > 3000 ? 'text-red-500' : ''}`}>Words limit/Search: {wordsCount}/3000</p>
-                                    {Content && (<CustomToolTip title='Clear content'>
+                                    {(Content && !isPlagiarismChecked && !IsLoading) && (<CustomToolTip title='Clear content'>
                                         <div onClick={handleClearContent} className="flex  items-center cursor-pointer justify-center rounded-md   w-8 h-9 bg-[#FF0000] ">
                                             <RiDeleteBin7Line className='text-xl text-white' />
                                         </div>
@@ -467,6 +538,7 @@ function Plagiarism() {
                                     <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} className="" />
                                 </div>
 
+
                                 {IsLoading ? (
                                     <button className="font-semibold tracking-wide  bg-custom-dark-orange w-[160px] lg:w-[170px] xl:w-[200px] 2xl:w-[220px] flex justify-center items-center  rounded-md h-[35px] xl:h-[40px] 2xl:h-[45px]  text-white">
                                         <span className="text-lg ">Checking </span> <PulseLoader color="#ffffff" size={6} margin={8} />
@@ -480,22 +552,24 @@ function Plagiarism() {
                         </div>
                     </div>
 
-                    {(isPlagiarismChecked && IsFinishedCalculating) && (<div
+
+
+                    {(isPlagiarismChecked && IsFinishedCalculating && !IsLoading) && (<div
                         ref={resultsRef}
                         className="flex items-center justify-center mt-20 ">
                         <div className="w-full mt-4 xl:px-10 2xl:px-0 2xl:w-10/12 ">
                             <h2 className="text-2xl font-medium tracking-wide ">Results</h2>
 
-                            <div className="flex p-2 mt-4 space-x-4 bg-white rounded-lg md:p-8 max-lg:flex-col">
+                            <div className="flex p-2 mt-4 bg-white rounded-lg max-sm:py-4 sm:space-x-4 md:p-8 max-lg:flex-col">
 
                                 <div className="">
                                     <div className="flex justify-center space-x-10 lg:space-x-4 ">
                                         <div className="flex flex-col items-center justify-center px-6 py-4 border-2 2xl:px-8 border-slate-200 rounded-xl">
-                                            <CircularPercentage percentage={PlagiarismPercentage} pathcolor='#FF0000' textcolor='#F20000' />
+                                            <CircularPercentage percentage={FindPercentage(PlagiarisedCount, wordsCount)} pathcolor='#FF0000' textcolor='#F20000' />
                                             <span className="text-lg mt-2 font-semibold tracking-wide text-[#F20000]">Plagiarism</span>
                                         </div>
                                         <div className="flex flex-col items-center justify-center px-6 py-4 border-2 2xl:px-8 border-slate-200 rounded-xl">
-                                            <CircularPercentage percentage={PlagiarisedCount === 0 ? '100' : UniquePercentage} pathcolor='#14AE20' textcolor='#14AE20' />
+                                            <CircularPercentage percentage={PlagiarisedCount === 0 ? '100' : FindPercentage((wordsCount - PlagiarisedCount), wordsCount)} pathcolor='#14AE20' textcolor='#14AE20' />
                                             <span className="text-lg mt-2 font-semibold tracking-wide text-[#14AE20]">Unique</span>
                                         </div>
                                     </div>
@@ -504,21 +578,23 @@ function Plagiarism() {
                                         <p className="font-semibold">Plagiarised Words: <span className="ml-1 text-red-500 ">{PlagiarisedCount}</span> </p>
                                         <p className="mt-2 font-semibold">Unique Words:<span className="ml-1 text-green-500 ">{wordsCount - PlagiarisedCount}</span> </p>
                                         <div className="w-full mt-4 text-center ">
-                                            <span className=" text-[#858484] text-center   text-sm">Scan details: 4:35PM (IST), 30 Aug 2024</span>
+                                            <span className=" text-[#858484] text-center   text-sm">Scan details: {checkedTime} (IST), {checkedDate}</span>
                                         </div>
                                     </div>
                                 </div>
 
 
-                                <div className="h-full max-lg:mt-10 ">
+                                <div className="w-full h-full max-lg:mt-10 ">
 
                                     <div className="bg-[rgb(246,247,248)] custom-scrollbar space-y-4 h-[330px] max-h-[330px] overflow-y-auto  flex flex-col justify-start w-full rounded-xl lg:px-3 2xl:px-8">
-                                        {PlagiarisedCount === 0 ? (
+                                        {PlagiarisedCount === 0 && PlagiarisedUrl.length === 0 ? (
                                             <div className="flex items-center justify-center w-full h-full ">
+
                                                 <p className="font-semibold tracking-wide text-center text-slate-500 ">Congratulations! Your content is authentic and does not contain any plagiarized material. Keep it up!</p>
+
                                             </div>
                                         ) : (
-                                            <PlagiarismCheckerDetails wordsCount={wordsCount} PlagiarisedResult={PlagiarisedResult} setPlagiarisedwords={setPlagiarisedwords} setSentences={setSentences} setUniqueWordsCount={setUniqueWordsCount} setPlagiarismWordsCount={setPlagiarismWordsCount} setPlagiarismPercentage={setPlagiarismPercentage} PlagiarisedCount={PlagiarisedCount} setUniquePercentage={setUniquePercentage} />
+                                            <PlagiarismDetails PlagiarisedUrl={PlagiarisedUrl} setPlagiarisedUrl={setPlagiarisedUrl} wordsCount={wordsCount} PlagiarisedResult={results} setUniqueWordsCount={setUniqueWordsCount} setPlagiarismWordsCount={setPlagiarismWordsCount} setPlagiarismPercentage={setPlagiarismPercentage} PlagiarisedCount={PlagiarisedCount} setUniquePercentage={setUniquePercentage} />
                                         )}
 
                                     </div>
@@ -532,10 +608,8 @@ function Plagiarism() {
                             </div>
                         </div>
                     </div>)}
-
-
-
                 </div>
+
                 <Toaster position="bottom-right" />
 
             </div>

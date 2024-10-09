@@ -94,7 +94,7 @@ function ArticleGenerate2() {
     }
 
 
-    // this function ensures that alert is ignored and cation is to regenarate the content 
+    // this function ensures that alert is ignored and action is to regenarate the content 
     const handleIgnoreContinue = () => {
         setAlertPopup(false);
         if (apiToCall) {

@@ -28,12 +28,12 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
 
 
 
-  const getMenuStyle =(page)=>{
+  const getMenuStyle = (page) => {
     return page === pageSelected ? 'text-custom-dark-orange bg-[#FFFFFF1A]' : 'text-white'
   }
 
-  const HandlePageChange = (page)=>{
-   dispatch(setSelectedPage(page))
+  const HandlePageChange = (page) => {
+    dispatch(setSelectedPage(page))
   }
 
 
@@ -52,8 +52,8 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
       </section>
 
       <section className="flex flex-col justify-start w-full space-y-1 ">
-        <Link to='/' onClick={()=>HandlePageChange('Home')} className='cursor-pointer '>
-          <div  className={`flex items-center  lg:text-base xl:text-base  space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer ${getMenuStyle('Home')}  hover:text-custom-dark-orange`}>
+        <Link to='/' onClick={() => HandlePageChange('Home')} className='cursor-pointer '>
+          <div className={`flex items-center  lg:text-base xl:text-base  space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer ${getMenuStyle('Home')}  hover:text-custom-dark-orange`}>
             <SlHome className='' />
             <span className="">Home</span>
           </div>
@@ -66,18 +66,21 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
         </div>
 
 
-        <Link to='/choose-article-writer' onClick={()=>HandlePageChange('Article Writer')} className='cursor-pointer '>
-        <div  className={`flex items-center  lg:text-base xl:text-base  space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer ${getMenuStyle('Article Writer')}  hover:text-custom-dark-orange`}>
-          <LuFileEdit className='' />
-          <span className="">Article Writer</span>
-        </div>
+        <Link to='/choose-article-writer' onClick={() => HandlePageChange('Article Writer')} className='cursor-pointer '>
+          <div className={`flex items-center  lg:text-base xl:text-base  space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer ${getMenuStyle('Article Writer')}  hover:text-custom-dark-orange`}>
+            <LuFileEdit className='' />
+            <span className="">Article Writer</span>
+          </div>
         </Link>
 
 
-        <div className='flex items-center  lg:text-base xl:text-base text-white space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer  hover:text-custom-dark-orange'>
-          <LuFileEdit className='' />
-          <span className="">Article Rewriter</span>
-        </div>
+        <Link to='/article-rewriter' className='cursor-pointer '>
+
+          <div className='flex items-center  lg:text-base xl:text-base text-white space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer  hover:text-custom-dark-orange'>
+            <LuFileEdit className='' />
+            <span className="">Article Rewriter</span>
+          </div>
+        </Link>
 
         {/* <Link to='/plagiarism-checker'>
           <div className={menustyle}>

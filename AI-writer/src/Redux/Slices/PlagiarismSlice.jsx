@@ -7,6 +7,8 @@ const initialState = {
     contents : [],
     totalWords : null,
     result : [],
+    winstonResult :null,
+    results : null,
 };
 
 
@@ -14,6 +16,12 @@ const PlagiarismSlice = createSlice({
     name: 'Plagiarism',
     initialState,
     reducers: {
+        setWinstonResult(state, action) {
+            state.results  = action.payload;  // Move to the next step
+        },
+        ResetWinstonResult(state) {
+            state.results  = null;  // Move to the next step
+        },
         setResponse(state, action) {
             state.response  = action.payload;  // Move to the next step
         },
@@ -45,5 +53,5 @@ const PlagiarismSlice = createSlice({
 });
 
 
-export const {setResponse,setContents,setArticle,ResetArticle,resetContents,setTotalWords,setResults,setResetResults} = PlagiarismSlice.actions;
+export const {setWinstonResult,ResetWinstonResult,setResponse,setContents,setArticle,ResetArticle,resetContents,setTotalWords,setResults,setResetResults} = PlagiarismSlice.actions;
 export default PlagiarismSlice.reducer;

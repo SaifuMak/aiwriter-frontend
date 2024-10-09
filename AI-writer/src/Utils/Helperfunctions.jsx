@@ -9,6 +9,15 @@ export function countWords(text) {
     return  text.split(/\s+/).filter(Boolean).length;
 }
 
+export  function truncateUrl(url,maxLength){
+    const trimmedUrl = url.replace(/^https?:\/\//, '');
+    if(trimmedUrl.length > maxLength){
+        return trimmedUrl.slice(0,maxLength) + '...';
+    }
+    return trimmedUrl
+    
+}
+
 // Utility function to calculate the number of characters
 export function countCharacters(text) {
     return text.length; // Total number of characters

@@ -16,9 +16,9 @@ import PublicRoutes from './Routes/PublicRoutes'
 import PrivateRoutes from './Routes/PrivateRoutes'
 import Demo from './Pages/Demo'
 import ArticleGenerate2 from './Pages/ArticleGenerate2'
+import ArticleRewriter from './Pages/ArticleRewriter'
 import WorkSheet from './Pages/WorkSheet'
 import { Toaster, toast } from 'sonner';
-
 import WriterStep from './Pages/WriterStep'
 
 function App() {
@@ -78,6 +78,10 @@ function App() {
 
               {<Route path='/choose-article-writer' element={<PrivateRoutes />}>
                 <Route index element={<WriterStep />} />
+              </Route>}
+
+              {<Route path='/article-rewriter' element={<PrivateRoutes />}>
+                <Route index element={<ArticleRewriter />} />
               </Route>}
               
               {/* <Route path="/login" element={<Login />} /> */}

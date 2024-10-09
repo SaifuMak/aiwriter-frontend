@@ -6,6 +6,7 @@ import ArticleGenerationSlice from './Slices/ArticleGenerationSlice';
 import SelectedToolSlice from './Slices/SelectedToolSlice';
 import PlagiarismSlice from './Slices/PlagiarismSlice';
 import NavigationSlice from './Slices/NavigationSlice';
+import ArticleRewriterSlice from './Slices/ArticleRewriterSlice';
 import { combineReducers } from 'redux';
 
 // const persistConfig = {
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
     Plagiarism : PlagiarismSlice,
     SelectedTool : SelectedToolSlice,
     Navigation : NavigationSlice,
+    ArticleRewriter : ArticleRewriterSlice
     
 });
   

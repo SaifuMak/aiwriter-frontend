@@ -169,6 +169,8 @@ function ArticleGeneration() {
     }
 
 
+
+    
     const Fetchkeywords = async () => {
         toast.dismiss()
 
@@ -193,10 +195,24 @@ function ArticleGeneration() {
                 dispatch(setLoading(true))
                 const response = await Axiosinstance.post('api/generate-keywords', data)
                 const articles = response.data.article
+                const keywords = articles.split('\n')
                 const keywordsArray = articles
                     ? articles.split('\n').map(item => item.replace(/^\d+\.\s*/, '').trim())
                     : [];
-                console.log(keywordsArray, '///////////////////')
+                console.log(articles, 'without striping keywords ////////////////')
+
+                console.log(keywords, 'keywords ////////////////')
+                console.log(keywordsArray, 'keywords array  ////////////////')
+                console.log(keywordsArray.length, 'keywords array length  ////////////////')
+
+                if(keywordsArray.length <= 1){
+                    ErrorToast('please enter a meaningfull topic')
+                dispatch(setLoading(false))
+
+                    return
+
+                }
+                
 
 
                 dispatch(setKeywords(keywordsArray))
