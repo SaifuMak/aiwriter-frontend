@@ -26,7 +26,10 @@ const initialState = {
     selectedPointOfView : 'Second-Person (You)',
     selectedWordLimit : '1000',
     IsScrolled : false,
-    IsArticleLoadingCompleted : false
+    IsArticleLoadingCompleted : false,
+   
+    ContentForArticleRewrite :'',
+    KeywordsForArticleRewrite : ''
 
     // Add any other initial state you need
 };  
@@ -43,6 +46,13 @@ const ArticleGenerationSlice = createSlice({
         // setFinalSelectedArticleWriter(state,action){
         //     state.FinalSelectedArticleWriter = action.payload;
         // },
+     
+        SetContentForArticleRewrite(state,action){
+            state.ContentForArticleRewrite = action.payload;
+        },
+        SetKeywordsForArticleRewrite(state,action){
+            state.KeywordsForArticleRewrite =  action.payload;
+        },
 
         nextStep(state) {
             state.currentStep += 1;  // Move to the next step
@@ -182,5 +192,5 @@ const ArticleGenerationSlice = createSlice({
 });
 
 
-export const { nextStep, previousStep,setRefTitle,ResetKeywords,ResetSelectedKeywordsRedux,setisManualHeadlinesEnabled, setHeadlines,setSelectedHeadline,ResetSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setisManualKeywordsEnabled, setToneOfVoice,setPointOfView,setWordLimit, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration,setReorderedSelectedOutlines,setFinalArticle,resetFinalArticle,setIsArticleLoadingCompleted ,ResetIsArticleLoadingCompleted ,resetReorderedSelectedOutlines,setIsScrolling,setScrollingfalse } = ArticleGenerationSlice.actions;
+export const {SetContentForArticleRewrite,SetKeywordsForArticleRewrite, nextStep, previousStep,setRefTitle,ResetKeywords,ResetSelectedKeywordsRedux,setisManualHeadlinesEnabled, setHeadlines,setSelectedHeadline,ResetSelectedHeadline, setSelectedKeywordsRedux, setLoading,setCurrentStep, setTitle, setKeywords, setisManualKeywordsEnabled, setToneOfVoice,setPointOfView,setWordLimit, setOutlines,ClearOutlines, ClearSelectedOutlines, setIsIndividualOutlines  ,setSelectedOutlines,RemoveSelectedOutlines,SetSelectedOutlineKey, setArticleStructure, resetArticleGeneration,setReorderedSelectedOutlines,setFinalArticle,resetFinalArticle,setIsArticleLoadingCompleted ,ResetIsArticleLoadingCompleted ,resetReorderedSelectedOutlines,setIsScrolling,setScrollingfalse } = ArticleGenerationSlice.actions;
 export default ArticleGenerationSlice.reducer;

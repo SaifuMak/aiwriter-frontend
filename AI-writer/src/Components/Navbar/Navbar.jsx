@@ -10,8 +10,9 @@ import CompleteLogo from '../../assets/Logo/CompleteLogo';
 import { Link } from 'react-router-dom';
 
 
-function Navbar({ setIsSidedbarOpened, IsSidedbarOpened, setIsMobileArticleSidebarOpened, IsMobileArticleSidebarOpened }) {
+function Navbar({ Label, setIsSidedbarOpened, IsSidedbarOpened, setIsMobileArticleSidebarOpened, IsMobileArticleSidebarOpened }) {
     const { currentStep, selectedHeadline, selectedOutlines, keywords } = useSelector((state) => state.articleGeneration);
+    const { ArticleRewriterStep } = useSelector((state) => state.ArticleRewriter)
     const dispatch = useDispatch();
 
 
@@ -38,7 +39,7 @@ function Navbar({ setIsSidedbarOpened, IsSidedbarOpened, setIsMobileArticleSideb
 
             </div>
 
-            <div className="flex items-center justify-between flex-1 ">
+            {(Label === 'Article Writer 2.0' || Label === 'Article Writer 1.0') && (<div className="flex items-center justify-between flex-1 ">
 
                 {/* Desktop view  */}
                 <div className="flex items-center justify-center space-x-1 text-sm tracking-wider text-white max-sm:hidden lg:space-x-3 lg:text-lg ">
@@ -59,8 +60,32 @@ function Navbar({ setIsSidedbarOpened, IsSidedbarOpened, setIsMobileArticleSideb
                     <span className={`${selectedOutlines.length > 0 || currentStep === 7 ? 'text-custom-dark-orange' : ''}`}>Generate Article</span>
                 </div>
 
-               {currentStep > 0 && ( <RxCross1 onClick={() => dispatch(resetArticleGeneration())} className='p-1 text-2xl font-semibold transition-transform duration-300 transform rounded-full cursor-pointer sm:text-3xl hover:rotate-90 hover:bg-slate-700 text-custom-dark-orange ' />)}
-            </div>
+                {currentStep > 0 && (<RxCross1 onClick={() => dispatch(resetArticleGeneration())} className='p-1 text-2xl font-semibold transition-transform duration-300 transform rounded-full cursor-pointer sm:text-3xl hover:rotate-90 hover:bg-slate-700 text-custom-dark-orange ' />)}
+            </div>)}
+
+
+
+            {Label === 'Article Rewriter 1.0' && (<div className="flex items-center justify-between flex-1 ">
+
+                {/* Desktop view  */}
+                <div className="flex items-center justify-center space-x-1 text-sm tracking-wider text-white max-sm:hidden lg:space-x-3 lg:text-lg ">
+                    <span className=" text-custom-dark-orange">Paste content{ArticleRewriterStep}</span>
+                    <LongArrow isActive={true} />
+                    <span className={`${ArticleRewriterStep === 1 ? 'text-custom-dark-orange' : ''}`}>Rewrite Article</span>
+
+                </div>
+
+
+                {/* mobile view  */}
+                <div className="flex items-center justify-center space-x-1 text-sm tracking-wider text-white sm:hidden ">
+                    <span className=" text-custom-dark-orange"> Paste content</span>
+                    <ShortArrow isActive={true} />
+                    <span className={`${ArticleRewriterStep === 1 ? 'text-custom-dark-orange' : ''}`}> Rewrite Article</span>
+
+                </div>
+
+                {/* {currentStep > 0 && (<RxCross1 onClick={() => dispatch(resetArticleGeneration())} className='p-1 text-2xl font-semibold transition-transform duration-300 transform rounded-full cursor-pointer sm:text-3xl hover:rotate-90 hover:bg-slate-700 text-custom-dark-orange ' />)} */}
+            </div>)}
 
         </div>
     )

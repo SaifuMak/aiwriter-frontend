@@ -15,7 +15,7 @@ import FinalArticle from '../Components/FinalArticle/FinalArticle'
 import { Toaster, toast } from 'sonner';
 import Axiosinstance from '../Axios/Axiosinstance'
 
-import {setArticleRewriterStep,nextArticleRewriterStep,prevArticleRewriterStep,setToneOfVoiceArticleRewriter,setPointOfViewArticleRewriter} from '../Redux/Slices/ArticleRewriterSlice'
+import { setContentForRewriting, setKeywordsForRewriting } from '../Redux/Slices/ArticleRewriterSlice'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { IoIosArrowDropright } from "react-icons/io";
@@ -24,13 +24,16 @@ import { motion } from 'framer-motion';
 import AlertPopUp from '../Components/ArticleGenerationComponents/SmallComponents/AlertPopUp'
 import { showGenericError } from '../Utils/ErrorMessages'
 import TextareaAutosize from 'react-textarea-autosize';
+import { countWords } from '../Utils/Helperfunctions'
+
+
 
 
 function ArticleRewriter() {
 
     const dispatch = useDispatch()
 
-    const { selectedKeywords, finalArticle, title, currentStep, selectedOutlines, selectedWordLimit, ReorderedSelectedOutlines, selectedToneOfVoice, selectedPointOfView, selectedHeadline, refTitle, loading } = useSelector((state) => state.articleGeneration);
+    const { ContentForRewriting, KeywordsForRewriting ,selectedToneOfVoiceArticleRewriter, selectedPointOfViewArticleRewriter, ArticleRewriterStep,selectedWordlimitArticleRewriter, } = useSelector((state) => state.ArticleRewriter);
 
 
 
@@ -45,6 +48,8 @@ function ArticleRewriter() {
     const [article, setarticle] = useState('')
     const [keywords, setkeywords] = useState('')
 
+    const [wordsCount, setwordsCount] = useState(0)
+
 
 
 
@@ -55,20 +60,64 @@ function ArticleRewriter() {
 
     const handleArticle = (e) => {
         const article = e.target.value
+        setwordsCount(countWords(article))
         setarticle(article)
+        // dispatch(setSubmittedArticle(article))
+        // dispatch(SetrequestedArticleForArticleRewrite(article))
+        dispatch(setContentForRewriting(article))
     }
 
 
     const handleKeywords = (e) => {
         const Enteredkeywords = e.target.value
         setkeywords(Enteredkeywords)
+        dispatch(setKeywordsForRewriting(Enteredkeywords))
     }
+
+
+    const HandleRewriteArticle = async () => {
+        toast.dismiss()
+        if (!ContentForRewriting) {
+            console.log('no content ')
+            return
+        }
+        if (wordsCount > 3000) {
+            ErrorToast('The content has exceeded the allowed word limit.')
+            return
+        }
+        const data = {
+            'Article': ContentForRewriting,
+            'Keywords': KeywordsForRewriting,
+            'Tone_of_voice' : selectedToneOfVoiceArticleRewriter,
+            'Point_of_view' : selectedPointOfViewArticleRewriter,
+            'Word_limit' : selectedWordlimitArticleRewriter,
+
+
+        }
+
+        try {
+            const response = await Axiosinstance.post('api/rewrite-your-article', data)
+            console.log(response)
+
+        }
+        catch {
+
+        }
+    }
+
+
+    useEffect(() => {
+        if (ContentForRewriting) {
+            setwordsCount(countWords(ContentForRewriting))
+        }
+
+    }, [])
 
 
 
     return (
         <>
-            <Navbar IsSidedbarOpened={IsSidedbarOpened} setIsSidedbarOpened={setIsSidedbarOpened} setIsMobileArticleSidebarOpened={setIsMobileArticleSidebarOpened} IsMobileArticleSidebarOpened={IsMobileArticleSidebarOpened} />
+            <Navbar Label='Article Rewriter 1.0' IsSidedbarOpened={IsSidedbarOpened} setIsSidedbarOpened={setIsSidedbarOpened} setIsMobileArticleSidebarOpened={setIsMobileArticleSidebarOpened} IsMobileArticleSidebarOpened={IsMobileArticleSidebarOpened} />
             <div className="relative flex font-poppins ">
 
                 <motion.span
@@ -87,24 +136,26 @@ function ArticleRewriter() {
 
 
                 <div className="w-full ">
-                    <div className="p-20">
+                    <div className="p-8 lg:p-20 sm:p-12">
 
                         <div className="">
 
                             <h1 className="text-2xl ">Paste your existing article:</h1>
-                            <textarea onChange={handleArticle} value={article} name="" id="" className='w-full p-8 mt-6 border border-opacity-50 rounded-md outline-none min-h-96 border-slate-600' placeholder='Paste content here or Type...'></textarea>
+                            <textarea onChange={handleArticle} value={ContentForRewriting} name="" id="" className='w-full p-4 mt-6 border border-opacity-50 rounded-md outline-none sm:p-8 min-h-96 border-slate-600' placeholder='Paste content here or Type...'></textarea>
+                            <p className={`${wordsCount > 3000 ? 'text-red-500' : ''}`}>Words limit: {wordsCount}/3000</p>
 
                         </div>
 
-                        <div className="mt-20 ">
+                        <div className="mt-6 lg:mt-20 sm:mt-10 ">
 
                             <h1 className="text-lg ">Enter Keywords (optional):</h1>
-                            <TextareaAutosize onChange={handleKeywords} value={keywords} name="" id="" className='w-full p-4 mt-3 border border-opacity-50 rounded-md outline-none resize-none border-slate-600' placeholder='Paste content here or Type...' />
+                            <TextareaAutosize onChange={handleKeywords} value={KeywordsForRewriting} name="" id="" className='w-full p-4 mt-3 border border-opacity-50 rounded-md outline-none resize-none border-slate-600' placeholder='Paste content here or Type...' />
+
 
                         </div>
 
 
-                        <button className="px-12 rounded-md mt-8  tracking-wider py-1.5 text-white bg-custom-dark-orange">Rewrite</button>
+                        <button onClick={HandleRewriteArticle} className="px-12 py-2 mt-8 tracking-wider text-white rounded-md bg-custom-dark-orange">Rewrite</button>
 
 
 
@@ -113,7 +164,7 @@ function ArticleRewriter() {
 
 
                 </div>
-                {/* <Toaster  /> */}
+                <Toaster />
 
 
 
