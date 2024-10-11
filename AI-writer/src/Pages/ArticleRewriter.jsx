@@ -142,7 +142,7 @@ function ArticleRewriter() {
 
                             <h1 className="text-2xl ">Paste your existing article:</h1>
                             <textarea onChange={handleArticle} value={ContentForRewriting} name="" id="" className='w-full p-4 mt-6 border border-opacity-50 rounded-md outline-none sm:p-8 min-h-96 border-slate-600' placeholder='Paste content here or Type...'></textarea>
-                            <p className={`${wordsCount > 3000 ? 'text-red-500' : ''}`}>Words limit: {wordsCount}/3000</p>
+                            <p className={`${wordsCount > 3000 ? 'text-red-500' : ''}`}>Words limitsss: {wordsCount}/3000</p>
 
                         </div>
 
