@@ -15,7 +15,8 @@ import FinalArticle from '../Components/FinalArticle/FinalArticle'
 import { Toaster, toast } from 'sonner';
 import Axiosinstance from '../Axios/Axiosinstance'
 
-import { setContentForRewriting, setKeywordsForRewriting } from '../Redux/Slices/ArticleRewriterSlice'
+import {prevArticleRewriterStep, setContentForRewriting, setKeywordsForRewriting, SetArticleRewriterStep, ResetArticleRewrited, setArticleRewrited,setIsRewriteArticleLoadingCompleted } from '../Redux/Slices/ArticleRewriterSlice'
+import { setLoading } from '../Redux/Slices/ArticleGenerationSlice'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { IoIosArrowDropright } from "react-icons/io";
@@ -25,18 +26,15 @@ import AlertPopUp from '../Components/ArticleGenerationComponents/SmallComponent
 import { showGenericError } from '../Utils/ErrorMessages'
 import TextareaAutosize from 'react-textarea-autosize';
 import { countWords } from '../Utils/Helperfunctions'
-
-
-
+import ArticleTobeRewrite from '../Components/ArticleRewrite/ArticleTobeRewrite'
+import FinalArticleRewriter from '../Components/FinalArticleRewriter'
 
 function ArticleRewriter() {
 
     const dispatch = useDispatch()
 
-    const { ContentForRewriting, KeywordsForRewriting ,selectedToneOfVoiceArticleRewriter, selectedPointOfViewArticleRewriter, ArticleRewriterStep,selectedWordlimitArticleRewriter, } = useSelector((state) => state.ArticleRewriter);
-
-
-
+    const { ContentForRewriting, ArticleRewrited, KeywordsForRewriting, selectedToneOfVoiceArticleRewriter, selectedPointOfViewArticleRewriter, ArticleRewriterStep, selectedWordlimitArticleRewriter } = useSelector((state) => state.ArticleRewriter);
+    const { loading } = useSelector((state) => state.articleGeneration);
 
     const [IsSidedbarOpened, setIsSidedbarOpened] = useState(false)
     const [IsMobileArticleSidebarOpened, setIsMobileArticleSidebarOpened] = useState(false)
@@ -50,13 +48,54 @@ function ArticleRewriter() {
 
     const [wordsCount, setwordsCount] = useState(0)
 
+    useEffect(() => {
+        dispatch(setLoading(false))
+
+    }, [])
 
 
+
+
+    const handleBackButtonClick = () => {  //  this decreases the count for the currentstate , allow users to go back 
+        if (ArticleRewriterStep === 0) {
+            return
+        }
+        else {
+            dispatch(prevArticleRewriterStep())
+
+        }
+    }
+
+    const handleForwardButtonClick = () => {  //  this decreases the count for the currentstate , allow users to go back 
+        if (ArticleRewriterStep === 0 && ArticleRewrited) {
+            dispatch(SetArticleRewriterStep(1))
+        }
+        else {
+            return
+
+        }
+    }
+
+     // this function ensures that alert is ignored and action is to regenarate the content 
+     const handleIgnoreContinue = () => {
+        setAlertPopup(false);
+        if (apiToCall) {
+            apiToCall(); // Call the stored API function
+        }
+    };
+    // this function sends the api need to call after the alert popup 
 
     const showPopupAndCallAPI = (apiFunction) => {
         setAlertPopup(true);
         setApiToCall(() => apiFunction); // Store the API function to be called later
     }
+
+    const HandleClosePopUp = () => {
+        setAlertPopup(false)
+        setApiToCall(null)
+    }
+
+   
 
     const handleArticle = (e) => {
         const article = e.target.value
@@ -81,26 +120,43 @@ function ArticleRewriter() {
             console.log('no content ')
             return
         }
+        
         if (wordsCount > 3000) {
             ErrorToast('The content has exceeded the allowed word limit.')
             return
         }
+
         const data = {
             'Article': ContentForRewriting,
             'Keywords': KeywordsForRewriting,
-            'Tone_of_voice' : selectedToneOfVoiceArticleRewriter,
-            'Point_of_view' : selectedPointOfViewArticleRewriter,
-            'Word_limit' : selectedWordlimitArticleRewriter,
-
-
+            'Tone_of_voice': selectedToneOfVoiceArticleRewriter,
+            'Point_of_view': selectedPointOfViewArticleRewriter,
+            'Word_limit': selectedWordlimitArticleRewriter,
         }
+        
+        dispatch(setLoading(true))
+        dispatch(ResetArticleRewrited())
+        dispatch(setIsRewriteArticleLoadingCompleted(false))
+
+
 
         try {
+            
             const response = await Axiosinstance.post('api/rewrite-your-article', data)
-            console.log(response)
+            if (response.data.article) {
+                const article = response.data.article.replace("```html", "").replace("```", "").trim();
+                console.log(article)
+                dispatch(setArticleRewrited(article))
+                dispatch(SetArticleRewriterStep(1))
+                dispatch(setLoading(false))
+            }
+
 
         }
         catch {
+            console.log(response.data.error)
+            dispatch(setLoading(false))
+
 
         }
     }
@@ -120,6 +176,7 @@ function ArticleRewriter() {
             <Navbar Label='Article Rewriter 1.0' IsSidedbarOpened={IsSidedbarOpened} setIsSidedbarOpened={setIsSidedbarOpened} setIsMobileArticleSidebarOpened={setIsMobileArticleSidebarOpened} IsMobileArticleSidebarOpened={IsMobileArticleSidebarOpened} />
             <div className="relative flex font-poppins ">
 
+
                 <motion.span
                     drag
                     dragConstraints={{ left: 0, top: 0, right: 0, bottom: 400 }} // Optional: constraints for drag area
@@ -131,12 +188,18 @@ function ArticleRewriter() {
                 {IsSidedbarOpened && (<MobileSidebar IsProfilePopup={IsProfilePopup} setIsSidedbarOpened={setIsSidedbarOpened} setIsProfilePopup={setIsProfilePopup} />)}
 
                 <div className="xl:w-[500px] sm:w-[200px] lg:w-[400px] max-sm:hidden ">
-                    <ArticleSidebar Label='Article Rewriter 1.0' showPopupAndCallAPI={showPopupAndCallAPI} />
+                    <ArticleSidebar Label='Article Rewriter 1.0' showPopupAndCallAPI={showPopupAndCallAPI} handleBackButtonClick={handleBackButtonClick} handleForwardButtonClick={handleForwardButtonClick} HandleRewriteArticle={HandleRewriteArticle} />
                 </div>
 
 
                 <div className="w-full ">
-                    <div className="p-8 lg:p-20 sm:p-12">
+                    {(ArticleRewriterStep === 0 && !loading) && <ArticleTobeRewrite  showPopupAndCallAPI={showPopupAndCallAPI} handleArticle={handleArticle} ContentForRewriting={ContentForRewriting} wordsCount={wordsCount} handleKeywords={handleKeywords} KeywordsForRewriting={KeywordsForRewriting} HandleRewriteArticle={HandleRewriteArticle} />}
+                    {(loading && (ArticleRewriterStep === 0 || ArticleRewriterStep === 1)) && <ArticleLoader text='Your copies created by artificial intelligence will appear here.' />}
+                    {(ArticleRewriterStep === 1 && !loading) && <FinalArticleRewriter />}
+
+
+
+                    {/* <div className="p-8 lg:p-20 sm:p-12">
 
                         <div className="">
 
@@ -153,17 +216,19 @@ function ArticleRewriter() {
 
 
                         </div>
-
+                        
 
                         <button onClick={HandleRewriteArticle} className="px-12 py-2 mt-8 tracking-wider text-white rounded-md bg-custom-dark-orange">Rewrite</button>
 
 
 
-                    </div>
+                    </div> */}
 
 
 
                 </div>
+                {AlertPopup && <AlertPopUp handleIgnoreContinue={handleIgnoreContinue} HandleClosePopUp={HandleClosePopUp} />}
+
                 <Toaster />
 
 

@@ -12,6 +12,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedPage } from '../../Redux/Slices/NavigationSlice'
 import { loginSuccess, setLogout } from '../../Redux/Slices/AuthSlice'
 import { HiOutlineDocumentMagnifyingGlass } from "react-icons/hi2";
+import { ResetRewriteArticle } from '../../Redux/Slices/ArticleRewriterSlice'
+
+import { MdOutlineDocumentScanner } from "react-icons/md";
+
 
 
 
@@ -20,20 +24,30 @@ import { Link } from 'react-router-dom';
 
 function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
 
+
+
   const dispatch = useDispatch()
   const { IsAuthenticated, Username, Email } = useSelector(state => state.auth);
   const { pageSelected } = useSelector(state => state.Navigation);
+  const { IsRewriteArticleLoadingCompleted } = useSelector((state) => state.ArticleRewriter);
+
 
 
 
 
 
   const getMenuStyle = (page) => {
-    return page === pageSelected ? 'text-custom-dark-orange bg-[#FFFFFF1A]' : 'text-white'
+    console.log(page, pageSelected, 'selected page, real selected  ')
+    return page === pageSelected ? 'text-[#FB923C] bg-[#FFFFFF1A]' : 'text-white'
   }
 
   const HandlePageChange = (page) => {
     dispatch(setSelectedPage(page))
+
+    if (page === 'Article Rewriter' && IsRewriteArticleLoadingCompleted) {
+      dispatch(ResetRewriteArticle())
+
+    }
   }
 
 
@@ -74,11 +88,22 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
         </Link>
 
 
-        <Link to='/article-rewriter' className='cursor-pointer '>
+        <Link to='/article-rewriter' onClick={() => HandlePageChange('Article Rewriter')} className='cursor-pointer '>
 
-          <div className='flex items-center  lg:text-base xl:text-base text-white space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer  hover:text-custom-dark-orange'>
+          <div className={`flex items-center ${getMenuStyle('Article Rewriter')}   lg:text-base xl:text-base text-white space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer  hover:text-custom-dark-orange`}>
             <LuFileEdit className='' />
             <span className="">Article Rewriter</span>
+          </div>
+        </Link>
+
+
+
+        <Link to='/plagiarism-checker' onClick={() => HandlePageChange('Plagiarism Checker')} className='cursor-pointer '>
+
+          <div className={`flex items-center ${getMenuStyle('Plagiarism Checker')}   lg:text-base xl:text-base text-white space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer  hover:text-custom-dark-orange`}>
+            <MdOutlineDocumentScanner className='' />
+            <span className="">Plagiarism Checker
+            </span>
           </div>
         </Link>
 

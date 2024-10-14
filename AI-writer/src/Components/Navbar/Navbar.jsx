@@ -6,13 +6,16 @@ import LongArrow from '../../assets/Icons/LongArrow';
 import ShortArrow from '../../assets/Icons/ShortArrow';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetArticleGeneration } from '../../Redux/Slices/ArticleGenerationSlice'
+import { ResetRewriteArticle } from '../../Redux/Slices/ArticleRewriterSlice'
 import CompleteLogo from '../../assets/Logo/CompleteLogo';
 import { Link } from 'react-router-dom';
 
 
 function Navbar({ Label, setIsSidedbarOpened, IsSidedbarOpened, setIsMobileArticleSidebarOpened, IsMobileArticleSidebarOpened }) {
+
+
     const { currentStep, selectedHeadline, selectedOutlines, keywords } = useSelector((state) => state.articleGeneration);
-    const { ArticleRewriterStep } = useSelector((state) => state.ArticleRewriter)
+    const { ArticleRewriterStep, ArticleRewrited } = useSelector((state) => state.ArticleRewriter)
     const dispatch = useDispatch();
 
 
@@ -61,6 +64,7 @@ function Navbar({ Label, setIsSidedbarOpened, IsSidedbarOpened, setIsMobileArtic
                 </div>
 
                 {currentStep > 0 && (<RxCross1 onClick={() => dispatch(resetArticleGeneration())} className='p-1 text-2xl font-semibold transition-transform duration-300 transform rounded-full cursor-pointer sm:text-3xl hover:rotate-90 hover:bg-slate-700 text-custom-dark-orange ' />)}
+
             </div>)}
 
 
@@ -71,7 +75,7 @@ function Navbar({ Label, setIsSidedbarOpened, IsSidedbarOpened, setIsMobileArtic
                 <div className="flex items-center justify-center space-x-1 text-sm tracking-wider text-white max-sm:hidden lg:space-x-3 lg:text-lg ">
                     <span className=" text-custom-dark-orange">Paste content{ArticleRewriterStep}</span>
                     <LongArrow isActive={true} />
-                    <span className={`${ArticleRewriterStep === 1 ? 'text-custom-dark-orange' : ''}`}>Rewrite Article</span>
+                    <span className={`${(ArticleRewriterStep === 1 || ArticleRewrited) ? 'text-custom-dark-orange' : ''}`}>Rewrite Article</span>
 
                 </div>
 
@@ -80,11 +84,12 @@ function Navbar({ Label, setIsSidedbarOpened, IsSidedbarOpened, setIsMobileArtic
                 <div className="flex items-center justify-center space-x-1 text-sm tracking-wider text-white sm:hidden ">
                     <span className=" text-custom-dark-orange"> Paste content</span>
                     <ShortArrow isActive={true} />
-                    <span className={`${ArticleRewriterStep === 1 ? 'text-custom-dark-orange' : ''}`}> Rewrite Article</span>
-
+                    <span className={`${(ArticleRewriterStep === 1 || ArticleRewrited) ? 'text-custom-dark-orange' : ''}`}> Rewrite Article</span>
                 </div>
 
-                {/* {currentStep > 0 && (<RxCross1 onClick={() => dispatch(resetArticleGeneration())} className='p-1 text-2xl font-semibold transition-transform duration-300 transform rounded-full cursor-pointer sm:text-3xl hover:rotate-90 hover:bg-slate-700 text-custom-dark-orange ' />)} */}
+
+
+                {ArticleRewrited && (<RxCross1 onClick={() => dispatch(ResetRewriteArticle())} className='p-1 text-2xl font-semibold transition-transform duration-300 transform rounded-full cursor-pointer sm:text-3xl hover:rotate-90 hover:bg-slate-700 text-custom-dark-orange ' />)}
             </div>)}
 
         </div>

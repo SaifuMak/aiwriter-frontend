@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
 import { ResetArticleGenerator } from '../../Utils/Helperfunctions'
 import CardComponent from '../../Components/CardComponent';
+import { setSelectedPage } from '../../Redux/Slices/NavigationSlice'
 
 import Sidebar from '../../Components/Sidebar/Sidebar'
 import ArticleCard from '../../Components/ArticleCard'
@@ -21,6 +22,12 @@ function Home() {
   const [isloading, setLoading] = useState(false)
   const { IsAuthenticated } = useSelector(state => state.auth);
 
+   useEffect(() => {
+     dispatch(setSelectedPage('Home'))
+   
+    
+   }, [])
+   
 
 
   const GetLoginStatus = async () => {

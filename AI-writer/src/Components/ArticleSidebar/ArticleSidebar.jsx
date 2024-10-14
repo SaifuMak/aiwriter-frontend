@@ -8,15 +8,15 @@ import PulseLoader from 'react-spinners/PulseLoader';
 import DropdownComponent from '../DropdownComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTitle, setToneOfVoice, setPointOfView, setWordLimit, setSelectedKeywordsRedux } from '../../Redux/Slices/ArticleGenerationSlice'
-import { setToneOfVoiceArticleRewriter, setPointOfViewArticleRewriter,setSelectedWordlimitArticleRewriter } from '../../Redux/Slices/ArticleRewriterSlice'
+import { setToneOfVoiceArticleRewriter, setPointOfViewArticleRewriter, setSelectedWordlimitArticleRewriter,ResetRewriteArticle } from '../../Redux/Slices/ArticleRewriterSlice'
 
 import ButtonComponent from '../ArticleGenerationComponents/SmallComponents/ButtonComponent';
 
 
-function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleForwardButtonClick, Fetchkeywords, handleSidebarOptionsVisible, GenerateHeadlines, handleOutlineGeneration, GenerateOutlines, HandleOutlinesStructure, GenerateArticle, RegenerateArticle }) {
+function ArticleSidebar({ Label, handleBackButtonClick, HandleRewriteArticle, showPopupAndCallAPI, handleBackClick, handleForwardButtonClick, Fetchkeywords, handleSidebarOptionsVisible, GenerateHeadlines, handleOutlineGeneration, GenerateOutlines, HandleOutlinesStructure, GenerateArticle, RegenerateArticle }) {
     const dispatch = useDispatch();
     const { title, currentStep, selectedKeywords, loading, selectedToneOfVoice, selectedPointOfView, selectedWordLimit, finalArticle, selectedOutlines, selectedHeadline, isManualKeywordsEnabled } = useSelector((state) => state.articleGeneration);
-    const { selectedToneOfVoiceArticleRewriter, selectedPointOfViewArticleRewriter, ArticleRewriterStep,selectedWordlimitArticleRewriter, PointOfViewArticleRewriter } = useSelector((state) => state.ArticleRewriter);
+    const { selectedToneOfVoiceArticleRewriter, selectedPointOfViewArticleRewriter, ArticleRewriterStep, selectedWordlimitArticleRewriter,ArticleRewrited, IsRewriteArticleLoadingCompleted, PointOfViewArticleRewriter } = useSelector((state) => state.ArticleRewriter);
 
 
 
@@ -39,9 +39,6 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
 
 
     const [activeDropdown, setActiveDropdown] = useState(null); // Single state to track active dropdown
-
-
-
 
 
     const handleToggleDropdown = (dropdown) => {
@@ -77,15 +74,16 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
     const handleToneOfVoiceForArticleRewriter = (option) => {
         dispatch(setToneOfVoiceArticleRewriter(option));
         setActiveDropdown(null)
-
     }
+
+
     const handlePointOfViewForArticleRewriter = (option) => {
         dispatch(setPointOfViewArticleRewriter(option));
         setActiveDropdown(null)
 
     }
 
-    const handleWordLimitArticleRewriter = (option)=>{
+    const handleWordLimitArticleRewriter = (option) => {
         dispatch(setSelectedWordlimitArticleRewriter(option));
         setActiveDropdown(null)
 
@@ -95,6 +93,7 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
     // const handlePointOfViewToggle = () => {
     //     setPointOfViewDropdown(!PointOfViewDropdown);
     // };
+
     const handlePointOfViewSelection = (option) => {
         dispatch(setPointOfView(option));
         setActiveDropdown(null)
@@ -246,7 +245,12 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
                     <RxDoubleArrowLeft className='text-lg lg:text-xl xl:text-2xl text-custom-dark-orange' />
                 </div>)}
 
+                {(ArticleRewriterStep > 0 && Label === 'Article Rewriter 1.0') && (<div onClick={handleBackButtonClick} className="xl:p-1.5 max-sm:hidden  p-1 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
+                    <RxDoubleArrowLeft className='text-lg lg:text-xl xl:text-2xl text-custom-dark-orange' />
+                </div>)}
             </div>
+
+
 
             {(Label === 'Article Writer 2.0' || Label === 'Article Writer 1.0') && (
                 <InputComponent
@@ -270,7 +274,6 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
                     isOptional={false}
                     isActive={currentStep > 2}
                 />
-
             )}
 
 
@@ -285,6 +288,8 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
             )}
             </div>)}
 
+
+
             {(currentStep === 1 && (Label === 'Article Writer 2.0' || Label === 'Article Writer 1.0')) && (<div className="flex items-center mt-10 space-x-16 sm:space-x-2 lg:space-x-5 xl:space-x-7 2xl:space-x-8 ">
                 <div onClick={handleBackClick} className="lg:p-2 sm:p-1 p-1.5 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
                     <RxDoubleArrowLeft className='text-lg lg:text-2xl text-custom-dark-orange' />
@@ -292,8 +297,6 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
 
                 <button onClick={handleSidebarOptionsVisible} className="text-white bg-custom-dark-orange lg:text-base text-sm text-center py-1 lg:py-1.5 xl:py-2 rounded-md  w-[100px] lg:w-[120px] xl:w-[211px]">Next</button>
             </div>)}
-
-
 
 
 
@@ -321,6 +324,7 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
 
                     />
 
+
                     <DropdownComponent
                         label='Point of view'
                         options={PointOfViewOptions}
@@ -329,8 +333,9 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
                         value={selectedPointOfView}
                         HandleSelection={handlePointOfViewSelection}
                         isActive={currentStep < 8}
-
                     />
+
+
 
                     {/* <InputComponent
                         label='Call-to-Action'
@@ -441,8 +446,6 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
             {Label === 'Article Rewriter 1.0' && (
 
                 <>
-
-
                     <DropdownComponent
                         label='Tone of voice'
                         options={ToneOfVoiceOptions}
@@ -504,31 +507,53 @@ function ArticleSidebar({ Label, showPopupAndCallAPI, handleBackClick, handleFor
                     />
 
 
-
-
-
-                    <div className="flex items-center pb-10 mt-10 space-x-16 sm:space-x-1 lg:space-x-5 xl:space-x-7 2xl:space-x-10 ">
-                        {ArticleRewriterStep === 0 && (<div onClick={handleBackClick} className="xl:p-1.5 p-1 border rounded-md cursor-pointer bg-[#42515F] border-custom-dark-orange border-opacity-40">
+                    <div className="flex items-center w-full mt-10 space-x-16 sm:space-x-1 lg:space-x-5 xl:space-x-7 2xl:space-x-10 ">
+                        <div onClick={handleBackButtonClick} className={`xl:p-1.5 p-1 border rounded-md ${ArticleRewriterStep === 0 ? 'opacity-45' : 'cursor-pointer'}  bg-[#42515F] border-custom-dark-orange border-opacity-40`}>
                             <RxDoubleArrowLeft className='text-lg lg:text-2xl text-custom-dark-orange' />
-                        </div>)}
-
-
-                        <div className=" bg-slate-100">
-                            <ButtonComponent
-                                onClick={GenerateHeadlines}
-                                label="Rewrite"
-                                isVisible={ArticleRewriterStep === 0}
-                            />
                         </div>
 
+                        {loading ? (
+                            <div className="flex items-center w-full ">
+                                <button className="text-white bg-custom-dark-orange lg:text-base text-sm text-center py-1 lg:py-1.5 xl:py-2 rounded-md  w-[100px] lg:w-[120px] xl:w-[161px]">
+                                    <PulseLoader color="#ffffff" size={6} margin={4} />
+                                </button>
+                            </div>
+
+
+                        ) : (
+
+                            !ArticleRewrited ? (<div className="flex justify-center w-full ">
+                                <ButtonComponent
+                                    onClick={HandleRewriteArticle}
+                                    label="Rewrite"
+                                    isVisible={ArticleRewriterStep === 0 || ArticleRewriterStep === 1}
+                                />
+                            </div>)
+                                :
+
+                                (ArticleRewrited && (<div className="flex justify-center w-full ">
+                                    <ButtonComponent
+                                        onClick={() => showPopupAndCallAPI(HandleRewriteArticle)}
+                                        label="Rewritee"
+                                        isVisible={ArticleRewriterStep === 0 || ArticleRewrited}
+                                    />
+                                </div>))
+
+                        )}
 
 
 
+                        <div className="flex justify-end flex-grow ">
 
-
-
+                            <div onClick={handleForwardButtonClick} className={`lg:p-2 sm:p-1 p-1.5  border rounded-md  bg-[#42515F] ${(ArticleRewriterStep === 0 && ArticleRewrited) ? 'cursor-pointer' : ' opacity-45'} border-custom-dark-orange border-opacity-40`}>
+                                <RxDoubleArrowRight className='text-lg lg:text-2xl text-custom-dark-orange' />
+                            </div>
+                        </div>
 
                     </div>
+
+
+
                 </>
             )}
 

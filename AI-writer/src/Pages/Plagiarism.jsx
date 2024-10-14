@@ -25,6 +25,8 @@ import '../Components/Plagiarism/css/customScrollbar.css'
 import PulseLoader from 'react-spinners/PulseLoader'
 import { FindPercentage } from '../Utils/Helperfunctions'
 
+import { setSelectedPage } from '../Redux/Slices/NavigationSlice'
+
 
 function Plagiarism() {
 
@@ -84,6 +86,14 @@ function Plagiarism() {
     const [highlightedArticle, setHighlightedArticle] = useState('');
 
     const [PlagiarisedUrl, setPlagiarisedUrl] = useState([])
+
+
+    useEffect(() => {
+        dispatch(setSelectedPage('Plagiarism Checker'))
+      
+       
+      }, [])
+      
 
 
 

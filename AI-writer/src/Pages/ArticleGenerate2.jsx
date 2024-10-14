@@ -360,6 +360,8 @@ function ArticleGenerate2() {
 
     }
 
+
+    
     const RegenerateArticle = async () => {
         toast.dismiss()
 
