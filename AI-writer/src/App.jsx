@@ -21,6 +21,8 @@ import WorkSheet from './Pages/WorkSheet'
 import { Toaster, toast } from 'sonner';
 import WriterStep from './Pages/WriterStep'
 
+import Signup from './Pages/Signup'
+
 function App() {
 
   return (
@@ -83,6 +85,12 @@ function App() {
               {<Route path='/article-rewriter' element={<PrivateRoutes />}>
                 <Route index element={<ArticleRewriter />} />
               </Route>}
+
+              {<Route path='/register' element={<PrivateRoutes />}>
+                <Route index element={<Signup />} />
+              </Route>}
+              
+
               
               {/* <Route path="/login" element={<Login />} /> */}
               
