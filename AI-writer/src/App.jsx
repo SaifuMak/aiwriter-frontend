@@ -14,6 +14,8 @@ import store, { persistor } from './Redux/Store'
 
 import PublicRoutes from './Routes/PublicRoutes'
 import PrivateRoutes from './Routes/PrivateRoutes'
+import UnrestrictedRoutes from './Routes/UnrestrictedRoutes'
+
 import Demo from './Pages/Demo'
 import ArticleGenerate2 from './Pages/ArticleGenerate2'
 import ArticleRewriter from './Pages/ArticleRewriter'
@@ -49,7 +51,7 @@ function App() {
                 <Route index element={<EmailConfirmation />} />
               </Route>}
 
-              {<Route path='/' element={<PrivateRoutes />}>
+              {<Route path='/' element={<UnrestrictedRoutes />}>
                 <Route index element={<Home />} />
               </Route>}
 
@@ -86,7 +88,7 @@ function App() {
                 <Route index element={<ArticleRewriter />} />
               </Route>}
 
-              {<Route path='/register' element={<PrivateRoutes />}>
+              {<Route path='/register' element={<UnrestrictedRoutes />}>
                 <Route index element={<Signup />} />
               </Route>}
               

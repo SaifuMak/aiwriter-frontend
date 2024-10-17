@@ -4,11 +4,12 @@ import {useSelector} from 'react-redux'
 
 function PublicRoutes() {
     const {IsAuthenticated} = useSelector(state => state.auth);
-    if (IsAuthenticated) {
-        return <Navigate to="/" replace />; 
-      } else {
-        return <Outlet />; 
-      }
+    return IsAuthenticated ?  <Navigate to="/" replace /> :  <Outlet /> ;
+    // if (IsAuthenticated) {
+    //     return <Navigate to="/" replace />; 
+    //   } else {
+    //     return <Outlet />; 
+    //   }
 }
 
 export default PublicRoutes

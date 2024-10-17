@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import Logo from '../assets/Images/Logo.png'
 import LongArrow from '../assets/Icons/LongArrow'
 
@@ -28,6 +28,7 @@ function Login() {
     const [isPasswordVisible, setisPasswordVisible] = useState(false)
     const [IsLoading, setIsLoading] = useState(false)
 
+    
     const handleEmail = (e) => {
         setEmail(e.target.value.trim())
     }
@@ -72,6 +73,35 @@ function Login() {
         setIsLoading(false)
 
     }
+
+    // const GetLoginStatus = async () => {
+    //     try {
+    //         const response = await Axiosinstance.get('api/check_login_status')
+    //         SuccessToast('yes he has the cookie ')
+
+    //         // setEmail(response.data.email)
+    //         // setName(response.data.name)
+
+
+    //         //   dispatch(loginSuccess({ username, email }));
+
+    //         // setIsAuthenticated(true)
+    //     }
+
+    //     catch (error) {
+
+    //         console.log(error, '&&&&&&&&&&&&&')
+    //         //   dispatch(setLogout())
+    //         //   navigate('/login')
+
+
+    //     }
+    // }
+
+
+    
+  
+    
 
 
 
