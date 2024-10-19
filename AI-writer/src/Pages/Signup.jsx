@@ -9,10 +9,15 @@ import Axiosinstance from '../Axios/Axiosinstance'
 import { setLogout, loginSuccess } from '../Redux/Slices/AuthSlice'
 import { useDispatch, useSelector } from 'react-redux';
 
+import SuccessToast from '../Utils/SuccessToast';
+import ErrorToast from '../Utils/ErrorToast';
+
 
 import { LuLoader2 } from 'react-icons/lu'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { Toaster, toast } from 'sonner';
+
 
 import PlanCards from '../Components/GeneralComponets/PlanCards'
 
@@ -28,10 +33,15 @@ function Signup() {
     const [CustomPlagiarisedWords, setCustomPlagiarisedWords] = useState(180000)
     const [IsCustomPlanSelected, setIsCustomPlanSelected] = useState(false)
 
+
+
     const [formData, setFormData] = useState({
+
         email: '',
+        name: '',
         password: '',
         confirmPassword: '',
+
 
         firstName: '',
         lastName: '',
@@ -154,7 +164,7 @@ function Signup() {
     const HandleCountrySelection = (option) => {
         setFormData({
             ...formData,
-            country : option
+            country: option
 
         });
         setSelectedCountry(option)
@@ -182,10 +192,27 @@ function Signup() {
     }
 
     const HasAnAccount = () => {
+        setFormData({
+            ...formData,
+            email: '',
+            name: '',
+            password: '',
+            confirmPassword: ''
+
+        });
         setAlreadyHasAccount(true)
     }
 
     const RevokeHasAnAccount = () => {
+        setFormData({
+            ...formData,
+            email: '',
+            name: '',
+            password: '',
+            confirmPassword: ''
+
+        });
+
         setAlreadyHasAccount(false)
     }
 
@@ -217,8 +244,6 @@ function Signup() {
             //   dispatch(setLogout())
             //   navigate('/login')
             setIsCheckingAuthStatus(false)
-
-
         }
     }
 
@@ -248,8 +273,16 @@ function Signup() {
     }, [])
 
 
-    const CheckData = () => {
+
+    const CheckData = async () => {
         console.log(formData)
+        try {
+            const response = await Axiosinstance.post('api/register', formData)
+        }
+        catch (error) {
+            ErrorToast(Object.values(error.response.data)[0][0]
+        )
+        }
     }
 
 
@@ -320,16 +353,19 @@ function Signup() {
 
 
                                 <div className="mt-3 space-y-6 ">
+
                                     <div className={OuterContainerInputBoxStyle}>
-                                        <InputBox placeholder={'Email'} />
-                                        <InputBox placeholder={'Password'} />
+                                        <InputBox placeholder='Email' name='email' value={formData.email} onchange={HandleInputchange} />
+                                        <InputBox placeholder='Name' name='name' value={formData.name} onchange={HandleInputchange} />
                                     </div>
 
                                     <div className={OuterContainerInputBoxStyle}>
-                                        <InputBox placeholder={'Confirm Password'} />
-                                        <p onClick={HasAnAccount} className="w-1/2 cursor-pointer text-custom-dark-orange">Already have an account? Log In</p>
-
+                                        <InputBox placeholder='Password' name='password' value={formData.password} onchange={HandleInputchange} />
+                                        <InputBox placeholder='Confirm Password' name='confirmPassword' value={formData.confirmPassword} onchange={HandleInputchange} />
                                     </div>
+
+                                    <p onClick={HasAnAccount} className="w-1/2 cursor-pointer text-custom-dark-orange">Already have an account? Log In</p>
+
                                 </div>
                             </div>
                         )}
@@ -347,16 +383,16 @@ function Signup() {
 
                                 <div className="mt-6 space-y-6">
                                     <div className={OuterContainerInputBoxStyle}>
-                                        <InputBox placeholder={'Email'} />
-                                        <InputBox placeholder={'Password'} />
+                                        <InputBox placeholder='Email' name='email' value={formData.email} onchange={HandleInputchange} />
+                                        <InputBox placeholder='Password' name='password' value={formData.password} onchange={HandleInputchange} />
                                     </div>
 
 
-                                    <div className='flex items-center justify-center w-full'>
 
-                                        <p onClick={RevokeHasAnAccount} className="cursor-pointer text-custom-dark-orange">Create a new account? Sign Up</p>
 
-                                    </div>
+                                    <p onClick={RevokeHasAnAccount} className="cursor-pointer text-custom-dark-orange">Create a new account? Sign Up</p>
+
+
                                 </div>
                             </div>
                         )}
@@ -371,7 +407,7 @@ function Signup() {
                                 </div>
                                 <div className="flex items-center justify-between mt-8 cursor-pointer ">
                                     <div className="flex items-center justify-center space-x-4">
-                                        <div className="flex items-center text-5xl justify-center shadow-custom-dark-orange border-2  border-custom-dark-orange w-12 h-12 rounded-full max-lg:text-2xl lg:w-16 lg:h-16 text-custom-dark-orange bg-[#213343]">S</div>
+                                        <div className="flex items-center text-4xl justify-center shadow-custom-dark-orange border-2  border-custom-dark-orange w-12 h-12 rounded-full max-lg:text-2xl lg:w-16 lg:h-16 text-custom-dark-orange bg-[#213343]">{Username[0]}</div>
                                         <div className="flex flex-col mt-1">
                                             <span className="text-base font-semibold">{Username}</span>
                                             <span className="text-base ">{Email}</span>
@@ -431,14 +467,14 @@ function Signup() {
 
 
                             <div className={OuterContainerInputBoxStyle}>
-                            <InputBox placeholder='Company' name='company' value={formData.company} onchange={HandleInputchange} />
-                            <InputBox placeholder='VAT/Tax ID' name='taxId' value={formData.taxId} onchange={HandleInputchange} />
+                                <InputBox placeholder='Company' name='company' value={formData.company} onchange={HandleInputchange} />
+                                <InputBox placeholder='VAT/Tax ID' name='taxId' value={formData.taxId} onchange={HandleInputchange} />
 
-                              
+
                             </div>
 
                             <div className={OuterContainerInputBoxStyle}>
-                            <InputBox placeholder='Phone Number' name='phNo' value={formData.phNo} onchange={HandleInputchange} />
+                                <InputBox placeholder='Phone Number' name='phNo' value={formData.phNo} onchange={HandleInputchange} />
 
                                 <span className="w-1/2"></span>
 
@@ -479,6 +515,7 @@ function Signup() {
                     </div>
                 </div>
             </div>
+            <Toaster />
 
 
         </div>
