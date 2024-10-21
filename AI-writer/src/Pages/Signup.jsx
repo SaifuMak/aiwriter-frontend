@@ -32,6 +32,7 @@ function Signup() {
     const [CustomContentWords, setCustomContentWords] = useState(150000)
     const [CustomPlagiarisedWords, setCustomPlagiarisedWords] = useState(180000)
     const [IsCustomPlanSelected, setIsCustomPlanSelected] = useState(false)
+    const [Action, setAction] = useState('signup')
 
 
 
@@ -42,7 +43,6 @@ function Signup() {
         password: '',
         confirmPassword: '',
 
-
         firstName: '',
         lastName: '',
         city: '',
@@ -51,7 +51,8 @@ function Signup() {
         zipCode: '',
         company: '',
         taxId: '',
-        phNo: '',
+        phone_number: '',
+        action: 'signup',
 
     });
 
@@ -77,7 +78,9 @@ function Signup() {
 
     const { IsAuthenticated, Username, Email } = useSelector(state => state.auth);
 
+    const [emptyFields, setEmptyFields] = useState([]); 
 
+    const [IsPayButtonClicked, setIsPayButtonClicked] = useState(false)
 
 
     const dispatch = useDispatch()
@@ -191,30 +194,55 @@ function Signup() {
         setIsCustomPlanSelected(false)
     }
 
+
     const HasAnAccount = () => {
+        setAction('login')
+
         setFormData({
             ...formData,
             email: '',
             name: '',
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
+            action: 'login'
 
         });
         setAlreadyHasAccount(true)
     }
 
+
+
     const RevokeHasAnAccount = () => {
+        setAction('signup')
+
         setFormData({
             ...formData,
             email: '',
             name: '',
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
+            action: 'signup'
 
         });
 
         setAlreadyHasAccount(false)
     }
+
+
+    const checkEmptyFields = (formData) => {
+        if(!IsPayButtonClicked){
+            return
+        }
+        const emptyFieldsArray = [];
+    
+        Object.keys(formData).forEach((field) => {
+            if (!formData[field].trim()) {
+                emptyFieldsArray.push(field);  // Push field name to the array if empty
+            }
+        });
+    
+        setEmptyFields(emptyFieldsArray);  // Update the state with empty fields
+    };
 
 
 
@@ -223,7 +251,6 @@ function Signup() {
         try {
             const response = await Axiosinstance.get('api/check_login_status')
 
-
             // setEmail(response.data.email)
             // setName(response.data.name)
 
@@ -231,6 +258,12 @@ function Signup() {
             const username = response.data.name
 
             dispatch(loginSuccess({ username, email }));
+            setFormData({
+                ...formData,
+                action: 'logged',
+                email : email,
+    
+            });
 
             //   dispatch(loginSuccess({ username, email }));
 
@@ -247,14 +280,22 @@ function Signup() {
         }
     }
 
+
     const handleLogout = async () => {
         const data = null
 
         try {
             const response = await Axiosinstance.post('api/logout', data)
             dispatch(setLogout())
+            setFormData({
+                ...formData,
+                action: 'signup',
+                email : '',
+    
+            });
             // window.location.reload();
             GetLoginStatus()
+            RevokeHasAnAccount()
 
 
         }
@@ -268,24 +309,44 @@ function Signup() {
 
 
 
-    useEffect(() => {
-        GetLoginStatus()
-    }, [])
-
-
-
     const CheckData = async () => {
+        setIsPayButtonClicked(true)
+        
+        setEmptyFields([])
+        toast.dismiss()
+
+        checkEmptyFields(formData)
+        console.log(emptyFields,'=============================')
+        if(emptyFields.length > 0){
+            ErrorToast('Please fill the required fields')
+            return
+        }
+
         console.log(formData)
         try {
-            const response = await Axiosinstance.post('api/register', formData)
+            const response = await Axiosinstance.post('api/register-login-payment', formData)
+            GetLoginStatus()
+
         }
         catch (error) {
-            ErrorToast(Object.values(error.response.data)[0][0]
-        )
+            GetLoginStatus()
+
+
+            ErrorToast(Object.values(error.response.data)[0][0])
         }
     }
 
 
+    useEffect(() => {
+        checkEmptyFields(formData)
+     
+    }, [formData])
+    
+
+
+    useEffect(() => {
+        GetLoginStatus()
+    }, [])
 
 
     return (
@@ -293,7 +354,7 @@ function Signup() {
             <div className="flex py-10 mt-10 max-md:flex-col max-md:justify-center max-md:items-center xl:w-11/12 2xl:w-10/12 md:space-x-6 xl:space-x-16 2xl:space-x-28 max-xl:px-10 ">
 
                 <div className="w-full max-md:justify-center max-md:flex-col max-md:items-center max-md:px-10 md:mt-10 md:w-3/12 ">
-                    <h3 className="mb-4 text-2xl text-center ">You are subscribing for:</h3>
+                    <h3 className="mb-4 text-2xl text-center ">You are subscribing for:{Action}</h3>
 
 
                     <PlanCards
@@ -441,16 +502,16 @@ function Signup() {
                         <div className="space-y-6 ">
 
                             <div className={OuterContainerInputBoxStyle}>
-                                <InputBox placeholder='First Name' name='firstName' value={formData.firstName} onchange={HandleInputchange} />
-                                <InputBox placeholder='Last Name' name='lastName' value={formData.lastName} onchange={HandleInputchange} />
+                                <InputBox placeholder='First Name' name='firstName' value={formData.firstName} onchange={HandleInputchange}  is_null={emptyFields.includes('firstName')}  />
+                                <InputBox placeholder='Last Name' name='lastName' value={formData.lastName} onchange={HandleInputchange}  is_null={emptyFields.includes('lastName')}  />
 
 
                             </div>
 
 
                             <div className={OuterContainerInputBoxStyle}>
-                                <InputBox placeholder='City' name='city' value={formData.city} onchange={HandleInputchange} />
-                                <InputBox placeholder='State/Suburb' name='state' value={formData.state} onchange={HandleInputchange} />
+                                <InputBox placeholder='City' name='city' value={formData.city} onchange={HandleInputchange}  is_null={emptyFields.includes('city')}  />
+                                <InputBox placeholder='State/Suburb' name='state' value={formData.state} onchange={HandleInputchange} is_null={emptyFields.includes('state')}   />
 
                             </div>
 
@@ -462,19 +523,19 @@ function Signup() {
                                     HandleCountrySelection={HandleCountrySelection}
                                     SelectedCountry={formData.country}
                                 />
-                                <InputBox placeholder='Zip Code' name='zipCode' value={formData.zipCode} onchange={HandleInputchange} />
+                                <InputBox placeholder='Zip Code' name='zipCode' value={formData.zipCode} onchange={HandleInputchange}  is_null={emptyFields.includes('zipCode')}  />
                             </div>
 
 
                             <div className={OuterContainerInputBoxStyle}>
-                                <InputBox placeholder='Company' name='company' value={formData.company} onchange={HandleInputchange} />
-                                <InputBox placeholder='VAT/Tax ID' name='taxId' value={formData.taxId} onchange={HandleInputchange} />
+                                <InputBox placeholder='Company' name='company' value={formData.company} onchange={HandleInputchange}  is_null={emptyFields.includes('company')}  />
+                                <InputBox placeholder='VAT/Tax ID' name='taxId' value={formData.taxId} onchange={HandleInputchange}  is_null={emptyFields.includes('taxId')}  />
 
 
                             </div>
 
                             <div className={OuterContainerInputBoxStyle}>
-                                <InputBox placeholder='Phone Number' name='phNo' value={formData.phNo} onchange={HandleInputchange} />
+                                <InputBox placeholder='Phone Number' name='phone_number' value={formData.phone_number} onchange={HandleInputchange}  is_null={emptyFields.includes('phone_number')}  />
 
                                 <span className="w-1/2"></span>
 
