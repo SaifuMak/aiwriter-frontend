@@ -18,6 +18,8 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { Toaster, toast } from 'sonner';
 
+import LoginPopup from '../Components/LoginPopup'
+
 
 import PlanCards from '../Components/GeneralComponets/PlanCards'
 
@@ -33,6 +35,15 @@ function Signup() {
     const [CustomPlagiarisedWords, setCustomPlagiarisedWords] = useState(180000)
     const [IsCustomPlanSelected, setIsCustomPlanSelected] = useState(false)
     const [Action, setAction] = useState('signup')
+
+    const [IsPasswordVisible, setIsPasswordVisible] = useState(false)
+    const [IsConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false)
+
+    const [IsPasswordNotMatching, setIsPasswordNotMatching] = useState(false)
+
+    const [IsLoginPopup, setIsLoginPopup] = useState(false)
+
+
 
 
 
@@ -74,11 +85,11 @@ function Signup() {
 
     const [AlreadyHasAccount, setAlreadyHasAccount] = useState(false)
 
-    const OuterContainerInputBoxStyle = 'flex items-end w-full space-x-10'
+    const OuterContainerInputBoxStyle = 'flex  w-full space-x-10'
 
     const { IsAuthenticated, Username, Email } = useSelector(state => state.auth);
 
-    const [emptyFields, setEmptyFields] = useState([]); 
+    const [emptyFields, setEmptyFields] = useState([]);
 
     const [IsPayButtonClicked, setIsPayButtonClicked] = useState(false)
 
@@ -194,6 +205,35 @@ function Signup() {
         setIsCustomPlanSelected(false)
     }
 
+    const togglePassword = () => {
+        setIsPasswordVisible(!IsPasswordVisible)
+    }
+
+
+    const toggleConfirmPassword = () => {
+        setIsConfirmPasswordVisible(!IsConfirmPasswordVisible)
+    }
+
+
+    const isPasswordStrong = (password) => {
+        // Regular expression to check if the password is at least 8 characters long,
+        // and contains both letters and numbers.
+        const strongPasswordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+        // Test the password against the regex
+        return strongPasswordRegex.test(password);
+    };
+
+
+    const HandleOpenLoginPopup =()=>{
+        setIsLoginPopup(true)
+    }
+
+    const HandleCloseLoginPopup =()=>{
+        setIsLoginPopup(false)
+    }
+
+
 
     const HasAnAccount = () => {
         setAction('login')
@@ -209,6 +249,22 @@ function Signup() {
         });
         setAlreadyHasAccount(true)
     }
+
+  const handleClearInputs =()=>{
+    setFormData(prevFormData => {
+        const newFormData = { action: 'signup' }; // Start with action
+        Object.keys(prevFormData).forEach(key => {
+            if (key !== 'action') {
+                newFormData[key] = ''; // Clear other fields
+            } else {
+                newFormData[key] = prevFormData[key]; // Keep action
+            }
+        });
+        return newFormData;
+    });
+    
+  }
+
 
 
 
@@ -230,20 +286,29 @@ function Signup() {
 
 
     const checkEmptyFields = (formData) => {
-        if(!IsPayButtonClicked){
+        if (!IsPayButtonClicked) {
             return
         }
         const emptyFieldsArray = [];
-    
+
         Object.keys(formData).forEach((field) => {
             if (!formData[field].trim()) {
                 emptyFieldsArray.push(field);  // Push field name to the array if empty
             }
         });
-    
+
+        // if(formData.password !== formData.confirmPassword){
+
+        //     setIsPasswordNotMatching(true)
+        // }
+
+
         setEmptyFields(emptyFieldsArray);  // Update the state with empty fields
+        return emptyFieldsArray.length > 0;
     };
 
+
+    
 
 
 
@@ -261,18 +326,18 @@ function Signup() {
             setFormData({
                 ...formData,
                 action: 'logged',
-                email : email,
-    
+                email: email,
+
             });
 
             //   dispatch(loginSuccess({ username, email }));
 
             setIsCheckingAuthStatus(false)
             // setIsAuthenticated(true)
+
+            GetBillingInfo(email)
         }
-
         catch (error) {
-
             console.log(error, '&&&&&&&&&&&&&')
             //   dispatch(setLogout())
             //   navigate('/login')
@@ -288,16 +353,15 @@ function Signup() {
             const response = await Axiosinstance.post('api/logout', data)
             dispatch(setLogout())
             setFormData({
-                ...formData,
+               ...formData,
                 action: 'signup',
-                email : '',
-    
+            
             });
+
             // window.location.reload();
             GetLoginStatus()
             RevokeHasAnAccount()
-
-
+            handleClearInputs()
         }
 
         catch (error) {
@@ -307,46 +371,124 @@ function Signup() {
         }
     }
 
+    const GetBillingInfo = async (email=null) =>{
+        console.log('entered the getbillinginfo ')
+       
+        // const data ={
+        //     'email' : Email
+        // }
+        try{
+            const response = await Axiosinstance.get(`api/register-login-payment/${email}`,)
+            const {
+                firstName,
+                lastName,
+                city,
+                state,
+                country,
+                zipCode,
+                company,
+                taxId,
+                phone_number,
+            } = response.data;
+
+            // Populate the formData with the response
+            setFormData(prevData => ({
+                ...prevData,
+                firstName,
+                lastName,
+                city,
+                state,
+                country,
+                zipCode,
+                company,
+                taxId,
+                phone_number,
+            }));
+
+        }
+        catch(error){
+            console.log(error.response.data)
+
+        }
+
+    }
+
 
 
     const CheckData = async () => {
         setIsPayButtonClicked(true)
-        
-        setEmptyFields([])
+
+        // setEmptyFields([])
         toast.dismiss()
 
         checkEmptyFields(formData)
-        console.log(emptyFields,'=============================')
-        if(emptyFields.length > 0){
+
+        // console.log(isEmptyFields,'=============================')
+        // if(isEmptyFields){
+        //     ErrorToast('Please fill the required fields')
+        //     return
+        // }
+
+        const emptyFieldsArray = [];
+
+        Object.keys(formData).forEach((field) => {
+            console.log(field)
+
+            if (formData.action === 'login' && (field === 'name' || field === 'confirmPassword')) {
+                return;  // Skip these fields
+            }
+            if (formData.action === 'logged' && (field === 'name' || field === 'confirmPassword' || field === 'email' || field === 'password')) {
+                return;  // Skip these fields
+            }
+            if (!formData[field].trim()) {
+                emptyFieldsArray.push(field);  // Push field name to the array if empty
+            }
+        });
+
+        console.log(emptyFieldsArray)
+
+        if (emptyFieldsArray.length > 0) {
             ErrorToast('Please fill the required fields')
+            GetLoginStatus()
             return
         }
 
+        if (formData.action === 'signup') {
+            if (formData.password !== formData.confirmPassword || !isPasswordStrong(formData.password)) {
+                alert('entered')
+                return
+            }
+        }
+
         console.log(formData)
+        const email = Email
+        
         try {
-            const response = await Axiosinstance.post('api/register-login-payment', formData)
+            const response = await Axiosinstance.post(`api/register-login-payment/${email}`,formData)
             GetLoginStatus()
 
         }
         catch (error) {
             GetLoginStatus()
-
-
             ErrorToast(Object.values(error.response.data)[0][0])
         }
     }
 
 
-    useEffect(() => {
-        checkEmptyFields(formData)
-     
-    }, [formData])
     
 
 
     useEffect(() => {
+        checkEmptyFields(formData)
+
+    }, [formData])
+
+
+
+    useEffect(() => {
         GetLoginStatus()
-    }, [])
+        
+    }, [IsLoginPopup])
 
 
     return (
@@ -354,7 +496,7 @@ function Signup() {
             <div className="flex py-10 mt-10 max-md:flex-col max-md:justify-center max-md:items-center xl:w-11/12 2xl:w-10/12 md:space-x-6 xl:space-x-16 2xl:space-x-28 max-xl:px-10 ">
 
                 <div className="w-full max-md:justify-center max-md:flex-col max-md:items-center max-md:px-10 md:mt-10 md:w-3/12 ">
-                    <h3 className="mb-4 text-2xl text-center ">You are subscribing for:{Action}</h3>
+                    <h3 className="mb-4 text-2xl text-center ">You are subscribing for:{formData.action}</h3>
 
 
                     <PlanCards
@@ -416,16 +558,16 @@ function Signup() {
                                 <div className="mt-3 space-y-6 ">
 
                                     <div className={OuterContainerInputBoxStyle}>
-                                        <InputBox placeholder='Email' name='email' value={formData.email} onchange={HandleInputchange} />
-                                        <InputBox placeholder='Name' name='name' value={formData.name} onchange={HandleInputchange} />
+                                        <InputBox placeholder='Email' name='email' value={formData.email} onchange={HandleInputchange} is_null={emptyFields.includes('email')} />
+                                        <InputBox placeholder='Name' name='name' value={formData.name} onchange={HandleInputchange} is_null={emptyFields.includes('name')} />
                                     </div>
 
-                                    <div className={OuterContainerInputBoxStyle}>
-                                        <InputBox placeholder='Password' name='password' value={formData.password} onchange={HandleInputchange} />
-                                        <InputBox placeholder='Confirm Password' name='confirmPassword' value={formData.confirmPassword} onchange={HandleInputchange} />
+                                    <div className='flex w-full space-x-10 '>
+                                        <InputBox placeholder='Password' name='password' value={formData.password} onchange={HandleInputchange} is_password_field={true} HandlePasswordVisibility={togglePassword} isPasswordVisible={IsPasswordVisible} Is_password_null={!formData.password.trim()} IsPasswordStrong={isPasswordStrong(formData.password)} Is_check_password={true} is_null={emptyFields.includes('password')} />
+                                        <InputBox placeholder='Confirm Password' name='confirmPassword' value={formData.confirmPassword} onchange={HandleInputchange} is_password_field={true} HandlePasswordVisibility={toggleConfirmPassword} Is_password_null={!formData.confirmPassword.trim()} isPasswordVisible={IsConfirmPasswordVisible} IsPasswordNotMatching={formData.password !== formData.confirmPassword} is_null={emptyFields.includes('confirmPassword')} />
                                     </div>
 
-                                    <p onClick={HasAnAccount} className="w-1/2 cursor-pointer text-custom-dark-orange">Already have an account? Log In</p>
+                                    <p onClick={HandleOpenLoginPopup} className="w-1/2 cursor-pointer text-custom-dark-orange">Already have an account? Log In</p>
 
                                 </div>
                             </div>
@@ -444,8 +586,8 @@ function Signup() {
 
                                 <div className="mt-6 space-y-6">
                                     <div className={OuterContainerInputBoxStyle}>
-                                        <InputBox placeholder='Email' name='email' value={formData.email} onchange={HandleInputchange} />
-                                        <InputBox placeholder='Password' name='password' value={formData.password} onchange={HandleInputchange} />
+                                        <InputBox placeholder='Email' name='email' value={formData.email} onchange={HandleInputchange} is_null={emptyFields.includes('email')} />
+                                        <InputBox placeholder='Password' name='password' value={formData.password} onchange={HandleInputchange} HandlePasswordVisibility={togglePassword} is_password={true} is_null={emptyFields.includes('password')} />
                                     </div>
 
 
@@ -502,18 +644,16 @@ function Signup() {
                         <div className="space-y-6 ">
 
                             <div className={OuterContainerInputBoxStyle}>
-                                <InputBox placeholder='First Name' name='firstName' value={formData.firstName} onchange={HandleInputchange}  is_null={emptyFields.includes('firstName')}  />
-                                <InputBox placeholder='Last Name' name='lastName' value={formData.lastName} onchange={HandleInputchange}  is_null={emptyFields.includes('lastName')}  />
-
-
+                                <InputBox placeholder='First Name' name='firstName' value={formData.firstName} onchange={HandleInputchange} is_null={emptyFields.includes('firstName')} />
+                                <InputBox placeholder='Last Name' name='lastName' value={formData.lastName} onchange={HandleInputchange} is_null={emptyFields.includes('lastName')} />
                             </div>
 
 
                             <div className={OuterContainerInputBoxStyle}>
-                                <InputBox placeholder='City' name='city' value={formData.city} onchange={HandleInputchange}  is_null={emptyFields.includes('city')}  />
-                                <InputBox placeholder='State/Suburb' name='state' value={formData.state} onchange={HandleInputchange} is_null={emptyFields.includes('state')}   />
-
+                                <InputBox placeholder='City' name='city' value={formData.city} onchange={HandleInputchange} is_null={emptyFields.includes('city')} />
+                                <InputBox placeholder='State/Suburb' name='state' value={formData.state} onchange={HandleInputchange} is_null={emptyFields.includes('state')} />
                             </div>
+
 
                             <div className={OuterContainerInputBoxStyle}>
                                 <DropDown
@@ -523,19 +663,19 @@ function Signup() {
                                     HandleCountrySelection={HandleCountrySelection}
                                     SelectedCountry={formData.country}
                                 />
-                                <InputBox placeholder='Zip Code' name='zipCode' value={formData.zipCode} onchange={HandleInputchange}  is_null={emptyFields.includes('zipCode')}  />
+                                <InputBox placeholder='Zip Code' name='zipCode' value={formData.zipCode} onchange={HandleInputchange} is_null={emptyFields.includes('zipCode')} />
                             </div>
 
 
                             <div className={OuterContainerInputBoxStyle}>
-                                <InputBox placeholder='Company' name='company' value={formData.company} onchange={HandleInputchange}  is_null={emptyFields.includes('company')}  />
-                                <InputBox placeholder='VAT/Tax ID' name='taxId' value={formData.taxId} onchange={HandleInputchange}  is_null={emptyFields.includes('taxId')}  />
+                                <InputBox placeholder='Company' name='company' value={formData.company} onchange={HandleInputchange} is_null={emptyFields.includes('company')} />
+                                <InputBox placeholder='VAT/Tax ID' name='taxId' value={formData.taxId} onchange={HandleInputchange} is_null={emptyFields.includes('taxId')} />
 
 
                             </div>
 
                             <div className={OuterContainerInputBoxStyle}>
-                                <InputBox placeholder='Phone Number' name='phone_number' value={formData.phone_number} onchange={HandleInputchange}  is_null={emptyFields.includes('phone_number')}  />
+                                <InputBox placeholder='Phone Number' name='phone_number' value={formData.phone_number} onchange={HandleInputchange} is_null={emptyFields.includes('phone_number')} />
 
                                 <span className="w-1/2"></span>
 
@@ -577,6 +717,8 @@ function Signup() {
                 </div>
             </div>
             <Toaster />
+
+          {IsLoginPopup &&   <LoginPopup HandleCloseLoginPopup={HandleCloseLoginPopup}  />}
 
 
         </div>
