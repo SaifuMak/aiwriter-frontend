@@ -6,24 +6,24 @@ import SliderComponets from './SliderComponets';
 
 function PlanCards({IsCustomPlanSelected, selectedPlan, PricePlans, HandleArticleWordsForCustomPlan, CustomContentWords, HandlePlagiarismWordsForCustomPlan, CustomPlagiarisedWords }) {
     const featuresLineStyle = 'text-sm text-center text-[#3E3E3E]  flex  space-x-1'
-
+ 
    
 
 
     
     return (
 
-        <div className='flex flex-col items-center justify-center pb-32 space-y-6 border xl:space-y-8 rounded-xl border-slate-300'>
-            <div className="flex items-center justify-center w-full py-5 rounded-t-xl" style={{ backgroundColor: PricePlans[selectedPlan].cardColor }}>
+        <div className='flex flex-col items-center justify-center pb-32 space-y-6 bg-red-100 border-b border-l border-r xl:space-y-8 rounded-b-xl border-slate-300'>
+            {/* <div className="flex items-center justify-center w-full py-5 rounded-t-xl" style={{ backgroundColor: PricePlans[selectedPlan].cardColor }}>
 
                 <span className={`flex mr-3  items-center border duration-500 border-custom-dark-orange justify-center  w-4 h-4 xl:w-5 xl:h-5 rounded-full bg-custom-dark-orange`}>
                     <VscCheck className='-mt-1.5 -mr-1 text-xl' />
                 </span>
 
                 <h6 className="font-semibold text-center ">{PricePlans[selectedPlan].name}</h6>
-            </div>
+            </div>   */}
 
-          <div className="w-11/12 space-y-4 ">
+          <div className="w-11/12 mt-10 space-y-4 ">
                 <h6 className="text-center text-[#808080] "><span className="text-3xl text-custom-dark-orange">${PricePlans[selectedPlan].price}</span>/month</h6>
                 <p className="text-center text-[#808080] text-sm ">(Charged monthly)</p>
 

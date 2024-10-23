@@ -23,6 +23,8 @@ import LoginPopup from '../Components/LoginPopup'
 
 import PlanCards from '../Components/GeneralComponets/PlanCards'
 
+import AccordianComponent from '../Components/GeneralComponets/AccordianComponent'
+
 
 function Signup() {
     const [IsCountyDropdownOpened, setIsCountyDropdownOpened] = useState(false)
@@ -225,11 +227,11 @@ function Signup() {
     };
 
 
-    const HandleOpenLoginPopup =()=>{
+    const HandleOpenLoginPopup = () => {
         setIsLoginPopup(true)
     }
 
-    const HandleCloseLoginPopup =()=>{
+    const HandleCloseLoginPopup = () => {
         setIsLoginPopup(false)
     }
 
@@ -250,20 +252,20 @@ function Signup() {
         setAlreadyHasAccount(true)
     }
 
-  const handleClearInputs =()=>{
-    setFormData(prevFormData => {
-        const newFormData = { action: 'signup' }; // Start with action
-        Object.keys(prevFormData).forEach(key => {
-            if (key !== 'action') {
-                newFormData[key] = ''; // Clear other fields
-            } else {
-                newFormData[key] = prevFormData[key]; // Keep action
-            }
+    const handleClearInputs = () => {
+        setFormData(prevFormData => {
+            const newFormData = { action: 'signup' }; // Start with action
+            Object.keys(prevFormData).forEach(key => {
+                if (key !== 'action') {
+                    newFormData[key] = ''; // Clear other fields
+                } else {
+                    newFormData[key] = prevFormData[key]; // Keep action
+                }
+            });
+            return newFormData;
         });
-        return newFormData;
-    });
-    
-  }
+
+    }
 
 
 
@@ -292,9 +294,13 @@ function Signup() {
         const emptyFieldsArray = [];
 
         Object.keys(formData).forEach((field) => {
-            if (!formData[field].trim()) {
+
+            if (formData[field] == null || typeof formData[field] !== 'string' || !formData[field].trim()) {
                 emptyFieldsArray.push(field);  // Push field name to the array if empty
             }
+            // if (!formData[field].trim()) {
+            //     emptyFieldsArray.push(field);  // Push field name to the array if empty
+            // }
         });
 
         // if(formData.password !== formData.confirmPassword){
@@ -308,11 +314,11 @@ function Signup() {
     };
 
 
-    
 
 
 
-    const GetLoginStatus = async () => {
+
+    const GetLoginStatus = async (CheckBillingStatus = true) => {
         try {
             const response = await Axiosinstance.get('api/check_login_status')
 
@@ -334,8 +340,9 @@ function Signup() {
 
             setIsCheckingAuthStatus(false)
             // setIsAuthenticated(true)
-
-            GetBillingInfo(email)
+            if (CheckBillingStatus) {
+                GetBillingInfo(email)
+            }
         }
         catch (error) {
             console.log(error, '&&&&&&&&&&&&&')
@@ -353,12 +360,13 @@ function Signup() {
             const response = await Axiosinstance.post('api/logout', data)
             dispatch(setLogout())
             setFormData({
-               ...formData,
+                ...formData,
                 action: 'signup',
-            
+
             });
 
             // window.location.reload();
+            setIsPayButtonClicked(false)
             GetLoginStatus()
             RevokeHasAnAccount()
             handleClearInputs()
@@ -371,13 +379,12 @@ function Signup() {
         }
     }
 
-    const GetBillingInfo = async (email=null) =>{
-        console.log('entered the getbillinginfo ')
-       
+    const GetBillingInfo = async (email = null) => {
+
         // const data ={
         //     'email' : Email
         // }
-        try{
+        try {
             const response = await Axiosinstance.get(`api/register-login-payment/${email}`,)
             const {
                 firstName,
@@ -406,7 +413,7 @@ function Signup() {
             }));
 
         }
-        catch(error){
+        catch (error) {
             console.log(error.response.data)
 
         }
@@ -455,27 +462,54 @@ function Signup() {
 
         if (formData.action === 'signup') {
             if (formData.password !== formData.confirmPassword || !isPasswordStrong(formData.password)) {
-                alert('entered')
                 return
             }
         }
 
         console.log(formData)
-        const email = Email
-        
+        let email
+
+        if (Email === '' && formData.email !== '') {
+            email = formData.email
+        }
+        else {
+            email = Email
+
+
+        }
+
+
         try {
-            const response = await Axiosinstance.post(`api/register-login-payment/${email}`,formData)
+            const response = await Axiosinstance.post(`api/register-login-payment/${email}`, formData)
             GetLoginStatus()
 
         }
         catch (error) {
-            GetLoginStatus()
-            ErrorToast(Object.values(error.response.data)[0][0])
+            GetLoginStatus(false)
+            // ErrorToast(Object.values(error.response.data)[0][0])
+            if (error.response && error.response.data) {
+                // Check for an email error
+                if (error.response.data.email) {
+                    ErrorToast(error.response.data.email);
+                }
+        
+                // Check for other errors nested within an "errors" object
+                if (error.response.data.error) {
+                    const { error } = error.response.data;
+        
+                    // Flatten the error messages and show them as toasts
+                    const errorMessages = Object.values(error).flat();
+                    ErrorToast(errorMessages);
+                }
+            } else {
+                // Handle unexpected errors
+                ErrorToast('An unexpected error occurred.');
+            }
         }
     }
 
 
-    
+
 
 
     useEffect(() => {
@@ -487,7 +521,7 @@ function Signup() {
 
     useEffect(() => {
         GetLoginStatus()
-        
+
     }, [IsLoginPopup])
 
 
@@ -496,10 +530,10 @@ function Signup() {
             <div className="flex py-10 mt-10 max-md:flex-col max-md:justify-center max-md:items-center xl:w-11/12 2xl:w-10/12 md:space-x-6 xl:space-x-16 2xl:space-x-28 max-xl:px-10 ">
 
                 <div className="w-full max-md:justify-center max-md:flex-col max-md:items-center max-md:px-10 md:mt-10 md:w-3/12 ">
-                    <h3 className="mb-4 text-2xl text-center ">You are subscribing for:{formData.action}</h3>
+                    <h3 className="mb-4 text-2xl text-center ">You are subscribing for:</h3>
 
 
-                    <PlanCards
+                    {/* <PlanCards
                         PricePlans={PricePlans}
                         selectedPlan={selectedPlan}
                         HandleArticleWordsForCustomPlan={HandleArticleWordsForCustomPlan}
@@ -507,6 +541,20 @@ function Signup() {
                         HandlePlagiarismWordsForCustomPlan={HandlePlagiarismWordsForCustomPlan}
                         CustomPlagiarisedWords={CustomPlagiarisedWords}
                         IsCustomPlanSelected={IsCustomPlanSelected}
+                    /> */}
+
+
+                    <AccordianComponent
+
+                        PricePlans={PricePlans}
+                        selectedPlan={selectedPlan}
+                        HandlePlanSelection={HandlePlanSelection}
+                        HandleArticleWordsForCustomPlan={HandleArticleWordsForCustomPlan}
+                        CustomContentWords={CustomContentWords}
+                        HandlePlagiarismWordsForCustomPlan={HandlePlagiarismWordsForCustomPlan}
+                        CustomPlagiarisedWords={CustomPlagiarisedWords}
+                        IsCustomPlanSelected={IsCustomPlanSelected}
+                        ShowPlanLists={ShowPlanLists}
                     />
 
                     {!ShowPlanLists && (<div className="px-6 ">
@@ -515,7 +563,7 @@ function Signup() {
 
 
 
-                    {(ShowPlanLists && !IsCustomPlanSelected) && (
+                    {/* {(ShowPlanLists && !IsCustomPlanSelected) && (
                         <>
                             {Object.keys(PricePlans).filter((plan) => plan !== selectedPlan && plan !== 'CUSTOM').map((plan) => (
                                 <div key={plan} onClick={() => HandlePlanSelection(PricePlans[plan].name)} className="mt-5 rounded-md cursor-pointer " style={{ backgroundColor: PricePlans[plan].cardColor }}>
@@ -527,7 +575,7 @@ function Signup() {
                                 </div>
                             ))}
                         </>
-                    )}
+                    )} */}
 
 
                     {(ShowPlanLists && !IsCustomPlanSelected) && (<div className="px-6 ">
@@ -716,9 +764,12 @@ function Signup() {
                     </div>
                 </div>
             </div>
+
+
+
             <Toaster />
 
-          {IsLoginPopup &&   <LoginPopup HandleCloseLoginPopup={HandleCloseLoginPopup}  />}
+            {IsLoginPopup && <LoginPopup HandleCloseLoginPopup={HandleCloseLoginPopup} />}
 
 
         </div>

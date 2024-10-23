@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import Axiosinstance from '../Axios/Axiosinstance'
 
+import AccordianComponent from '../Components/GeneralComponets/AccordianComponent'
+
 function Demo() {
-     <h1 className="text-3xl ">Demo page </h1>
+//     <AccordianComponent />
     
 }
 
