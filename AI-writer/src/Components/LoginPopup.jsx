@@ -15,7 +15,7 @@ import CompleteLogo from '../assets/Logo/CompleteLogo';
 
 
 
-function LoginPopup({HandleCloseLoginPopup}) {
+function LoginPopup({HandleCloseLoginPopup,setIsPayButtonClicked}) {
 
 
     const { IsAuthenticated } = useSelector(state => state.auth);
@@ -57,6 +57,7 @@ function LoginPopup({HandleCloseLoginPopup}) {
             // setIsLoading(true)
             const response = await Axiosinstance.post('api/login', data)
             // dispatch(loginSuccess({}));
+            // setIsPayButtonClicked(false)
             HandleCloseLoginPopup()
 
 

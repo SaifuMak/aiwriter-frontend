@@ -2,7 +2,7 @@ import React from 'react'
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { MdInfoOutline } from "react-icons/md";
 
-function DropDown({  IsOpened, options,Toggle,HandleCountrySelection,SelectedCountry }) {
+function DropDown({  IsOpened, options,Toggle,HandleCountrySelection,SelectedCountry,is_null }) {
 
 
     return (
@@ -32,6 +32,9 @@ function DropDown({  IsOpened, options,Toggle,HandleCountrySelection,SelectedCou
                     ))}
                 </ul>
             )}
+
+    {is_null && <span className="text-xs text-red-500 ">*This field is required</span>}
+
         </div>
     )
 }

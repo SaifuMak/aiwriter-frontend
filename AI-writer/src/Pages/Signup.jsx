@@ -228,6 +228,8 @@ function Signup() {
 
 
     const HandleOpenLoginPopup = () => {
+        setIsPayButtonClicked(false)
+        setEmptyFields([])
         setIsLoginPopup(true)
     }
 
@@ -298,6 +300,7 @@ function Signup() {
             if (formData[field] == null || typeof formData[field] !== 'string' || !formData[field].trim()) {
                 emptyFieldsArray.push(field);  // Push field name to the array if empty
             }
+
             // if (!formData[field].trim()) {
             //     emptyFieldsArray.push(field);  // Push field name to the array if empty
             // }
@@ -307,7 +310,6 @@ function Signup() {
 
         //     setIsPasswordNotMatching(true)
         // }
-
 
         setEmptyFields(emptyFieldsArray);  // Update the state with empty fields
         return emptyFieldsArray.length > 0;
@@ -319,6 +321,7 @@ function Signup() {
 
 
     const GetLoginStatus = async (CheckBillingStatus = true) => {
+     
         try {
             const response = await Axiosinstance.get('api/check_login_status')
 
@@ -370,7 +373,9 @@ function Signup() {
             GetLoginStatus()
             RevokeHasAnAccount()
             handleClearInputs()
+
         }
+
 
         catch (error) {
             dispatch(setLogout())
@@ -378,6 +383,9 @@ function Signup() {
 
         }
     }
+
+
+
 
     const GetBillingInfo = async (email = null) => {
 
@@ -422,7 +430,10 @@ function Signup() {
 
 
 
+
+
     const CheckData = async () => {
+
         setIsPayButtonClicked(true)
 
         // setEmptyFields([])
@@ -466,7 +477,22 @@ function Signup() {
             }
         }
 
+
+
+        if (formData.phone_number.length > 15) {
+            ErrorToast('Phone number must not exceed 15 characters.')
+            return
+        }
+
+
+        if (formData.zipCode.length > 20) {
+            ErrorToast('ZipCode must not exceed 20 characters.')
+            return
+        }
+
+
         console.log(formData)
+
         let email
 
         if (Email === '' && formData.email !== '') {
@@ -474,8 +500,6 @@ function Signup() {
         }
         else {
             email = Email
-
-
         }
 
 
@@ -484,34 +508,35 @@ function Signup() {
             GetLoginStatus()
 
         }
+
+
         catch (error) {
             GetLoginStatus(false)
-            // ErrorToast(Object.values(error.response.data)[0][0])
-            if (error.response && error.response.data) {
-                // Check for an email error
-                if (error.response.data.email) {
-                    ErrorToast(error.response.data.email);
-                }
-        
-                // Check for other errors nested within an "errors" object
-                if (error.response.data.error) {
-                    const { error } = error.response.data;
-        
-                    // Flatten the error messages and show them as toasts
-                    const errorMessages = Object.values(error).flat();
-                    ErrorToast(errorMessages);
-                }
-            } else {
-                // Handle unexpected errors
-                ErrorToast('An unexpected error occurred.');
-            }
+            ErrorToast(Object.values(error.response.data)[0][0])
+            // if (error.response && error.response.data) {
+            //     // Check for an email error
+            //     if (error.response.data.email) {
+            //         ErrorToast(error.response.data.email);
+            //     }
+
+            //     // Check for other errors nested within an "errors" object
+            //     if (error.response.data.error) {
+            //         const { error } = error.response.data;
+
+            //         // Flatten the error messages and show them as toasts
+            //         const errorMessages = Object.values(error).flat();
+            //         ErrorToast(errorMessages);
+            //     }
+            // } else {
+            //     // Handle unexpected errors
+            //     ErrorToast('An unexpected error occurred.');
+            // }
         }
     }
 
 
 
-
-
+    
     useEffect(() => {
         checkEmptyFields(formData)
 
@@ -520,6 +545,7 @@ function Signup() {
 
 
     useEffect(() => {
+        console.log(formData)
         GetLoginStatus()
 
     }, [IsLoginPopup])
@@ -532,6 +558,7 @@ function Signup() {
                 <div className="w-full max-md:justify-center max-md:flex-col max-md:items-center max-md:px-10 md:mt-10 md:w-3/12 ">
                     <h3 className="mb-4 text-2xl text-center ">You are subscribing for:</h3>
 
+                
 
                     {/* <PlanCards
                         PricePlans={PricePlans}
@@ -658,9 +685,9 @@ function Signup() {
                                 </div>
                                 <div className="flex items-center justify-between mt-8 cursor-pointer ">
                                     <div className="flex items-center justify-center space-x-4">
-                                        <div className="flex items-center text-4xl justify-center shadow-custom-dark-orange border-2  border-custom-dark-orange w-12 h-12 rounded-full max-lg:text-2xl lg:w-16 lg:h-16 text-custom-dark-orange bg-[#213343]">{Username[0]}</div>
+                                        <div className="flex items-center text-4xl justify-center shadow-custom-dark-orange border-2  border-custom-dark-orange w-12 h-12 rounded-full max-lg:text-2xl lg:w-16 lg:h-16 text-custom-dark-orange bg-[#213343]">{Username ? Username[0] : 'U'}</div>
                                         <div className="flex flex-col mt-1">
-                                            <span className="text-base font-semibold">{Username}</span>
+                                        <span className="text-base font-semibold">{Username ? Username : 'User'}</span> 
                                             <span className="text-base ">{Email}</span>
                                             <span onClick={handleLogout} className="text-custom-dark-orange ">signout</span>
                                         </div>
@@ -710,6 +737,7 @@ function Signup() {
                                     IsOpened={IsCountyDropdownOpened}
                                     HandleCountrySelection={HandleCountrySelection}
                                     SelectedCountry={formData.country}
+                                    is_null={emptyFields.includes('country')}
                                 />
                                 <InputBox placeholder='Zip Code' name='zipCode' value={formData.zipCode} onchange={HandleInputchange} is_null={emptyFields.includes('zipCode')} />
                             </div>
@@ -769,7 +797,7 @@ function Signup() {
 
             <Toaster />
 
-            {IsLoginPopup && <LoginPopup HandleCloseLoginPopup={HandleCloseLoginPopup} />}
+            {IsLoginPopup && <LoginPopup HandleCloseLoginPopup={HandleCloseLoginPopup} setIsPayButtonClicked={setIsPayButtonClicked} />}
 
 
         </div>

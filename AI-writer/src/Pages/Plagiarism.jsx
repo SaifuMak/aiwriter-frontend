@@ -238,7 +238,7 @@ function Plagiarism() {
 
 
         try {
-            const response = await Axiosinstance.post('api/plagiarism-check-winston', formData, {
+            const response = await Axiosinstance.post('api/plagiarism-checker', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -509,9 +509,10 @@ function Plagiarism() {
                             {/* {isPlagiarismChecked && <h2 className="text-2xl font-medium tracking-wide "> Checker</h2>} */}
                             {/* <button onClick={() => dispatch(resetContents())} className="px-6 py-1 text-white bg-indigo-500 rounded-lg ">Reset</button> */}
                             <div className="p-10 mt-6 space-y-2 bg-white rounded-lg shadow-xl ">
-                                <h5 className="font-semibold ">Paste (Ctrl + V) your article below then click for Plagiarism!{PlagiarisedCount}</h5>
+                                <h5 className="font-semibold ">Paste (Ctrl + V) your article below then click for Plagiarism!</h5>
                                 {PlagiarisedCount > 0 ? (
                                     <div className='w-full  text-lg min-h-[400px] outline-none p-8 rounded-lg  bg-slate-50 border border-slate-200'>
+                                       
                                         <div
                                             className="prose focus:outline-none"
                                             contentEditable={true}
