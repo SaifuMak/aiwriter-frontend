@@ -25,6 +25,15 @@ import PlanCards from '../Components/GeneralComponets/PlanCards'
 
 import AccordianComponent from '../Components/GeneralComponets/AccordianComponent'
 
+import PayPalCheckout from '../Components/GeneralComponets/Payments/PayPalCheckout'
+import StripeCheckout from '../Components/GeneralComponets/Payments/StripeCheckout'
+
+import { LuLoader } from 'react-icons/lu'
+
+import { loadStripe } from '@stripe/stripe-js';
+
+
+const stripePromise = loadStripe('pk_test_51QE1VQJN7jDpKSSQxJ8sJ6r7TRweKoTKY8bCwzwMRLmVTNenHhHFfi6QwDpS3I1raNNwo52VpQie8SrlDzx63Vjp00VIO5XxmF');
 
 function Signup() {
     const [IsCountyDropdownOpened, setIsCountyDropdownOpened] = useState(false)
@@ -44,6 +53,16 @@ function Signup() {
     const [IsPasswordNotMatching, setIsPasswordNotMatching] = useState(false)
 
     const [IsLoginPopup, setIsLoginPopup] = useState(false)
+
+    const [selectedPaymentMethod, setselectedPaymentMethod] = useState('STRIPE')
+
+    const [IsLoading, setIsLoading] = useState(true)
+
+    const [SelectedPlanDetails, setSelectedPlanDetails] = useState({
+        PlanName: 'STARTER',
+        PlanPrice: '9',
+        PlanDetails: 'This plan offers essential content generation services, including up to 15,000 words of original writing, a plagiarism checker for 10,000 words, and optional add-ons for customized solutions.',
+    })
 
 
 
@@ -105,6 +124,7 @@ function Signup() {
             name: 'STARTER',
             price: '9',
             cardColor: '#D9E5F1',
+            description: 'This plan offers essential content generation services, including up to 15,000 words of original writing, a plagiarism checker for 10,000 words, and optional add-ons for customized solutions.',
             details: [
                 'Content Generation - 15,000 words',
                 'Plagiarism Checker - 10,000 words',
@@ -115,6 +135,8 @@ function Signup() {
             name: 'PROFESSIONAL',
             price: '29',
             cardColor: '#FFEFE9',
+            description: 'This plan offers essential content generation services, including up to 15,000 words of original writing, a plagiarism checker for 10,000 words, and optional add-ons for customized solutions.',
+
 
             details: [
                 'Content Generation - 15,000 words',
@@ -126,6 +148,7 @@ function Signup() {
             name: 'ENTERPRISE',
             price: '99',
             cardColor: '#FFF2C9',
+            description: 'This plan offers essential content generation services, including up to 15,000 words of original writing, a plagiarism checker for 10,000 words, and optional add-ons for customized solutions.',
 
             details: [
                 'Content Generation - 15,000 words',
@@ -144,8 +167,6 @@ function Signup() {
                 'Buy Addons when needed'
             ]
         },
-
-
 
     }
 
@@ -191,19 +212,37 @@ function Signup() {
         setShowPlanLists(true)
     }
 
+    const HandleFillSelectedPlanDetails = (plan) => {
+
+        const selectedPlan = PricePlans[plan];
+
+        if (selectedPlan) {
+            setSelectedPlanDetails({
+                PlanName: selectedPlan.name,
+                PlanPrice: selectedPlan.price,
+                PlanDetails: selectedPlan.description,
+            });
+        }
+
+    }
+
     const HandlePlanSelection = (plan) => {
+        HandleFillSelectedPlanDetails(plan)
         setselectedPlan(plan)
     }
 
     const CustomPlanEnabled = () => {
+        HandleFillSelectedPlanDetails('CUSTOM')
         setselectedPreviousPlan(selectedPlan)
         setIsCustomPlanSelected(true)
         setselectedPlan('CUSTOM')
 
     }
 
+    
     const CustomPlanDisabled = () => {
         setselectedPlan(selectedPreviousPlan)
+        HandleFillSelectedPlanDetails(selectedPreviousPlan)
         setIsCustomPlanSelected(false)
     }
 
@@ -217,14 +256,7 @@ function Signup() {
     }
 
 
-    const isPasswordStrong = (password) => {
-        // Regular expression to check if the password is at least 8 characters long,
-        // and contains both letters and numbers.
-        const strongPasswordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
-        // Test the password against the regex
-        return strongPasswordRegex.test(password);
-    };
 
 
     const HandleOpenLoginPopup = () => {
@@ -235,6 +267,12 @@ function Signup() {
 
     const HandleCloseLoginPopup = () => {
         setIsLoginPopup(false)
+    }
+
+
+    const HandleSelectedPaymentOption = (PaymentMethod) => {
+        setselectedPaymentMethod(PaymentMethod)
+
     }
 
 
@@ -253,6 +291,16 @@ function Signup() {
         });
         setAlreadyHasAccount(true)
     }
+
+
+    const isPasswordStrong = (password) => {
+        // Regular expression to check if the password is at least 8 characters long,
+        // and contains both letters and numbers.
+        const strongPasswordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+        // Test the password against the regex
+        return strongPasswordRegex.test(password);
+    };
 
     const handleClearInputs = () => {
         setFormData(prevFormData => {
@@ -320,8 +368,10 @@ function Signup() {
 
 
 
+
+
     const GetLoginStatus = async (CheckBillingStatus = true) => {
-     
+
         try {
             const response = await Axiosinstance.get('api/check_login_status')
 
@@ -535,8 +585,46 @@ function Signup() {
     }
 
 
-
+    const handleStripePayment = async () => {
     
+        const stripe = await stripePromise;
+        setIsLoading(true)
+
+        try {
+
+            // Create a checkout session by calling the Django backend
+            const response = await Axiosinstance.post(`payment/stripe-checkout`, SelectedPlanDetails)
+
+            console.log(response)
+            setIsLoading(false)
+
+            const { sessionId } = response.data;
+            // Redirect to Stripe Checkout
+            const { error } = await stripe.redirectToCheckout({ sessionId });
+            if (error) console.error('Stripe Checkout error');
+        } catch (error) {
+            setIsLoading(false)
+
+            console.error('Error creating checkout session', error);
+        }
+    };
+
+
+
+
+    const HandlePayment = async () => {
+        toast.dismiss()
+       if(selectedPaymentMethod === 'STRIPE'){
+        handleStripePayment()
+       }
+       else{
+        ErrorToast('paypal payment is not allowed')
+       }
+    }
+
+
+
+
     useEffect(() => {
         checkEmptyFields(formData)
 
@@ -558,7 +646,7 @@ function Signup() {
                 <div className="w-full max-md:justify-center max-md:flex-col max-md:items-center max-md:px-10 md:mt-10 md:w-3/12 ">
                     <h3 className="mb-4 text-2xl text-center ">You are subscribing for:</h3>
 
-                
+
 
                     {/* <PlanCards
                         PricePlans={PricePlans}
@@ -687,7 +775,7 @@ function Signup() {
                                     <div className="flex items-center justify-center space-x-4">
                                         <div className="flex items-center text-4xl justify-center shadow-custom-dark-orange border-2  border-custom-dark-orange w-12 h-12 rounded-full max-lg:text-2xl lg:w-16 lg:h-16 text-custom-dark-orange bg-[#213343]">{Username ? Username[0] : 'U'}</div>
                                         <div className="flex flex-col mt-1">
-                                        <span className="text-base font-semibold">{Username ? Username : 'User'}</span> 
+                                            <span className="text-base font-semibold">{Username ? Username : 'User'}</span>
                                             <span className="text-base ">{Email}</span>
                                             <span onClick={handleLogout} className="text-custom-dark-orange ">signout</span>
                                         </div>
@@ -770,7 +858,7 @@ function Signup() {
                             <h2 className="text-2xl font-semibold ">Payment</h2>
 
                             <div className="flex items-center justify-center space-x-8 ">
-                                <button className="flex items-center justify-center px-8 py-2 space-x-4 border rounded-lg border-custom-dark-orange">
+                                <button onClick={() => HandleSelectedPaymentOption('STRIPE')} className={`flex items-center justify-center px-8 py-2 space-x-4 border rounded-lg ${selectedPaymentMethod === 'STRIPE' ? 'border-custom-dark-orange ' : 'border-[#B0B0B0]'} `} >
                                     <span className="text-[#6366F1] font-semibold text-xl">Stripe</span>
                                     <div className="w-9 h-9 ">
                                         <img src={stripeImg} alt="" className="object-cover w-full h-full " />
@@ -778,15 +866,17 @@ function Signup() {
                                 </button>
 
 
-                                <button className="flex items-center justify-center px-8 py-2 space-x-4 border rounded-lg border-[#B0B0B0]">
+                                <button onClick={() => HandleSelectedPaymentOption('PAYPAL')} className={`flex items-center justify-center px-8 py-2 space-x-4 border ${selectedPaymentMethod === 'PAYPAL' ? 'border-custom-dark-orange' : 'border-[#B0B0B0]'} rounded-lg border-[#B0B0B0]`}>
                                     <span className="text-[#2563EB] font-semibold text-xl">Paypal</span>
                                     <div className="w-9 h-9 ">
                                         <img src={paypalImg} alt="" className="object-cover w-full h-full " />
                                     </div>
                                 </button>
                             </div>
-                            <button onClick={CheckData} className="bg-[#44AA55] text-lg rounded-md  text-white font-semibold py-3 w-full">SIGN UP & PAY</button>
 
+                            <button onClick={HandlePayment}  className="bg-[#44AA55] text-lg rounded-md  text-white font-semibold  h-12 w-full">{ IsLoading ? <LuLoader /> : 'SIGN UP & PAY' }</button>
+                            {/* <PayPalCheckout /> */}
+                            {/* {selectedPaymentMethod === 'STRIPE' && <StripeCheckout SelectedPlanDetails={SelectedPlanDetails} />} */}
                         </div>
 
                     </div>

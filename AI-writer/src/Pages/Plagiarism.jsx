@@ -28,6 +28,8 @@ import { FindPercentage } from '../Utils/Helperfunctions'
 import { setSelectedPage } from '../Redux/Slices/NavigationSlice'
 
 
+import './styles/plagiarism.css';
+
 function Plagiarism() {
 
     const dispatch = useDispatch()
@@ -90,10 +92,10 @@ function Plagiarism() {
 
     useEffect(() => {
         dispatch(setSelectedPage('Plagiarism Checker'))
-      
-       
-      }, [])
-      
+
+
+    }, [])
+
 
 
 
@@ -198,7 +200,6 @@ function Plagiarism() {
         if (!Content && !uploadedFile) {
             return
         }
-
         // if (wordsCount > 3000 && !uploadedFile) {
         //     ErrorToast('The content exceeds the 3000-word limit.')
         //     return
@@ -207,8 +208,9 @@ function Plagiarism() {
         // if (wordsCount < 100 && !uploadedFile) {
         //     ErrorToast('The content must contain at least 100 words. ')
         //     return
-
         // }
+
+
 
         setIsLoading(true)
 
@@ -286,21 +288,148 @@ function Plagiarism() {
 
 
 
+
+
+
+
+    // useEffect(() => {
+    //     if (Content) {
+    //         const uniqueSentences = new Set();
+
+    //         const uniqueWordsSet = new Set();
+    //         console.log('upto here it is fine ')
+    //         console.log('Type of results:', typeof results);
+    //         console.log('Value of results:', results);
+
+    //         console.log(results)
+
+    //         const resultArray = Array.isArray(results) ? results : [results];
+    //         // const resultArray = Object.values(results);
+    //         resultArray.forEach((data) => {
+    //             if (data.plagiarismFound) {
+    //                 data.plagiarismFound.map((item, ind) => {
+    //                     // console.log(item.sequence, 'this is those sentences ')
+
+    //                     const words = item.sequence
+    //                         .toLowerCase()  // Convert to lowercase
+    //                         .split(/\s+/);  // Split by whitespace
+
+    //                     words.forEach(word => {
+    //                         const cleanedWord = word.replace(/[.,!?'’,)'′'`“”‘’`````]/g, '');  // Remove commas and periods
+    //                         if (cleanedWord.trim().length > 0) {
+    //                             console.log(cleanedWord, 'cleaned word ')
+    //                             uniqueWordsSet.add(cleanedWord);
+    //                         }
+    //                     });
+
+
+    //                 })
+    //             }
+
+
+    //         });
+
+
+
+    //         // Convert the Set back to an array
+    //         const uniqueWordsArray = Array.from(uniqueWordsSet);
+
+    //         setUniqueWordsArray(uniqueWordsArray)
+
+
+    //     }
+    // }, [results]);
+
+
+
+
+
+    // useEffect(() => {
+    //     if (!Content || Isediting) return;
+    //     const words = Content.split(/\s+/); // Split the article content by whitespace
+    //     let result = '';
+    //     let matchBuffer = []; // Buffer to keep track of consecutive matching words
+    //     let redWordCount = 0;
+
+    //     words.forEach((word, index) => {
+    //         // console.log(word, 'this is the list of words ');
+
+    //         // Remove punctuation including both straight and curly apostrophes
+    //         // const cleanedWord = word.toLowerCase().replace(/[.,!?'’]/g, '').trim();
+    //         const cleanedWord = word.toLowerCase().replace(/[.,!?'’,)'′'`“”‘’`````]/g, '').trim();
+
+    //         // console.log(cleanedWord, 'this is the cleaned word');
+
+    //         if (uniqueWordsArray.includes(cleanedWord)) {
+    //             // console.log(cleanedWord, 'this word is plaigaiarised +++++  ');
+
+    //             // If the word is in uniqueWordsArray, add it to matchBuffer
+    //             matchBuffer.push(word);
+    //             // console.log(matchBuffer, 'this is buffer ')
+    //         } else {
+    //             // Handle matchBuffer if chain is broken or word is not in uniqueWordsArray
+    //             if (matchBuffer.length >= 4) {
+    //                 // Wrap 4 or more consecutive matching words in red
+    //                 result += `<span style="background-color: #F9D5D5">${matchBuffer.join(' ')}</span> `;
+    //                 redWordCount += matchBuffer.length; // Increment red word count
+
+    //             } else if (matchBuffer.length > 0) {
+    //                 // Wrap fewer than 4 matching words in green (if needed)
+    //                 result += `<span style="background-color: #D8EFDA">${matchBuffer.join(' ')}</span> `;
+
+    //                 // result += matchBuffer.join(' ') + ' ';
+    //             }
+
+    //             // Reset matchBuffer since the current word is not in the unique array
+    //             matchBuffer = [];
+    //             // Append the current non-matching word wrapped in green
+    //             result += `<span style="background-color: #D8EFDA">${word}</span> `;
+    //         }
+    //     });
+
+    //     // After loop ends, check if there are any remaining words in matchBuffer
+    //     if (matchBuffer.length >= 4) {
+    //         result += `<span style="background-color:  #F9D5D5">${matchBuffer.join(' ')}</span>`;
+    //         redWordCount += matchBuffer.length; // Increment red word count
+
+    //     } else if (matchBuffer.length > 0) {
+    //         result += matchBuffer.join(' ');
+    //     }
+
+    //     // Set the highlighted article
+    //     setHighlightedArticle(result.trim());
+    //     setPlagiarisedCount(redWordCount)
+    //     console.log(redWordCount, 'palgwords *****************************************************')
+    //     setIsFinishedCalculating(true)
+
+    // }, [Content, results, uniqueWordsArray]);
+
+
+    function convertToHtmlFormat(text) {
+        let htmlContent = text
+            // Replace line breaks with <br>
+            .replace(/\n/g, '<br>')
+            // Replace two or more spaces with &nbsp;
+            // .replace(/\s\s+/g, '&nbsp;&nbsp;');
+
+        return htmlContent;
+    }
+
+
+
+    
     useEffect(() => {
         if (Content) {
             const uniqueSentences = new Set();
 
             const uniqueWordsSet = new Set();
-            console.log('upto here it is fine ')
-            console.log('Type of results:', typeof results);
-            console.log('Value of results:', results);
-
-            console.log(results)
+        
 
             const resultArray = Array.isArray(results) ? results : [results];
             // const resultArray = Object.values(results);
             resultArray.forEach((data) => {
                 if (data.plagiarismFound) {
+                    console.log(data.plagiarismFound, 'this is from  th erespons e')
                     data.plagiarismFound.map((item, ind) => {
                         // console.log(item.sequence, 'this is those sentences ')
 
@@ -338,19 +467,41 @@ function Plagiarism() {
 
 
 
+  
+
+    
+
+
+
+
+
     useEffect(() => {
         if (!Content || Isediting) return;
-        const words = Content.split(/\s+/); // Split the article content by whitespace
+        const htmlText = convertToHtmlFormat(Content)
+        const words = htmlText.split(/\s+/); // Split the article content by whitespace
+        // const words = htmlText.split(/(\s+|<br><br>)/);
+
+        // const cleanedContent = Content.replace(/<br\s*\/?>/g, ' <br> '); // Space around <br> to separate it from words
+
+        // // Split the cleaned content, keeping <br> as separate items
+        // const wordsAndBrTags = cleanedContent.split(/(\s+)/).filter(Boolean); // Filter to remove empty strings
+        // console.log(wordsAndBrTags, 'words and <br> tags *********'); // See the resulting array
+
+
         let result = '';
         let matchBuffer = []; // Buffer to keep track of consecutive matching words
         let redWordCount = 0;
 
         words.forEach((word, index) => {
             // console.log(word, 'this is the list of words ');
+            console.log(word, 'uncleaned *********')
 
             // Remove punctuation including both straight and curly apostrophes
             // const cleanedWord = word.toLowerCase().replace(/[.,!?'’]/g, '').trim();
-            const cleanedWord = word.toLowerCase().replace(/[.,!?'’,)'′'`“”‘’`````]/g, '').trim();
+            const cleanedWord = word.toLowerCase().replace(/[.,!?'’,)'′'`“”‘’`````]/g, '').replace(/<br\s*\/?>/g, '').trim();
+            console.log(cleanedWord, 'cleaned ++')
+
+
 
             // console.log(cleanedWord, 'this is the cleaned word');
 
@@ -362,14 +513,14 @@ function Plagiarism() {
                 // console.log(matchBuffer, 'this is buffer ')
             } else {
                 // Handle matchBuffer if chain is broken or word is not in uniqueWordsArray
-                if (matchBuffer.length >= 3) {
-                    // Wrap 3 or more consecutive matching words in red
+                if (matchBuffer.length >= 4) {
+                    // Wrap 4 or more consecutive matching words in red
                     result += `<span style="background-color: #F9D5D5">${matchBuffer.join(' ')}</span> `;
                     redWordCount += matchBuffer.length; // Increment red word count
 
                 } else if (matchBuffer.length > 0) {
-                    // Wrap fewer than 3 matching words in green (if needed)
-                    result += `<span style="background-color: #D8EFDA">${matchBuffer.join(' ')}</span> `;
+                    // Wrap fewer than 4 matching words in green (if needed)
+                    result += `<span >${matchBuffer.join(' ')}</span> `;
 
                     // result += matchBuffer.join(' ') + ' ';
                 }
@@ -377,12 +528,14 @@ function Plagiarism() {
                 // Reset matchBuffer since the current word is not in the unique array
                 matchBuffer = [];
                 // Append the current non-matching word wrapped in green
-                result += `<span style="background-color: #D8EFDA">${word}</span> `;
+                // result += `<span >${word}</span> `;
+                result += `<span >${word}</span> `;
             }
         });
 
         // After loop ends, check if there are any remaining words in matchBuffer
-        if (matchBuffer.length >= 3) {
+        if (matchBuffer.length >= 4) {
+            // result += `<span >${matchBuffer.join(' ')}</span>`;
             result += `<span style="background-color:  #F9D5D5">${matchBuffer.join(' ')}</span>`;
             redWordCount += matchBuffer.length; // Increment red word count
 
@@ -392,6 +545,7 @@ function Plagiarism() {
 
         // Set the highlighted article
         setHighlightedArticle(result.trim());
+        // console.log(result, 'this is the end result ')
         setPlagiarisedCount(redWordCount)
         console.log(redWordCount, 'palgwords *****************************************************')
         setIsFinishedCalculating(true)
@@ -399,6 +553,97 @@ function Plagiarism() {
     }, [Content, results, uniqueWordsArray]);
 
 
+
+
+
+    // useEffect(() => {
+    //     if (!Content || Isediting) return;
+    //     const htmlText = convertToHtmlFormat(Content)
+    //     const words = htmlText.split(/\s+/); // Split the article content by whitespace
+      
+
+    //     let result = '';
+    //     let matchBuffer = []; // Buffer to keep track of consecutive matching words
+    //     let redWordCount = 0;
+
+
+
+    //     words.forEach((word, index) => {
+    //         console.log(word, 'uncleaned *********');
+        
+    //         // Split by <br> tags to get segments
+    //         const segments = word.split(/<br\s*\/?>/);
+        
+    //         segments.forEach(segment => {
+    //             // Further split each segment by spaces to handle multi-word segments
+    //             const wordsInSegment = segment.split(/\s+/); // Split by one or more spaces
+        
+    //             wordsInSegment.forEach(subWord => {
+    //                 // Clean each sub-word, removing punctuation and converting to lowercase
+    //                 const cleanedSubWord = subWord.toLowerCase().replace(/[.,!?'’,)'′'`“”‘’]/g, '').trim();
+    //                 console.log(cleanedSubWord, 'cleaned ++');
+        
+    //                 // Check if the cleaned word exists in uniqueWordsArray
+    //                 if (cleanedSubWord && uniqueWordsArray.includes(cleanedSubWord)) {
+    //                     console.log(cleanedSubWord, 'this word is plagiarized +++++');
+    //                     if (uniqueWordsArray.includes(cleanedSubWord)) {
+    //                         // console.log(cleanedWord, 'this word is plaigaiarised +++++  ');
+            
+                       
+    //                         matchBuffer.push(subWord);
+    //                     } else {
+            
+    //                         if (matchBuffer.length >= 4) {
+    //                             // Wrap 4 or more consecutive matching words in red
+    //                             result += `<span style="background-color: #F9D5D5">${matchBuffer.join(' ')}</span> `;
+    //                             redWordCount += matchBuffer.length; // Increment red word count
+            
+    //                         } else if (matchBuffer.length > 0) {
+    //                             // Wrap fewer than 4 matching words in green (if needed)
+    //                             result += `<span >${matchBuffer.join(' ')}</span> `;
+            
+    //                             // result += matchBuffer.join(' ') + ' ';
+    //                         }
+            
+    //                         // Reset matchBuffer since the current word is not in the unique array
+    //                         matchBuffer = [];
+    //                         // Append the current non-matching word wrapped in green
+    //                         // result += `<span >${word}</span> `;
+    //                         result += `<span >${subWord}</span> `;
+    //                     }
+    //                     // If the sub-word is in uniqueWordsArray, add the original sub-word to matchBuffer
+    //                     // matchBuffer.push(subWord);
+    //                 }
+    //             });
+    //         });
+    //     });
+    
+     
+    //     // After loop ends, check if there are any remaining words in matchBuffer
+    //     if (matchBuffer.length >= 4) {
+    //         // result += `<span >${matchBuffer.join(' ')}</span>`;
+    //         result += `<span style="background-color:  #F9D5D5">${matchBuffer.join(' ')}</span>`;
+    //         redWordCount += matchBuffer.length; // Increment red word count
+
+    //     } else if (matchBuffer.length > 0) {
+    //         result += matchBuffer.join(' ');
+    //     }
+
+    //     // Set the highlighted article
+    //     setHighlightedArticle(result.trim());
+    //     // console.log(result, 'this is the end result ')
+    //     setPlagiarisedCount(redWordCount)
+    //     console.log(redWordCount, 'palgwords *****************************************************')
+    //     setIsFinishedCalculating(true)
+
+    // }, [Content, results, uniqueWordsArray]);
+
+
+
+
+
+
+    
 
     const resultsRef = useRef(null);
 
@@ -420,6 +665,7 @@ function Plagiarism() {
 
         console.log(urls, 'these are the urls that got matched--------(((((((())))))))))))----------------- ')
         // setPlagiarisedUrl(prevUrls => [...prevUrls, ...urls])
+       
         setPlagiarisedUrl(prevUrls => {
             // Combine the previous URLs and new URLs
             const combinedUrls = [...prevUrls, ...urls];
@@ -471,6 +717,10 @@ function Plagiarism() {
 
 
 
+
+
+
+
     return (
         <>
             <div className="flex justify-center  h-full bg-[#FEF2E8] font-poppins ">
@@ -511,8 +761,8 @@ function Plagiarism() {
                             <div className="p-10 mt-6 space-y-2 bg-white rounded-lg shadow-xl ">
                                 <h5 className="font-semibold ">Paste (Ctrl + V) your article below then click for Plagiarism!</h5>
                                 {PlagiarisedCount > 0 ? (
-                                    <div className='w-full  text-lg min-h-[400px] outline-none p-8 rounded-lg  bg-slate-50 border border-slate-200'>
-                                       
+                                    <div className='w-full  text-lg min-h-[400px] max-h-[400px] overflow-auto outline-none p-6 rounded-lg  bg-slate-50 border border-slate-200'>
+
                                         <div
                                             className="prose focus:outline-none"
                                             contentEditable={true}
@@ -522,7 +772,7 @@ function Plagiarism() {
                                         />
 
                                     </div>
-                                ) : (<textarea onChange={handlePlagiarismContent} value={Content} className='w-full resize-none text-lg min-h-[400px] outline-none p-8 rounded-lg  bg-slate-50 border border-slate-200' name="" id="" placeholder='Enter text here to check plagiarism...'>
+                                ) : (<textarea onChange={handlePlagiarismContent} value={Content} className='w-full resize-none text-lg min-h-[400px] outline-none p-6 rounded-lg  bg-slate-50 border border-slate-200' name="" id="" placeholder='Enter text here to check plagiarism...'>
                                 </textarea>)}
 
                                 <div className="flex items-center justify-between w-full h-10 ">
