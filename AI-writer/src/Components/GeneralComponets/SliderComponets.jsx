@@ -12,7 +12,7 @@ function SliderComponets({Handlefunction,WordsCount}) {
     onChange={Handlefunction} // Update state on change
     valueLabelDisplay="auto" // Show value label when dragging
     // color="success" // Change slider color
-    step={10000} // Step increment
+    step={5000} // Step increment
     min={10000} // Minimum value
     max={300000} // Maximum value
     sx={{

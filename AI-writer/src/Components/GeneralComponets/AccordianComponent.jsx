@@ -10,7 +10,7 @@ import PlanCards from './PlanCards';
 import { useEffect } from 'react';
 
 
-function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWordsForCustomPlan, CustomContentWords, HandlePlagiarismWordsForCustomPlan, CustomPlagiarisedWords, ShowPlanLists, IsCustomPlanSelected }) {
+function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWordsForCustomPlan, CustomContentWords, HandlePlagiarismWordsForCustomPlan, CustomPlagiarisedWords, ShowPlanLists, IsCustomPlanSelected,CustomPrice }) {
     const [expanded, setExpanded] = useState(false);
     const featuresLineStyle = 'text-sm text-center text-[#3E3E3E]  flex  space-x-1'
 
@@ -29,7 +29,7 @@ function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWo
 
         STARTER: {
             name: 'STARTER',
-            price: '9',
+            price: '2',
             cardColor: '#D9E5F1',
             details: [
                 'Content Generation - 15,000 words',
@@ -61,7 +61,7 @@ function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWo
         },
         CUSTOM: {
             name: 'CUSTOM',
-            price: '100',
+            price: CustomPrice,
             cardColor: '#FFF2C9',
 
             details: [

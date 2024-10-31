@@ -12,8 +12,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import SuccessToast from '../Utils/SuccessToast';
 import ErrorToast from '../Utils/ErrorToast';
 
-
-import { LuLoader2 } from 'react-icons/lu'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { Toaster, toast } from 'sonner';
@@ -31,6 +29,11 @@ import StripeCheckout from '../Components/GeneralComponets/Payments/StripeChecko
 import { LuLoader } from 'react-icons/lu'
 
 import { loadStripe } from '@stripe/stripe-js';
+
+import { LuLoader2 } from "react-icons/lu";
+
+import { RxCross2 } from "react-icons/rx";
+
 
 
 const stripePromise = loadStripe('pk_test_51QE1VQJN7jDpKSSQxJ8sJ6r7TRweKoTKY8bCwzwMRLmVTNenHhHFfi6QwDpS3I1raNNwo52VpQie8SrlDzx63Vjp00VIO5XxmF');
@@ -56,13 +59,9 @@ function Signup() {
 
     const [selectedPaymentMethod, setselectedPaymentMethod] = useState('STRIPE')
 
-    const [IsLoading, setIsLoading] = useState(true)
+    const [IsLoading, setIsLoading] = useState(false)
 
-    const [SelectedPlanDetails, setSelectedPlanDetails] = useState({
-        PlanName: 'STARTER',
-        PlanPrice: '9',
-        PlanDetails: 'This plan offers essential content generation services, including up to 15,000 words of original writing, a plagiarism checker for 10,000 words, and optional add-ons for customized solutions.',
-    })
+    const [IsChangePlanAlert, setIsChangePlanAlert] = useState(false)
 
 
 
@@ -114,6 +113,8 @@ function Signup() {
 
     const [IsPayButtonClicked, setIsPayButtonClicked] = useState(false)
 
+    const [CustomPrice, setCustomPrice] = useState(100)
+
 
     const dispatch = useDispatch()
 
@@ -122,8 +123,9 @@ function Signup() {
     const PricePlans = {
         STARTER: {
             name: 'STARTER',
-            price: '9',
+            price: '2',
             cardColor: '#D9E5F1',
+
             description: 'This plan offers essential content generation services, including up to 15,000 words of original writing, a plagiarism checker for 10,000 words, and optional add-ons for customized solutions.',
             details: [
                 'Content Generation - 15,000 words',
@@ -131,10 +133,12 @@ function Signup() {
                 'Buy Addons when needed'
             ]
         },
+
         PROFESSIONAL: {
             name: 'PROFESSIONAL',
             price: '29',
             cardColor: '#FFEFE9',
+
             description: 'This plan offers essential content generation services, including up to 15,000 words of original writing, a plagiarism checker for 10,000 words, and optional add-ons for customized solutions.',
 
 
@@ -144,10 +148,12 @@ function Signup() {
                 'Buy Addons when needed'
             ]
         },
+
         ENTERPRISE: {
             name: 'ENTERPRISE',
             price: '99',
             cardColor: '#FFF2C9',
+
             description: 'This plan offers essential content generation services, including up to 15,000 words of original writing, a plagiarism checker for 10,000 words, and optional add-ons for customized solutions.',
 
             details: [
@@ -158,7 +164,7 @@ function Signup() {
         },
         CUSTOM: {
             name: 'CUSTOM',
-            price: '100',
+            price: CustomPrice,
             cardColor: '#FFF2C9',
 
             details: [
@@ -173,23 +179,49 @@ function Signup() {
 
     const countryNames = Object.values(countries).map(country => country.name).sort((a, b) => a.localeCompare(b)); // Sort alphabetically;
 
-    const HandleArticleWordsForCustomPlan = (event, newValue) => {
 
-        if (newValue < 150000) {
+
+
+
+
+    // this calculates the custom price upon the slider change 
+    const calculateCustomPrice = (contentWords = CustomContentWords, plagiarismWords = CustomPlagiarisedWords) => {
+        // HandleFillSelectedPlanDetails()
+
+        const contentWordPrice = 0.00031; // Cost per content word
+        const plagiarismWordPrice = 0.0003; // Cost per plagiarism word
+
+        // Calculate additional price based on word counts
+        const contentWordsCost = contentWords * contentWordPrice;
+        const plagiarismWordsCost = plagiarismWords * plagiarismWordPrice;
+
+        return Math.round(contentWordsCost + plagiarismWordsCost);
+    };
+
+
+
+    const HandleArticleWordsForCustomPlan = (event, newWordsValue) => {
+
+        if (newWordsValue < 150000) {
             setCustomContentWords(150000); // Set to minimum value
         } else {
-            setCustomContentWords(newValue); // Update state with the new value
-        }
+            setCustomContentWords(newWordsValue); // Update state with the new value
+            setCustomPrice(calculateCustomPrice(newWordsValue, CustomPlagiarisedWords))
 
+        }
     }
 
-    const HandlePlagiarismWordsForCustomPlan = (event, newValue) => {
+    const HandlePlagiarismWordsForCustomPlan = (event, newPlagiarisedValue) => {
 
-        if (newValue < 180000) {
+        if (newPlagiarisedValue < 180000) {
             setCustomPlagiarisedWords(180000); // Set to minimum value
         } else {
-            setCustomPlagiarisedWords(newValue); // Update state with the new value
+            setCustomPlagiarisedWords(newPlagiarisedValue); // Update state with the new value
+            setCustomPrice(calculateCustomPrice(CustomContentWords, newPlagiarisedValue))
+
         }
+
+
     }
 
 
@@ -212,37 +244,87 @@ function Signup() {
         setShowPlanLists(true)
     }
 
-    const HandleFillSelectedPlanDetails = (plan) => {
+    // const HandleFillSelectedPlanDetails = (plan = selectedPlan) => {
 
-        const selectedPlan = PricePlans[plan];
+    //     const selectedPlan = PricePlans[plan];
+    //     console.log(selectedPlan, 'this is the selected plan----------')
+
+
+
+    //     if (selectedPlan) {
+    //         setSelectedPlanDetails({
+    //             PlanName: selectedPlan.name,
+    //             PlanPrice: selectedPlan.price,
+    //             PlanDetails: selectedPlan.description,
+    //             ContentWords: selectedPlan.ContentWords,
+    //             PlagWords: selectedPlan.PlagWords,
+    //         });
+    //     }
+
+    // }
+
+
+    const GetSelectedPlanDetails = (Is_willing_to_change_plan) => {
+
+        let PlanDetails = {}
 
         if (selectedPlan) {
-            setSelectedPlanDetails({
-                PlanName: selectedPlan.name,
-                PlanPrice: selectedPlan.price,
-                PlanDetails: selectedPlan.description,
-            });
+
+            const PlanSelected = PricePlans[selectedPlan];
+            console.log(PlanSelected, 'this is the selected plan----------')
+
+            if (selectedPlan !== 'CUSTOM') {
+
+                PlanDetails = {
+                    PlanName: PlanSelected.name,
+                    PlanPrice: PlanSelected.price,
+                    PlanDetails: PlanSelected.description,
+                    ContentWords: PlanSelected.ContentWords,
+                    PlagWords: PlanSelected.PlagWords,
+                    IsPlanChanging: Is_willing_to_change_plan,
+                };
+            }
+
+            else {
+
+                PlanDetails = {
+                    PlanName: PlanSelected.name,
+                    PlanPrice: CustomPrice,
+                    PlanDetails: `This plan offers essential content generation services, including up to ${CustomContentWords} words of original writing, a plagiarism checker for ${CustomPlagiarisedWords} words, and optional add-ons for customized solutions.`,
+                    ContentWords: CustomContentWords,
+                    PlagWords: CustomPlagiarisedWords,
+                    IsPlanChanging: Is_willing_to_change_plan,
+                };
+            }
         }
+
+        return PlanDetails
 
     }
 
+    const handleChangePlanAlert = () => {
+        setIsChangePlanAlert(false)
+    }
+
+
     const HandlePlanSelection = (plan) => {
-        HandleFillSelectedPlanDetails(plan)
+        // HandleFillSelectedPlanDetails(plan)
         setselectedPlan(plan)
     }
 
+
     const CustomPlanEnabled = () => {
-        HandleFillSelectedPlanDetails('CUSTOM')
+        setselectedPlan('CUSTOM')
         setselectedPreviousPlan(selectedPlan)
         setIsCustomPlanSelected(true)
-        setselectedPlan('CUSTOM')
+        // HandleFillSelectedPlanDetails('CUSTOM')
 
     }
 
-    
+
     const CustomPlanDisabled = () => {
         setselectedPlan(selectedPreviousPlan)
-        HandleFillSelectedPlanDetails(selectedPreviousPlan)
+        // HandleFillSelectedPlanDetails(selectedPreviousPlan)
         setIsCustomPlanSelected(false)
     }
 
@@ -362,12 +444,6 @@ function Signup() {
         setEmptyFields(emptyFieldsArray);  // Update the state with empty fields
         return emptyFieldsArray.length > 0;
     };
-
-
-
-
-
-
 
 
     const GetLoginStatus = async (CheckBillingStatus = true) => {
@@ -563,69 +639,84 @@ function Signup() {
         catch (error) {
             GetLoginStatus(false)
             ErrorToast(Object.values(error.response.data)[0][0])
-            // if (error.response && error.response.data) {
-            //     // Check for an email error
-            //     if (error.response.data.email) {
-            //         ErrorToast(error.response.data.email);
-            //     }
 
-            //     // Check for other errors nested within an "errors" object
-            //     if (error.response.data.error) {
-            //         const { error } = error.response.data;
-
-            //         // Flatten the error messages and show them as toasts
-            //         const errorMessages = Object.values(error).flat();
-            //         ErrorToast(errorMessages);
-            //     }
-            // } else {
-            //     // Handle unexpected errors
-            //     ErrorToast('An unexpected error occurred.');
-            // }
         }
     }
 
 
-    const handleStripePayment = async () => {
-    
+
+
+    const handleStripePayment = async (Is_willing_to_change_plan = false) => {
+
+        const PlanDetails = GetSelectedPlanDetails(Is_willing_to_change_plan)
+
         const stripe = await stripePromise;
         setIsLoading(true)
+
 
         try {
 
             // Create a checkout session by calling the Django backend
-            const response = await Axiosinstance.post(`payment/stripe-checkout`, SelectedPlanDetails)
+            const response = await Axiosinstance.post(`payment/stripe-checkout`, PlanDetails)
 
             console.log(response)
-            setIsLoading(false)
+            // setIsLoading(false)
 
             const { sessionId } = response.data;
             // Redirect to Stripe Checkout
             const { error } = await stripe.redirectToCheckout({ sessionId });
             if (error) console.error('Stripe Checkout error');
+            setIsChangePlanAlert(false)
+
+
         } catch (error) {
+
             setIsLoading(false)
 
-            console.error('Error creating checkout session', error);
+            if (error.response) {
+                if (error.response.status === 409) {
+                    setIsChangePlanAlert(true)
+                    return
+                }
+                if (error.response.status === 403) {
+                    ErrorToast('Your session is over please login')
+                    return
+                }
+                else {
+                    ErrorToast(error.response.data.error)
+
+                }
+
+            }
+
         }
     };
 
-
-
+    
+    // user agreed to change the existing plan 
+    const RetryStripePayment = () => {
+        setIsLoading(true)
+        if(IsLoading){
+            return
+        }
+        handleStripePayment(true)
+    }
 
     const HandlePayment = async () => {
         toast.dismiss()
-       if(selectedPaymentMethod === 'STRIPE'){
-        handleStripePayment()
-       }
-       else{
-        ErrorToast('paypal payment is not allowed')
-       }
+        if (selectedPaymentMethod === 'STRIPE') {
+            handleStripePayment()
+        }
+        else {
+            ErrorToast('paypal payment is not allowed')
+        }
     }
 
 
 
 
     useEffect(() => {
+        setCustomPrice(calculateCustomPrice())
         checkEmptyFields(formData)
 
     }, [formData])
@@ -670,6 +761,7 @@ function Signup() {
                         CustomPlagiarisedWords={CustomPlagiarisedWords}
                         IsCustomPlanSelected={IsCustomPlanSelected}
                         ShowPlanLists={ShowPlanLists}
+                        CustomPrice={CustomPrice}
                     />
 
                     {!ShowPlanLists && (<div className="px-6 ">
@@ -857,6 +949,8 @@ function Signup() {
                         <div className="flex flex-col items-center justify-center space-y-8 ">
                             <h2 className="text-2xl font-semibold ">Payment</h2>
 
+
+
                             <div className="flex items-center justify-center space-x-8 ">
                                 <button onClick={() => HandleSelectedPaymentOption('STRIPE')} className={`flex items-center justify-center px-8 py-2 space-x-4 border rounded-lg ${selectedPaymentMethod === 'STRIPE' ? 'border-custom-dark-orange ' : 'border-[#B0B0B0]'} `} >
                                     <span className="text-[#6366F1] font-semibold text-xl">Stripe</span>
@@ -874,7 +968,8 @@ function Signup() {
                                 </button>
                             </div>
 
-                            <button onClick={HandlePayment}  className="bg-[#44AA55] text-lg rounded-md  text-white font-semibold  h-12 w-full">{ IsLoading ? <LuLoader /> : 'SIGN UP & PAY' }</button>
+
+                            <button onClick={HandlePayment} className="bg-[#44AA55] flex  justify-center items-center text-lg rounded-md  text-white font-semibold  h-12 w-full"> {IsLoading ? <><span className="">Processing</span><LuLoader2 className='ml-2 text-2xl text-white animate-spin' /> </> : 'SIGN UP & PAY'}</button>
                             {/* <PayPalCheckout /> */}
                             {/* {selectedPaymentMethod === 'STRIPE' && <StripeCheckout SelectedPlanDetails={SelectedPlanDetails} />} */}
                         </div>
@@ -886,6 +981,30 @@ function Signup() {
 
 
             <Toaster />
+
+
+
+            {IsChangePlanAlert && (<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-55">
+                <div className="relative flex flex-col items-center justify-center h-auto px-4 py-8 rounded-md bg-custom-black-text max-sm:-mt-56 sm:py-12 sm:px-16">
+                    <span onClick={handleChangePlanAlert} className="absolute p-1 text-2xl text-white cursor-pointer top-1 right-1 hover:bg-slate-700 rounded-2xl"><RxCross2 /></span>
+                    <div className="flex flex-col items-center justify-center">
+                        <h2 className="text-2xl font-semibold text-white">You already have an active plan.</h2>
+                        <h4 className="text-lg font-semibold text-white">Do you want to change the plan ?</h4>
+
+                        <div className="flex justify-center w-full mt-6 space-x-12">
+                            <button onClick={handleChangePlanAlert} className="flex items-center justify-center w-24 h-10 text-lg font-semibold rounded-md bg-slate-300 ">cancel</button>
+                          {IsLoading ? (
+                             <button  className="flex items-center justify-center w-24 h-10 text-lg font-semibold text-white rounded-md bg-custom-dark-orange ">Loading</button>
+
+                          ) : (
+                            <button onClick={RetryStripePayment} className="flex items-center justify-center w-24 h-10 text-lg font-semibold text-white rounded-md bg-custom-dark-orange ">confirm</button>
+                          )} 
+                       
+                        </div>
+                        <p className="mt-10 text-sm text-slate-300">*A refund will be issued based on your remaining credits balance.</p>
+                    </div>
+                </div>
+            </div>)}
 
             {IsLoginPopup && <LoginPopup HandleCloseLoginPopup={HandleCloseLoginPopup} setIsPayButtonClicked={setIsPayButtonClicked} />}
 
