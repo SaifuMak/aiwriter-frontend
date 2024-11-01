@@ -22,6 +22,7 @@ import ArticleRewriter from './Pages/ArticleRewriter'
 import WorkSheet from './Pages/WorkSheet'
 import { Toaster, toast } from 'sonner';
 import WriterStep from './Pages/WriterStep'
+import PaymentSuccessPage from './Pages/PaymentSuccessPage'
 
 import Signup from './Pages/Signup'
 
@@ -56,6 +57,11 @@ function App() {
               </Route>}
 
 
+              {<Route path='/payment-success' element={<UnrestrictedRoutes />}>
+                <Route index element={<PaymentSuccessPage />} />
+              </Route>}
+
+              
               {<Route path='/password-change' element={<PrivateRoutes />}>
                 <Route index element={<PasswordChange />} />
               </Route>}

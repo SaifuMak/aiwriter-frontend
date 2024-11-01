@@ -472,6 +472,7 @@ function Signup() {
             if (CheckBillingStatus) {
                 GetBillingInfo(email)
             }
+
         }
         catch (error) {
             console.log(error, '&&&&&&&&&&&&&')
@@ -556,22 +557,14 @@ function Signup() {
 
 
 
+    const SignupPayment = async () => {
 
-
-    const CheckData = async () => {
 
         setIsPayButtonClicked(true)
 
-        // setEmptyFields([])
         toast.dismiss()
 
         checkEmptyFields(formData)
-
-        // console.log(isEmptyFields,'=============================')
-        // if(isEmptyFields){
-        //     ErrorToast('Please fill the required fields')
-        //     return
-        // }
 
         const emptyFieldsArray = [];
 
@@ -593,7 +586,7 @@ function Signup() {
 
         if (emptyFieldsArray.length > 0) {
             ErrorToast('Please fill the required fields')
-            GetLoginStatus()
+            await GetLoginStatus()
             return
         }
 
@@ -628,17 +621,24 @@ function Signup() {
             email = Email
         }
 
+        setIsLoading(true)
+
+
 
         try {
             const response = await Axiosinstance.post(`api/register-login-payment/${email}`, formData)
-            GetLoginStatus()
+            await GetLoginStatus()
+            // await handleStripePayment()
+            HandlePayment()
 
         }
 
 
         catch (error) {
-            GetLoginStatus(false)
+            await GetLoginStatus(false)
             ErrorToast(Object.values(error.response.data)[0][0])
+            setIsLoading(false)
+
 
         }
     }
@@ -692,11 +692,11 @@ function Signup() {
         }
     };
 
-    
+
     // user agreed to change the existing plan 
     const RetryStripePayment = () => {
         setIsLoading(true)
-        if(IsLoading){
+        if (IsLoading) {
             return
         }
         handleStripePayment(true)
@@ -705,7 +705,7 @@ function Signup() {
     const HandlePayment = async () => {
         toast.dismiss()
         if (selectedPaymentMethod === 'STRIPE') {
-            handleStripePayment()
+            await handleStripePayment()
         }
         else {
             ErrorToast('paypal payment is not allowed')
@@ -968,21 +968,23 @@ function Signup() {
                                 </button>
                             </div>
 
+                            {IsAuthenticated ? (
+                                <button onClick={SignupPayment} className="bg-[#44AA55] flex  justify-center items-center text-lg rounded-md  text-white font-semibold  h-12 w-full"> {IsLoading ? <><span className="">Processing</span><LuLoader2 className='ml-2 text-2xl text-white animate-spin' /> </> : ' PAY'}</button>
 
-                            <button onClick={HandlePayment} className="bg-[#44AA55] flex  justify-center items-center text-lg rounded-md  text-white font-semibold  h-12 w-full"> {IsLoading ? <><span className="">Processing</span><LuLoader2 className='ml-2 text-2xl text-white animate-spin' /> </> : 'SIGN UP & PAY'}</button>
+
+                            ) : (
+                                <button onClick={SignupPayment} className="bg-[#44AA55] flex  justify-center items-center text-lg rounded-md  text-white font-semibold  h-12 w-full"> {IsLoading ? <><span className="">Processing</span><LuLoader2 className='ml-2 text-2xl text-white animate-spin' /> </> : 'SIGN UP & PAY'}</button>
+
+
+                            )}
                             {/* <PayPalCheckout /> */}
                             {/* {selectedPaymentMethod === 'STRIPE' && <StripeCheckout SelectedPlanDetails={SelectedPlanDetails} />} */}
                         </div>
-
                     </div>
                 </div>
             </div>
 
-
-
             <Toaster />
-
-
 
             {IsChangePlanAlert && (<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-55">
                 <div className="relative flex flex-col items-center justify-center h-auto px-4 py-8 rounded-md bg-custom-black-text max-sm:-mt-56 sm:py-12 sm:px-16">
@@ -993,15 +995,15 @@ function Signup() {
 
                         <div className="flex justify-center w-full mt-6 space-x-12">
                             <button onClick={handleChangePlanAlert} className="flex items-center justify-center w-24 h-10 text-lg font-semibold rounded-md bg-slate-300 ">cancel</button>
-                          {IsLoading ? (
-                             <button  className="flex items-center justify-center w-24 h-10 text-lg font-semibold text-white rounded-md bg-custom-dark-orange ">Loading</button>
+                            {IsLoading ? (
+                                <button className="flex items-center justify-center w-24 h-10 text-lg font-semibold text-white rounded-md bg-custom-dark-orange "><LuLoader2 className='text-xl animate-spin' /></button>
 
-                          ) : (
-                            <button onClick={RetryStripePayment} className="flex items-center justify-center w-24 h-10 text-lg font-semibold text-white rounded-md bg-custom-dark-orange ">confirm</button>
-                          )} 
-                       
+                            ) : (
+                                <button onClick={RetryStripePayment} className="flex items-center justify-center w-24 h-10 text-lg font-semibold text-white rounded-md bg-custom-dark-orange ">confirm</button>
+                            )}
+
                         </div>
-                        <p className="mt-10 text-sm text-slate-300">*A refund will be issued based on your remaining credits balance.</p>
+                        <p className="mt-10 text-sm text-slate-300">*A refund may be issued based on your remaining credits balance.</p>
                     </div>
                 </div>
             </div>)}

@@ -7,7 +7,10 @@ import SelectedToolSlice from './Slices/SelectedToolSlice';
 import PlagiarismSlice from './Slices/PlagiarismSlice';
 import NavigationSlice from './Slices/NavigationSlice';
 import ArticleRewriterSlice from './Slices/ArticleRewriterSlice';
+import AssetsSlice from './Slices/AssetsSlice';
 import { combineReducers } from 'redux';
+
+
 
 // const persistConfig = {
 //     key: 'auth',
@@ -27,7 +30,8 @@ const rootReducer = combineReducers({
     Plagiarism : PlagiarismSlice,
     SelectedTool : SelectedToolSlice,
     Navigation : NavigationSlice,
-    ArticleRewriter : ArticleRewriterSlice
+    ArticleRewriter : ArticleRewriterSlice,
+    Assets : AssetsSlice
     
 });
   
@@ -38,6 +42,7 @@ const rootReducer = combineReducers({
       // AuthStatus: persistedReducer
      
   });
+  
   
   export const persistor = persistStore(store);
   export default store;

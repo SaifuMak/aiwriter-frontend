@@ -16,6 +16,7 @@ const initialState = {
 const AuthSlice = createSlice({
     name: 'AuthStatus',
     initialState,
+    
     reducers: {
         loginSuccess(state,action) {
             state.IsAuthenticated = true;

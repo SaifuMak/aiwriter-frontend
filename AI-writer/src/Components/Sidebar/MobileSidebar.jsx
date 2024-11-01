@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react'
 import Sidebar from './Sidebar'
 import ProfileDetails from '../Profile/ProfileDetails'
 
-
 function MobileSidebar({ IsProfilePopup, setIsSidedbarOpened, setIsProfilePopup }) {
 
   const sidebarRef = useRef(null)

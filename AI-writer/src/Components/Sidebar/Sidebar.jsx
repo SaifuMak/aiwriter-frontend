@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { SlHome } from "react-icons/sl";
 import { AiOutlineFileSync } from "react-icons/ai";
 import { GrDocumentTime } from "react-icons/gr";
 import { LuFileEdit } from "react-icons/lu";
 import { GrUploadOption } from "react-icons/gr";
 import { IoMenuOutline } from "react-icons/io5";
-
+import { setWordsCount } from '../../Redux/Slices/AssetsSlice'
 
 import CompleteLogo from '../../assets/Logo/CompleteLogo';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,13 +13,10 @@ import { setSelectedPage } from '../../Redux/Slices/NavigationSlice'
 import { loginSuccess, setLogout } from '../../Redux/Slices/AuthSlice'
 import { HiOutlineDocumentMagnifyingGlass } from "react-icons/hi2";
 import { ResetRewriteArticle } from '../../Redux/Slices/ArticleRewriterSlice'
-
 import { MdOutlineDocumentScanner } from "react-icons/md";
 
-
-
-
 import { Link } from 'react-router-dom';
+import Axiosinstance from '../../Axios/Axiosinstance'
 
 
 function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
@@ -49,6 +46,26 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
 
     }
   }
+
+  const getWordsCount = async () => {
+    try {
+
+      const response = await Axiosinstance.get('payment/get-assets')
+      console.log('response')
+    }
+    
+    catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  
+   useEffect(() => {
+      getWordsCount()
+    
+   }, [])
+   
 
 
   return (
@@ -129,8 +146,8 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
           <span className="text-sm">123</span>
         </div>
 
-        <button className="flex items-center justify-center max-xl:text-sm rounded-sm w-full py-1 xl:py-1.5 text-white hover:bg-hover-button-color  bg-custom-dark-orange "><GrUploadOption className='mr-1' />Upgrade</button>
 
+        <button className="flex items-center justify-center max-xl:text-sm rounded-sm w-full py-1 xl:py-1.5 text-white hover:bg-hover-button-color  bg-custom-dark-orange "><GrUploadOption className='mr-1' />Upgrade</button>
       </section>
 
 
