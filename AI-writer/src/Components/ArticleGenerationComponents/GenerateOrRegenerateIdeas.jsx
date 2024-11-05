@@ -84,9 +84,10 @@ function GenerateOrRegenerateIdeas({ GenerateHeadlines, handleOutlineGeneration,
                     </div>
                     <input type="text" onChange={HandleManualHeadline} value={selectedHeadline} className="p-4 mt-4 border rounded-md outline-none border-slate-300" />
                 </div>)}
+                <div className="space-y-6 2xl:space-y-8 overflow-y-auto h-[580px] 2xl:h-[620px]">
 
                 {headlines.map((data, index) => (
-                    <div onClick={() => handleSelectedheadline(data)} key={index} className={`w-full ${isManualHeadlineEnabled ? 'opacity-40' : 'hover:shadow-xl  cursor-pointer'} max-xl:items-center flex ${selectedHeadline === data ? ' bg-custom-lighter-orange' : 'bg-white'}  py-4 lg:py-8 px-4 space-x-4 duration-150  rounded-md  shadow-lg`}>
+                    <div onClick={() => handleSelectedheadline(data)} key={index} className={`w-full ${isManualHeadlineEnabled ? 'opacity-40' : 'hover:shadow-md  cursor-pointer'} max-xl:items-center  flex ${selectedHeadline === data ? ' bg-custom-lighter-orange' : 'bg-white'}  py-4 2xl:py-6 lg:py-5 px-4 space-x-4 duration-150   rounded-md  shadow-sm`}>
 
                         <div className="relative xl:p-1.5 ">
                             {selectedHeadline === data && (<VscCheck className='absolute duration-500 -top-0.5 -right-0.5  xl:text-xl xl:top-1 xl:right-1 ' />)}
@@ -95,12 +96,16 @@ function GenerateOrRegenerateIdeas({ GenerateHeadlines, handleOutlineGeneration,
 
 
                         <div className="">
-                            <h2 className="mb-2 text-sm font-semibold lg:mb-4 lg:text-base">{data}</h2>
+                            <h2 className="mb-1 text-sm font-semibold lg:mb-1 lg:text-base">{data}</h2>
                             <span className=" text-sm  lg:text-base text-[#7D7D7D] ">{countWords(data)} words / {countCharacters(data)} characters</span>
                         </div>
                     </div>))}
 
-                <div className="flex justify-between w-full pt-10 ">
+                    </div>
+
+
+
+                <div className="flex justify-between w-full pt-2 ">
 
                     <ButtonComponent
                         onClick={() => showPopupAndCallAPI(GenerateHeadlines)}

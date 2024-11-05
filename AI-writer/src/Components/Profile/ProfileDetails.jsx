@@ -3,6 +3,7 @@ import { setLogout } from '../../Redux/Slices/AuthSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom'
 import Axiosinstance from '../../Axios/Axiosinstance';
+import {ResetWordsCount} from '../../Redux/Slices/AssetsSlice'
 
 
 
@@ -34,6 +35,7 @@ const { IsAuthenticated, Username, Email  } = useSelector(state => state.auth);
         try {
             const response = await Axiosinstance.post('api/logout',data)
             dispatch(setLogout())
+            dispatch(ResetWordsCount())
             setIsProfilePopup(false)
            
             

@@ -74,6 +74,7 @@ function StructureOfArticle({ HandleOutlinesStructure }) {
 
 
     return (
+
         <div className="w-full px-4 py-10 xl:px-16 space-y-7 ">
             <div className="flex justify-between ">
                 <h2 className="text-lg lg:text-2xl xl:text-2xl">Choose a Structure for your Article</h2>
@@ -88,12 +89,10 @@ function StructureOfArticle({ HandleOutlinesStructure }) {
                     </div>
                     {(isIndividualOutlines && selectedOutlines.length > 0) && <button onClick={HandleOutlinesStructure} className="px-8 py-1 text-white duration-200 rounded-md bg-custom-dark-orange">Proceed</button>}
                 </div>
-
-
             </div>
 
 
-            <div>
+            <div className='h-screen overflow-y-auto '>
                 {Object.entries(outline).map(([OutlineName, sections]) => (
                     <div onClick={() => HandleOutlinesSelection(OutlineName)} key={OutlineName} className={`flex ${selectedOutlineKey === OutlineName ? 'bg-custom-lighter-orange' : 'bg-white'} px-3 py-6 mt-10  rounded-md shadow-md cursor-pointer`}>
 

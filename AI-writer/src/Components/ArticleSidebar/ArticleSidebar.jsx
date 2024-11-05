@@ -281,6 +281,7 @@ function ArticleSidebar({ Label, handleBackButtonClick, HandleRewriteArticle, sh
                 <button className="text-white bg-custom-dark-orange lg:text-base text-sm text-center py-1 lg:py-1.5 xl:py-2 rounded-md mt-10 w-[100px] lg:w-[120px] xl:w-[211px]">
                     <PulseLoader color="#ffffff" size={6} margin={4} />
                 </button>
+                
             ) : (
                 <button onClick={Fetchkeywords} className="text-white bg-custom-dark-orange lg:text-base text-sm text-center py-1 lg:py-1.5 xl:py-2 rounded-md mt-10 w-[100px] lg:w-[120px] xl:w-[211px] ">
                     <span>Next</span>
@@ -408,9 +409,11 @@ function ArticleSidebar({ Label, handleBackButtonClick, HandleRewriteArticle, sh
 
 
                         <ButtonComponent
-                            onClick={GenerateOutlines}
+                        onClick={() => showPopupAndCallAPI(GenerateOutlines)}
+                            // onClick={GenerateOutlines}
                             label="Regenerate Structure"
                             isVisible={currentStep === 5}
+                            isIcon = {true}
                         />
 
                         <ButtonComponent

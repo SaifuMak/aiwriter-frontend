@@ -19,14 +19,17 @@ const AssetsSlice = createSlice({
             state.ArticleWords = action.payload.ArticleWords;
             state.PlagiarisedWords = action.payload.PlagiarisedWords;
 
+        },
+
+        ResetWordsCount(state){
+            state.ArticleWords = 0;
+            state.PlagiarisedWords = 0;
         }
-        // setSelectedArticleWriter(state,action){
-        //     state.SelectedArticleWriter = action.payload;
-        // },
+      
         
     },
 });
 
 
-export const {setWordsCount} = AssetsSlice.actions;
+export const {setWordsCount,ResetWordsCount} = AssetsSlice.actions;
 export default AssetsSlice.reducer;

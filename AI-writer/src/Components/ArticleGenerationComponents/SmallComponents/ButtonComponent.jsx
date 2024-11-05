@@ -5,10 +5,12 @@ import { LuRefreshCcw } from "react-icons/lu";
 
 
 
-function ButtonComponent({ isVisible, onClick, color= '#FB923C',  label, isIcon=false }) {
+function ButtonComponent({ isVisible, onClick, color = '#FB923C', label, isIcon = false }) {
   const { loading } = useSelector((state) => state.articleGeneration);
   if (!isVisible) return null;
 
+
+  
   return (
     <>
       {loading ? (
@@ -17,10 +19,11 @@ function ButtonComponent({ isVisible, onClick, color= '#FB923C',  label, isIcon=
         </button>
 
       ) : (
-        <button onClick={onClick} className="text-white flex  justify-center  lg:text-base text-sm text-center py-1.5 lg:py-1.5 xl:py-2 rounded-md  px-3 min-w-[100px] xl:min-w-[151px] lg:min-w-[120px] " style={{ backgroundColor: color }}>
-         
+        
+        <button onClick={onClick} className="text-white flex  group justify-center  lg:text-base text-sm text-center py-1.5 lg:py-1.5 xl:py-2 rounded-md  px-3 min-w-[100px] xl:min-w-[151px] lg:min-w-[120px] " style={{ backgroundColor: color }}>
+
           <span className='flex items-center max-lg:text-xs text-nowrap '>
-           {isIcon &&  <LuRefreshCcw className='mr-2 shrink-0' />}
+            {isIcon && <LuRefreshCcw className='mr-2 duration-300 shrink-0 group-hover:animate-spin' />}
             {label}</span>
         </button>
 

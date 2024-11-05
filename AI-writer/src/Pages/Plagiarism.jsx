@@ -218,6 +218,7 @@ function Plagiarism() {
         if (uploadedFile) {
             formData.append('file', uploadedFile);
         }
+        
         else {
             formData.append('content', Content);
         }

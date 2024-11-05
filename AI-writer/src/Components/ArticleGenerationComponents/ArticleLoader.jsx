@@ -9,10 +9,11 @@ import { Toaster, toast } from 'sonner';
 
 
 function ArticleLoader({ text, IsQuickWriter }) {
+
   const { currentStep, loading } = useSelector((state) => state.articleGeneration);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full ">
+    <div className="flex flex-col items-center justify-center w-full h-screen ">
       <div className="">
         {loading ? (
           <div className="w-64 h-64 xl:w-80 xl:h-80">

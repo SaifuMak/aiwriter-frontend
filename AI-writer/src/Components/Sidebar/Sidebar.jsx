@@ -26,6 +26,8 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
   const dispatch = useDispatch()
   const { IsAuthenticated, Username, Email } = useSelector(state => state.auth);
   const { pageSelected } = useSelector(state => state.Navigation);
+  const { ArticleWords, PlagiarisedWords } = useSelector(state => state.Assets);
+
   const { IsRewriteArticleLoadingCompleted } = useSelector((state) => state.ArticleRewriter);
 
 
@@ -47,25 +49,32 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
     }
   }
 
+
+
   const getWordsCount = async () => {
+
     try {
 
-      const response = await Axiosinstance.get('payment/get-assets')
-      console.log('response')
+      const response = await Axiosinstance.get('payment/get-assets-information')
+      const ArticleWords = response.data.words_count
+      const PlagiarisedWords = response.data.plaigarism_words
+
+      dispatch(setWordsCount({ ArticleWords, PlagiarisedWords }))
+
     }
-    
+
     catch (error) {
       console.log(error)
     }
   }
 
 
-  
-   useEffect(() => {
-      getWordsCount()
-    
-   }, [])
-   
+
+  useEffect(() => {
+    getWordsCount()
+
+  }, [])
+
 
 
   return (
@@ -137,13 +146,14 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
       <section className="w-full px-2 py-5 space-y-2 border rounded-lg xl:space-y-5 xl:px-4 border-custom-dark-orange border-opacity-60 ">
 
         <div className="flex flex-col space-y-1 text-white">
-          <span className="font-medium ">Superior words</span>
-          <span className="text-sm">123,456</span>
+          <span className="font-medium ">Content credits</span>
+          <span className="text-sm">{ArticleWords}</span>
         </div>
 
+
         <div className="flex flex-col space-y-1 text-white">
-          <span className="font-medium ">Premium Credits</span>
-          <span className="text-sm">123</span>
+          <span className="font-medium ">Plagiarism credits</span>
+          <span className="text-sm">{PlagiarisedWords}</span>
         </div>
 
 

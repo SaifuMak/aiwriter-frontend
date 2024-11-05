@@ -34,12 +34,67 @@ function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
   };
 
 
+  // const copyToClipboard = () => {
+  //   const text = document.querySelector('.article-content').innerText;
+  //   navigator.clipboard.writeText(text).then(() => {
+  //     setIsCopied(true);
+  //   });
+  // };
+
+
+  // const copyToClipboard = () => {
+  //   // Get the HTML content of the article
+  //   const htmlContent = document.querySelector('.article-content').innerHTML;
+  
+  //   // Copy the HTML content to the clipboard
+  //   navigator.clipboard.writeText(htmlContent).then(() => {
+  //     setIsCopied(true);
+  //     setTimeout(() => setIsCopied(false), 2000); // Reset copy state after 2 seconds
+  //   }).catch((err) => {
+  //     console.error("Failed to copy: ", err);
+  //   });
+  // };
+
+
   const copyToClipboard = () => {
-    const text = document.querySelector('.article-content').innerText;
-    navigator.clipboard.writeText(text).then(() => {
+    const articleContent = document.querySelector('.article-content');
+  
+    // Clone the article content to include inline styles
+    const clonedContent = articleContent.cloneNode(true);
+  
+    // Get computed styles and apply them inline
+    // const applyInlineStyles = (element) => {
+    //   const computedStyle = window.getComputedStyle(element);
+    //   for (let style of computedStyle) {
+    //     element.style[style] = computedStyle.getPropertyValue(style);
+    //   }
+    // };
+  
+
+    
+    // Apply styles to the cloned content and all its children
+
+    // applyInlineStyles(clonedContent);
+    // clonedContent.querySelectorAll("*").forEach((child) => applyInlineStyles(child));
+  
+    // Get the HTML with inline styles
+    const styledHTML = clonedContent.outerHTML;
+  
+    // Use Clipboard API to copy as HTML
+    navigator.clipboard.write([
+      new ClipboardItem({
+        'text/html': new Blob([styledHTML], { type: 'text/html' }),
+        'text/plain': new Blob([articleContent.innerText], { type: 'text/plain' })
+      })
+    ]).then(() => {
       setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 1500); // Reset copy state after 2 seconds
+    }).catch((err) => {
+      console.error("Failed to copy: ", err);
     });
   };
+  
+  
 
 
 
