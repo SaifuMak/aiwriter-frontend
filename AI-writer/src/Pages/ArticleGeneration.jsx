@@ -27,7 +27,12 @@ import AlertPopUp from '../Components/ArticleGenerationComponents/SmallComponent
 
 import { motion } from 'framer-motion';
 
-import { HandleForbiddenError } from '../Utils/ErrorMessageHandler'
+import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler'
+
+import OpacityLoader from '../Components/GeneralComponets/Loaders/OpacityLoader'
+import SessionExpiredPopup from '../Components/ArticleGenerationComponents/SmallComponents/SessionExpiredPopup'
+
+
 
 
 function ArticleGeneration() {
@@ -84,6 +89,7 @@ function ArticleGeneration() {
 
             return
         }
+
         //   side bar options are only visible  the currrentstep is greater than 1 
         dispatch(setCurrentStep(2))
 
@@ -160,12 +166,14 @@ function ArticleGeneration() {
             const response = await Axiosinstance.post('api/generate-keywords', data)
             const articles = response.data.article
 
+
+
             const keywordsArray = articles
                 ? articles.split('\n').map(item => item.replace(/^\d+\.\s*/, '').trim())
                 : [];
 
             console.log(keywordsArray, '/////////////////// this is the keywords array ')
-            
+
             if (keywordsArray.length <= 1 || keywordsArray.length > 5) {
                 dispatch(setLoading(false))
                 dispatch(setCurrentStep(0))
@@ -187,7 +195,13 @@ function ArticleGeneration() {
 
         catch (error) {
             console.log(error)
-            ErrorToast(error.response.data.error)
+
+            HandleForbiddenGenericErrors(error)
+
+            // setTimeout(() => {
+            // ErrorToast(error.response.data.error)
+                
+            // }, 500);
             dispatch(setLoading(false))
 
         }
@@ -195,6 +209,7 @@ function ArticleGeneration() {
 
 
 
+    
 
     const Fetchkeywords = async () => {
 
@@ -254,9 +269,13 @@ function ArticleGeneration() {
 
                 console.log('entered to the forbidden error-----------------------------------------')
 
-                HandleForbiddenError(error)
 
-             
+                
+                HandleForbiddenGenericErrors(error)
+                // ErrorToast(error.response.data.error)
+
+
+
             }
         }
 
@@ -266,7 +285,10 @@ function ArticleGeneration() {
                 dispatch(setCurrentStep(1))
             }
             else {
-                showForbiddenError()
+                // showForbiddenError()
+                // ErrorToast(error.response.data.error)
+                Regeneratekeywords()
+
             }
         }
     }
@@ -310,7 +332,9 @@ function ArticleGeneration() {
         catch (error) {
             console.log(error)
             dispatch(setLoading(false))
-            ErrorToast('Limit reached! Please try after 20 seconds.')
+            HandleForbiddenGenericErrors(error)
+
+            // ErrorToast('Limit reached! Please try after 20 seconds.')
 
         }
         console.log(title, selectedKeywords, selectedToneOfVoice, selectedPointOfView)
@@ -372,7 +396,9 @@ function ArticleGeneration() {
         catch (error) {
             console.log(error)
             dispatch(setLoading(false))
-            ErrorToast('Request timed out or failed, please try again ')
+            HandleForbiddenGenericErrors(error)
+
+            // ErrorToast('Request timed out or failed, please try again ')
         }
     }
 
@@ -415,10 +441,15 @@ function ArticleGeneration() {
             dispatch(setCurrentStep(7))
 
         }
+
+
+        
         catch (error) {
             console.log(error)
             dispatch(setLoading(false))
-            ErrorToast('An error occured')
+            HandleForbiddenGenericErrors(error)
+
+            // ErrorToast('An error occured')
 
         }
 
@@ -455,10 +486,13 @@ function ArticleGeneration() {
             dispatch(setLoading(false))
 
         }
+        
         catch (error) {
             console.log(error)
             dispatch(setLoading(false))
-            ErrorToast('An error occured')
+            // ErrorToast('An error occured')
+            HandleForbiddenGenericErrors(error)
+
 
         }
 
@@ -493,12 +527,15 @@ function ArticleGeneration() {
                     </div>)}
 
                     {(currentStep === 0 || currentStep === 2) && <ArticleLoader text='Your copies created by artificial intelligence will appear here.' />}
-                    {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading || currentStep === 5 && loading || currentStep === 1 && loading) && <ArticleLoader />}
+                    {/* {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading || currentStep === 5 && loading || currentStep === 1 && loading) && <ArticleLoader />} */}
+                   
+                    {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading || currentStep === 5 && loading || currentStep === 1 && loading) && <OpacityLoader />}
+
+<SessionExpiredPopup/>
 
                     {currentStep === 1 && <KeywordsForArticle handleSidebarOptionsVisible={handleSidebarOptionsVisible} showPopupAndCallAPI={showPopupAndCallAPI} Regeneratekeywords={Regeneratekeywords} />}
-
                     {currentStep === 3 && <GenerateOrRegenerateIdeas GenerateHeadlines={GenerateHeadlines} showPopupAndCallAPI={showPopupAndCallAPI} handleOutlineGeneration={handleOutlineGeneration} />}
-                    {(!loading && currentStep === 4) && <GenerateOutline GenerateOutlines={GenerateOutlines} Label='Generate Structure' />}
+                    {( currentStep === 4) && <GenerateOutline GenerateOutlines={GenerateOutlines} Label='Generate Structure' />}
                     {(currentStep === 5 && !loading) && <StructureOfArticle HandleOutlinesStructure={HandleOutlinesStructure} />}
                     {(!loading && currentStep === 6) && <ArticleSummary setItems={setItems} items={items} GenerateArticle={GenerateArticle} />}
                     {/* {currentStep === 6 && <Worksheet />} */}

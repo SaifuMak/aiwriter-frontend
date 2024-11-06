@@ -1,7 +1,7 @@
 import { showForbiddenError } from "./ErrorMessages";
 import ErrorToast from "./ErrorToast";
 
-export const HandleForbiddenError = (error) => {
+export const HandleForbiddenGenericErrors = (error) => {
 
     if (error.response.status && error.response.status === 403) {
         setTimeout(() => {
