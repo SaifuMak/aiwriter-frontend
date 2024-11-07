@@ -270,7 +270,7 @@ function ArticleSidebar({ Label, handleBackButtonClick, HandleRewriteArticle, sh
                     onChange={handleKeywords}
                     value={selectedKeywords}
                     placeholder="Enter Keywords....."
-                    count={`${selectedKeywords && selectedKeywords.length}/200`}
+                    count={`${selectedKeywords ?  `${selectedKeywords.length}/200` : '0/200' }`}
                     isOptional={false}
                     isActive={currentStep > 2}
                 />
@@ -516,9 +516,9 @@ function ArticleSidebar({ Label, handleBackButtonClick, HandleRewriteArticle, sh
                         </div>
 
                         {loading ? (
-                            <div className="flex items-center w-full ">
-                                <button className="text-white bg-custom-dark-orange lg:text-base text-sm text-center py-1 lg:py-1.5 xl:py-2 rounded-md  w-[100px] lg:w-[120px] xl:w-[161px]">
-                                    <PulseLoader color="#ffffff" size={6} margin={4} />
+                            <div className="flex items-center justify-center w-full ">
+                                <button className="text-white bg-custom-dark-orange lg:text-base text-sm text-center py-1 lg:py-1.5 xl:py-2 rounded-md min-w-[100px] xl:min-w-[151px] lg:min-w-[120px] ">
+                                    <PulseLoader color="#ffffff" size={6} margin={2} />
                                 </button>
                             </div>
 
@@ -537,7 +537,7 @@ function ArticleSidebar({ Label, handleBackButtonClick, HandleRewriteArticle, sh
                                 (ArticleRewrited && (<div className="flex justify-center w-full ">
                                     <ButtonComponent
                                         onClick={() => showPopupAndCallAPI(HandleRewriteArticle)}
-                                        label="Rewritee"
+                                        label="Rewrite"
                                         isVisible={ArticleRewriterStep === 0 || ArticleRewrited}
                                     />
                                 </div>))

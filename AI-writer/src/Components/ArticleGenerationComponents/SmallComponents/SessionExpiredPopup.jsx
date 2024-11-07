@@ -1,9 +1,25 @@
 import React from 'react'
 import { GoAlert } from "react-icons/go";
-
+import { useDispatch, useSelector } from 'react-redux';
+import {setIsSessionExpired} from '../../../Redux/Slices/NavigationSlice';
+import { useNavigate } from 'react-router-dom'
+import {setLogout} from '../../../Redux/Slices/AuthSlice';
 
 
 function SessionExpiredPopup() {
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+
+    const handleLoginNavigation = ()=>{
+        
+        dispatch(setLogout())
+        dispatch(setIsSessionExpired(false))
+        navigate('/login')
+        
+    }
+
 
     return (
 
@@ -13,7 +29,7 @@ function SessionExpiredPopup() {
                 <div className="flex justify-center w-8/12 ">
 
                     {/* <div className="flex items-center justify-center w-10 h-10 p-2 rounded-full shrink-0 opacity-95 bg-gradient-to-r from-slate-500 via-slate-600 to-slate-500"><GoAlert className='text-2xl font-bold shrink-0 text-custom-dark-orange' /></div> */}
-                    <GoAlert className='mt-1 text-2xl font-bold shrink-0 text-custom-dark-orange' />
+                    <GoAlert className='mt-1.5 text-xl font-bold shrink-0 text-custom-dark-orange' />
 
                     <div className="flex flex-col items-center justify-center ml-2 ">
                         <h2 className="text-2xl font-semibold text-nowrap text-slate-200 ">Your session has expired</h2>
@@ -23,11 +39,8 @@ function SessionExpiredPopup() {
 
                 </div>
                 <div className="flex items-center justify-center w-8/12 mt-5 ">
-                    <button className="px-10 py-1.5  rounded-md bg-gradient-to-r from-slate-500 via-slate-600 to-slate-500 text-slate-100">Login</button>
+                    <button onClick={handleLoginNavigation} className="px-10 py-1.5  rounded-md bg-gradient-to-r from-slate-500 via-slate-600 to-slate-500 text-slate-100">Login</button>
                 </div>
-
-
-
             </div>
         </div>
 

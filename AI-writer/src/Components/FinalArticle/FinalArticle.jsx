@@ -9,22 +9,21 @@ import ArticleLoader from '../ArticleGenerationComponents/ArticleLoader';
 import PulseLoader from 'react-spinners/PulseLoader';
 import { Toaster, toast } from 'sonner';
 import { setIsArticleLoadingCompleted } from '../../Redux/Slices/ArticleGenerationSlice'
+import OpacityLoader from '../GeneralComponets/Loaders/OpacityLoader';
 
 
 
 function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
+
   const dispatch = useDispatch()
 
-
-  const { finalArticle, IsArticleLoadingCompleted } = useSelector((state) => state.articleGeneration); // HTML string from backend
+  const { finalArticle, IsArticleLoadingCompleted,loading } = useSelector((state) => state.articleGeneration); // HTML string from backend
   const [isCopied, setIsCopied] = useState(false);
 
   const [visibleHTML, setVisibleHTML] = useState(''); // Visible part of HTML (simulating typing effect)
   const [index, setIndex] = useState(0); // To track which part of the HTML is visible
   const contentRef = useRef(null); // Reference to the content container
   const [isManualyScrolled, setisManualyScrolled] = useState(false)
-
-
 
 
   const ArticleGenerated = () => {
@@ -208,6 +207,10 @@ function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
 
 
 
+
+
+
+  
   const wordCount = countWords(visibleHTML);
   const characterCount = index;
 
@@ -237,6 +240,7 @@ function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
               </div>
             )}
 
+
           {IsArticleLoadingCompleted && (<motion.button
             drag
             dragConstraints={{ top: 0, bottom: 600, left: 0, right: 0 }} // Adjust the constraints as needed
@@ -255,7 +259,7 @@ function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
 
           {IsArticleLoadingCompleted ? (
             <div
-              className="px-4 py-10 min-h-[900px] max-h-[900px] sm:px-10 xl:px-20 2xl:px-28 article-content"
+              className="px-4 py-10 min-h-[1000px] max-h-[1000px] sm:px-10 xl:px-20 2xl:px-28 article-content"
               dangerouslySetInnerHTML={{ __html: finalArticle }} // This renders the HTML progressively
               style={{ overflowY: 'auto' }} // Ensure the container scrolls
             />
@@ -271,7 +275,7 @@ function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
           )}
 
 
-          {!IsArticleLoadingCompleted && (<div className="flex items-center justify-center ">
+          {(!IsArticleLoadingCompleted && !loading) && (<div className="flex items-center justify-center ">
             <div className="flex items-center px-3 text-nowrap"> <span className="text-xl font-semibold text-custom-black-text">Your content is being cooked</span>
               <PulseLoader className='ml-2' /></div>
           </div>)}
@@ -280,7 +284,13 @@ function FinalArticle({ setisArticleGenerated, isArticleGenerated }) {
         </div>
 
       ) : (
+        loading ? (
+          <OpacityLoader />
+
+        ) : (
         <ArticleLoader text='An error occurred. Please attempt to regenerate the article. ' />
+
+        )
 
       )}
       <Toaster />

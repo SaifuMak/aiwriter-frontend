@@ -90,7 +90,7 @@ function App() {
                 <Route index element={<WriterStep />} />
               </Route>}
 
-              {<Route path='/article-rewriter' element={<PrivateRoutes />}>
+              {<Route path='/article-rewriter' element={<UnrestrictedRoutes />}>
                 <Route index element={<ArticleRewriter />} />
               </Route>}
 

@@ -6,7 +6,7 @@ export const showGenericError = () => {
 };
 
 export const showForbiddenError = () =>{
-    ErrorToast('Your session is over, please log in')
+    ErrorToast('Your session expired, please log in')
 }
 
 

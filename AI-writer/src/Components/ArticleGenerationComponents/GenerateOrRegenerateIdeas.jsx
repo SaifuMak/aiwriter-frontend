@@ -36,7 +36,7 @@ function GenerateOrRegenerateIdeas({ GenerateHeadlines, handleOutlineGeneration,
 
     const HandleManualHeadline = (e) => {
         const text = e.target.value
-        if (countWords(text) > 12) {
+        if (countWords(text) > 20) {
             return
         }
         dispatch(setSelectedHeadline(text))
@@ -80,7 +80,7 @@ function GenerateOrRegenerateIdeas({ GenerateHeadlines, handleOutlineGeneration,
                     <div className="">
                         <label htmlFor="" className="text-xl ">Enter Your Own Headline</label>
 
-                        <span className="ml-2 text-sm">({countWords(selectedHeadline)} words / 12 words)</span>
+                        <span className="ml-2 text-sm">({countWords(selectedHeadline)} words / 20 words)</span>
                     </div>
                     <input type="text" onChange={HandleManualHeadline} value={selectedHeadline} className="p-4 mt-4 border rounded-md outline-none border-slate-300" />
                 </div>)}

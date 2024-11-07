@@ -22,14 +22,17 @@ import { motion } from 'framer-motion';
 import AlertPopUp from '../Components/ArticleGenerationComponents/SmallComponents/AlertPopUp'
 import { showGenericError } from '../Utils/ErrorMessages'
 
-
+import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler'
+import OpacityLoader from '../Components/GeneralComponets/Loaders/OpacityLoader'
+import SessionExpiredPopup from '../Components/ArticleGenerationComponents/SmallComponents/SessionExpiredPopup'
 
 
 function ArticleGenerate2() {
 
     const dispatch = useDispatch()
 
-    const { selectedKeywords,keywords,headlines,outline,finalArticle, title, currentStep, selectedOutlines, selectedWordLimit, ReorderedSelectedOutlines, selectedToneOfVoice, selectedPointOfView, selectedHeadline, refTitle, loading } = useSelector((state) => state.articleGeneration);
+    const { selectedKeywords, keywords, headlines, outline, finalArticle, title, currentStep, selectedOutlines, selectedWordLimit, ReorderedSelectedOutlines, selectedToneOfVoice, selectedPointOfView, selectedHeadline, refTitle, loading } = useSelector((state) => state.articleGeneration);
+    const { IsSessionExpired } = useSelector((state) => state.Navigation);
 
 
 
@@ -152,6 +155,7 @@ function ArticleGenerate2() {
 
     // api calls 
     const Fetchkeywords = async () => {
+
         toast.dismiss()
 
 
@@ -178,21 +182,21 @@ function ArticleGenerate2() {
                 const keywordsArray = articles
                     ? articles.split('\n').map(item => item.replace(/^\d+\.\s*/, '').trim())
                     : [];
-                console.log(keywordsArray, '///////////////////')
 
-                if (keywordsArray.length <= 1) {
-                    dispatch(setLoading(false))
+                if (keywordsArray.length < 4 || keywordsArray.length > 5) {
+
 
                     setTimeout(() => {
-                        ErrorToast('please enter a meaningfull topic')
+                        dispatch(setLoading(false))
 
                     }, 500);
+
+                    setTimeout(() => {
+                        ErrorToast('Kindly specify a meaningful topic.')
+
+                    }, 2000);
                     return
                 }
-
-
-
-
 
                 dispatch(setKeywords(keywordsArray))
                 dispatch(setCurrentStep(1))
@@ -200,27 +204,22 @@ function ArticleGenerate2() {
 
             }
             catch (error) {
-                console.log(error)
-                dispatch(setLoading(false))
-                console.log(error.response.data.error)
+
+                HandleForbiddenGenericErrors(error, dispatch)
 
                 setTimeout(() => {
-
-                    ErrorToast(error.response?.data?.error || 'error')
-
+                    dispatch(setLoading(false))
                 }, 500);
-                // showGenericError()
 
             }
         }
         else {
-            // dispatch(setCurrentStep(1))
 
             if (keywords.length > 0) {
                 dispatch(setCurrentStep(1))
             }
             else {
-                // Fetchkeywords()
+                Regeneratekeywords()
             }
 
         }
@@ -229,10 +228,13 @@ function ArticleGenerate2() {
 
 
 
-    
+
 
     const Regeneratekeywords = async () => {
+
+
         toast.dismiss()
+        console.log('enetred the regeneration')
 
 
         if (!title) {
@@ -258,8 +260,26 @@ function ArticleGenerate2() {
                 ? articles.split('\n').map(item => item.replace(/^\d+\.\s*/, '').trim())
                 : [];
             console.log(keywordsArray, '///////////////////')
+            console.log(keywordsArray.length, 'length of keywords /////////////')
 
-            const UpdatedKeywords = [...keywordsArray,...keywords]
+
+            if (keywordsArray.length < 4 || keywordsArray.length > 5) {
+
+
+                setTimeout(() => {
+                    dispatch(setLoading(false))
+
+                }, 500);
+
+                setTimeout(() => {
+                    ErrorToast('Kindly specify a meaningful topic.')
+
+                }, 2000);
+
+                return
+            }
+
+            const UpdatedKeywords = [...keywordsArray, ...keywords]
             dispatch(setKeywords(UpdatedKeywords))
             // dispatch(setKeywords(keywordsArray))
             dispatch(setCurrentStep(1))
@@ -269,10 +289,14 @@ function ArticleGenerate2() {
 
         catch (error) {
             console.log(error)
-            dispatch(setLoading(false))
-            
-            ErrorToast(error.response.data.error)
-            // showGenericError()
+            HandleForbiddenGenericErrors(error, dispatch)
+            // dispatch(setLoading(false))
+
+            setTimeout(() => {
+                dispatch(setLoading(false))
+            }, 500);
+
+
 
 
         }
@@ -305,7 +329,7 @@ function ArticleGenerate2() {
             const response = await Axiosinstance.post('api/generate-headlines', data)
             const NewHeadlines = response.data.headlines
             // here the headlines is the existing headlines 
-            const UpdatedHeadlines = [...NewHeadlines , ...headlines]
+            const UpdatedHeadlines = [...NewHeadlines, ...headlines]
 
             dispatch(setHeadlines(UpdatedHeadlines))
             // dispatch(setHeadlines(response.data.headlines))
@@ -317,13 +341,19 @@ function ArticleGenerate2() {
         }
         catch (error) {
             console.log(error)
-            dispatch(setLoading(false))
-            ErrorToast('Limit reached! Please try after 20 seconds')
+            setTimeout(() => {
+                dispatch(setLoading(false))
+            }, 500);
+
+            HandleForbiddenGenericErrors(error, dispatch)
+
 
         }
         console.log(title, selectedKeywords, selectedToneOfVoice, selectedPointOfView)
 
     }
+
+
 
     const GenerateOutlines = async () => {
         toast.dismiss()
@@ -357,13 +387,13 @@ function ArticleGenerate2() {
             const NewOutlines = response.data.outlines
             const ExistingOutlines = outline
             const validExistingOutlines = ExistingOutlines ? Object.values(ExistingOutlines) : [];
-            console.log(validExistingOutlines,'.....-------------exisiting outlines')
+            console.log(validExistingOutlines, '.....-------------exisiting outlines')
 
 
             const validNewOutlines = NewOutlines ? Object.values(NewOutlines) : [];
-            console.log(validNewOutlines,'.....-------------outlines')
-            
-            const UpdatedOutlines = [...validNewOutlines,...validExistingOutlines]
+            console.log(validNewOutlines, '.....-------------outlines')
+
+            const UpdatedOutlines = [...validNewOutlines, ...validExistingOutlines]
             dispatch(setOutlines(UpdatedOutlines))
             dispatch(setCurrentStep(5))
             dispatch(setLoading(false))
@@ -372,8 +402,14 @@ function ArticleGenerate2() {
 
         catch (error) {
             console.log(error)
-            dispatch(setLoading(false))
-            showGenericError()
+
+            setTimeout(() => {
+                dispatch(setLoading(false))
+            }, 500);
+
+            HandleForbiddenGenericErrors(error, dispatch)
+
+            // showGenericError()
         }
     }
 
@@ -382,7 +418,7 @@ function ArticleGenerate2() {
     const GenerateArticle = async () => {
         toast.dismiss()
 
-  
+
 
 
         const data = {
@@ -409,8 +445,12 @@ function ArticleGenerate2() {
         }
         catch (error) {
             console.log(error)
-            dispatch(setLoading(false))
-            showGenericError()
+
+            setTimeout(() => {
+                dispatch(setLoading(false))
+            }, 500);
+            HandleForbiddenGenericErrors(error, dispatch)
+
 
 
         }
@@ -424,8 +464,6 @@ function ArticleGenerate2() {
 
 
         // const reorderedHeadlines = ReorderedSelectedOutlines.flat()
-        dispatch(resetFinalArticle())
-        dispatch(ResetIsArticleLoadingCompleted(false))
 
 
 
@@ -443,6 +481,10 @@ function ArticleGenerate2() {
 
         try {
             const response = await Axiosinstance.post('api/quickly-generate-article', data,)
+            dispatch(resetFinalArticle())
+            dispatch(ResetIsArticleLoadingCompleted(false))
+
+
             const article = response.data.article.replace("```html", "").replace("```", "").trim();
             dispatch(setFinalArticle(article))
             console.log(article)
@@ -450,15 +492,24 @@ function ArticleGenerate2() {
             dispatch(setLoading(false))
 
         }
+        
         catch (error) {
             console.log(error)
-            dispatch(setLoading(false))
-            showGenericError()
+            setTimeout(() => {
+                dispatch(setLoading(false))
+            }, 500);
+            HandleForbiddenGenericErrors(error, dispatch)
+            dispatch(ResetIsArticleLoadingCompleted(true))
+
+
 
 
         }
 
     }
+
+
+
 
 
 
@@ -490,17 +541,19 @@ function ArticleGenerate2() {
                     </div>)}
 
                     {(currentStep === 0 || currentStep === 2) && <ArticleLoader text='Your copies created by artificial intelligence will appear here.' />}
-                    {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading || currentStep === 1 && loading) && <ArticleLoader IsQuickWriter={true} />}
+                    {/* {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading || currentStep === 1 && loading) && <ArticleLoader IsQuickWriter={true} />} */}
+                    {(currentStep === 6 && loading || currentStep === 4 && loading || currentStep === 7 && loading || currentStep === 5 && loading || currentStep === 1 && loading || currentStep === 3 && loading) && <OpacityLoader />}
+                    {IsSessionExpired && <SessionExpiredPopup />}
 
                     {currentStep === 1 && <KeywordsForArticle handleSidebarOptionsVisible={handleSidebarOptionsVisible} showPopupAndCallAPI={showPopupAndCallAPI} Regeneratekeywords={Regeneratekeywords} />}
 
                     {currentStep === 3 && <GenerateOrRegenerateIdeas showPopupAndCallAPI={showPopupAndCallAPI} GenerateHeadlines={GenerateHeadlines} handleOutlineGeneration={handleOutlineGeneration} />}
-                    {(!loading && currentStep === 4) && <GenerateOutline GenerateOutlines={GenerateArticle} Label='Generate Article' />}
+                    {(currentStep === 4) && <GenerateOutline GenerateOutlines={GenerateArticle} Label='Generate Article' />}
                     {/* {currentStep === 5 && <StructureOfArticle HandleOutlinesStructure={HandleOutlinesStructure} />}
                     {(!loading && currentStep === 6) && <ArticleSummary setItems={setItems} items={items} GenerateArticle={GenerateArticle} />} */}
                     {/* {currentStep === 6 && <Worksheet />} */}
                     {/* {(!loading && currentStep === 7) && <FinalArticle articleHTML={articleHTML} />} */}
-                    {(!loading && currentStep === 7) && <FinalArticle articleHTML={articleHTML} isArticleGenerated={isArticleGenerated} setisArticleGenerated={setisArticleGenerated} />}
+                    {(currentStep === 7) && <FinalArticle articleHTML={articleHTML} isArticleGenerated={isArticleGenerated} setisArticleGenerated={setisArticleGenerated} />}
 
 
                 </div>

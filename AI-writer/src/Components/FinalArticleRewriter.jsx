@@ -9,15 +9,16 @@ import ArticleLoader from './ArticleGenerationComponents/ArticleLoader';
 import PulseLoader from 'react-spinners/PulseLoader';
 import { Toaster, toast } from 'sonner';
 import {setIsRewriteArticleLoadingCompleted} from '../Redux/Slices/ArticleRewriterSlice'
-
+import OpacityLoader from './GeneralComponets/Loaders/OpacityLoader';
+import Rocketloader from '../assets/Images/ArticleRocketLoader.png'
 
 
 function FinalArticleRewriter() {
+  
     const dispatch = useDispatch()
 
-
     // const { finalArticle, IsArticleLoadingCompleted } = useSelector((state) => state.articleGeneration); // HTML string from backend
-    const { ArticleRewrited,IsRewriteArticleLoadingCompleted } = useSelector((state) => state.ArticleRewriter);
+    const { ArticleRewrited,IsRewriteArticleLoadingCompleted,loading } = useSelector((state) => state.ArticleRewriter);
 
     const [isCopied, setIsCopied] = useState(false);
   
@@ -205,7 +206,19 @@ function FinalArticleRewriter() {
           </div>
   
         ) : (
-          <ArticleLoader text='An error occurred. Please attempt to regenerate the article. ' />
+          loading ? (
+            <OpacityLoader />
+  
+          ) : (
+          <div className="flex flex-col items-center justify-center w-full ">
+            <div className="w-64 h-64 xl:w-80 xl:h-80">
+              <img src={Rocketloader} alt="" className="w-full h-full p-3 " />
+            </div>
+            <span className="  text-nowrap w-full text-center px-4 text-[#585858]">An error occurred. Please attempt to regenerate the article. </span>
+
+          </div>
+  
+          )
   
         )}
         <Toaster />

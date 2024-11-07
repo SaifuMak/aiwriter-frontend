@@ -15,6 +15,7 @@ function ArticleLoader({ text, IsQuickWriter }) {
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen ">
       <div className="">
+        
         {loading ? (
           <div className="w-64 h-64 xl:w-80 xl:h-80">
             <Lottie animationData={animationData} className="w-full h-full" />
@@ -22,7 +23,8 @@ function ArticleLoader({ text, IsQuickWriter }) {
               {currentStep === 0 && (<span className="mt-10 text-center px-4 text-[#585858] ">Kickoff Your Article by Entering Your Topic</span>)}
               {(currentStep === 1 && !IsQuickWriter) && (<span className="mt-10 text-center px-4 text-[#585858] "> Your keywords are being generated</span>)}
 
-              {currentStep === 2 && (<span className="mt-10 text-center px-4 text-[#585858] ">Generated headlines will show up here</span>)}
+              {currentStep === 2 && (<span className="mt-10 text-center px-4 text-[#585858] ">Generated headlines will show up he</span>)}
+             
               {IsQuickWriter ? (
                 <>
                   {currentStep === 1 && (

@@ -3,7 +3,7 @@ import DotIcon from '../assets/Icons/DotIcon'
 import TextareaAutosize from 'react-textarea-autosize';
 
 
-function InputComponent({ label, placeholder, count, onChange, value, isOptional, isActive }) {
+function InputComponent({ label, placeholder, count=0, onChange, value, isOptional, isActive }) {
     return (
 
         <section className="flex flex-col w-full mt-8 space-y-2">

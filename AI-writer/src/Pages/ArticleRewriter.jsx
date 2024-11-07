@@ -28,6 +28,9 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { countWords } from '../Utils/Helperfunctions'
 import ArticleTobeRewrite from '../Components/ArticleRewrite/ArticleTobeRewrite'
 import FinalArticleRewriter from '../Components/FinalArticleRewriter'
+import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler'
+import OpacityLoader from '../Components/GeneralComponets/Loaders/OpacityLoader'
+import SessionExpiredPopup from '../Components/ArticleGenerationComponents/SmallComponents/SessionExpiredPopup'
 
 function ArticleRewriter() {
 
@@ -35,6 +38,7 @@ function ArticleRewriter() {
 
     const { ContentForRewriting, ArticleRewrited, KeywordsForRewriting, selectedToneOfVoiceArticleRewriter, selectedPointOfViewArticleRewriter, ArticleRewriterStep, selectedWordlimitArticleRewriter } = useSelector((state) => state.ArticleRewriter);
     const { loading } = useSelector((state) => state.articleGeneration);
+    const { IsSessionExpired } = useSelector((state) => state.Navigation);
 
     const [IsSidedbarOpened, setIsSidedbarOpened] = useState(false)
     const [IsMobileArticleSidebarOpened, setIsMobileArticleSidebarOpened] = useState(false)
@@ -52,8 +56,6 @@ function ArticleRewriter() {
         dispatch(setLoading(false))
 
     }, [])
-
-
 
 
     const handleBackButtonClick = () => {  //  this decreases the count for the currentstate , allow users to go back 
@@ -114,6 +116,8 @@ function ArticleRewriter() {
     }
 
 
+
+
     const HandleRewriteArticle = async () => {
         toast.dismiss()
         if (!ContentForRewriting) {
@@ -135,8 +139,7 @@ function ArticleRewriter() {
         }
         
         dispatch(setLoading(true))
-        dispatch(ResetArticleRewrited())
-        dispatch(setIsRewriteArticleLoadingCompleted(false))
+       
 
 
 
@@ -146,6 +149,11 @@ function ArticleRewriter() {
             if (response.data.article) {
                 const article = response.data.article.replace("```html", "").replace("```", "").trim();
                 console.log(article)
+                
+                dispatch(ResetArticleRewrited())
+                dispatch(setIsRewriteArticleLoadingCompleted(false))
+
+
                 dispatch(setArticleRewrited(article))
                 dispatch(SetArticleRewriterStep(1))
                 dispatch(setLoading(false))
@@ -153,9 +161,13 @@ function ArticleRewriter() {
 
 
         }
-        catch {
-            console.log(response.data.error)
-            dispatch(setLoading(false))
+        catch(error){
+            // console.log(response.data.error)
+            // dispatch(setLoading(false))
+            setTimeout(() => {
+                dispatch(setLoading(false))
+            }, 500);
+            HandleForbiddenGenericErrors(error, dispatch)
 
 
         }
@@ -193,9 +205,14 @@ function ArticleRewriter() {
 
 
                 <div className="w-full ">
-                    {(ArticleRewriterStep === 0 && !loading) && <ArticleTobeRewrite  showPopupAndCallAPI={showPopupAndCallAPI} handleArticle={handleArticle} ContentForRewriting={ContentForRewriting} wordsCount={wordsCount} handleKeywords={handleKeywords} KeywordsForRewriting={KeywordsForRewriting} HandleRewriteArticle={HandleRewriteArticle} />}
-                    {(loading && (ArticleRewriterStep === 0 || ArticleRewriterStep === 1)) && <ArticleLoader text='Your copies created by artificial intelligence will appear here.' />}
-                    {(ArticleRewriterStep === 1 && !loading) && <FinalArticleRewriter />}
+
+                {IsSessionExpired && <SessionExpiredPopup />}
+
+                    {(ArticleRewriterStep === 0 ) && <ArticleTobeRewrite  showPopupAndCallAPI={showPopupAndCallAPI} handleArticle={handleArticle} ContentForRewriting={ContentForRewriting} wordsCount={wordsCount} handleKeywords={handleKeywords} KeywordsForRewriting={KeywordsForRewriting} HandleRewriteArticle={HandleRewriteArticle} />}
+                    {/* {(loading && (ArticleRewriterStep === 0 || ArticleRewriterStep === 1)) && <ArticleLoader text='Your copies created by artificial intelligence will appear here.' />} */}
+                    {(loading && (ArticleRewriterStep === 0 || ArticleRewriterStep === 1)) && <OpacityLoader />}
+                    
+                    {(ArticleRewriterStep === 1 ) && <FinalArticleRewriter />}
 
 
 
@@ -220,13 +237,10 @@ function ArticleRewriter() {
 
                         <button onClick={HandleRewriteArticle} className="px-12 py-2 mt-8 tracking-wider text-white rounded-md bg-custom-dark-orange">Rewrite</button>
 
-
-
                     </div> */}
 
-
-
                 </div>
+                
                 {AlertPopup && <AlertPopUp handleIgnoreContinue={handleIgnoreContinue} HandleClosePopUp={HandleClosePopUp} />}
 
                 <Toaster />
