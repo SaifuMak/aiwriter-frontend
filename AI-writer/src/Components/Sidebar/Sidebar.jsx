@@ -19,7 +19,7 @@ import { Link } from 'react-router-dom';
 import Axiosinstance from '../../Axios/Axiosinstance'
 
 
-function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
+function Sidebar({ setIsProfilePopup, setIsSidedbarOpened,results }) {
 
 
 
@@ -73,7 +73,7 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened }) {
   useEffect(() => {
     getWordsCount()
 
-  }, [])
+  }, [results])
 
 
 

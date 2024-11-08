@@ -30,6 +30,8 @@ import { setSelectedPage } from '../Redux/Slices/NavigationSlice'
 
 import './styles/plagiarism.css';
 
+
+
 function Plagiarism() {
 
     const dispatch = useDispatch()
@@ -726,7 +728,7 @@ function Plagiarism() {
         <>
             <div className="flex justify-center  h-full bg-[#FEF2E8] font-poppins ">
                 <div className=" 2xl:w-2/12 lg:w-3/12 max-lg:hidden">
-                    <Sidebar setIsProfilePopup={setIsProfilePopup} />
+                    <Sidebar results={results} setIsProfilePopup={setIsProfilePopup} />
                 </div>
 
                 {IsSidebarVisible && (<div className="fixed inset-0 z-50 bg-black bg-opacity-75">

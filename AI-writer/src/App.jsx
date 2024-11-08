@@ -26,6 +26,8 @@ import PaymentSuccessPage from './Pages/PaymentSuccessPage'
 
 import Signup from './Pages/Signup'
 
+import UserSettings from './Pages/UserSettings'
+
 function App() {
 
   return (
@@ -96,6 +98,11 @@ function App() {
 
               {<Route path='/register' element={<UnrestrictedRoutes />}>
                 <Route index element={<Signup />} />
+              </Route>}
+              
+
+              {<Route path='/settings' element={<PrivateRoutes />}>
+                <Route index element={<UserSettings />} />
               </Route>}
               
 
