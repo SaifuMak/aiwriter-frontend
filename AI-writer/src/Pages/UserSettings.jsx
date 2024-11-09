@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState, useRef} from 'react'
 import { GoTriangleRight } from "react-icons/go";
 import { Link } from 'react-router-dom';
 import { LiaEditSolid } from "react-icons/lia";
@@ -6,7 +6,16 @@ import Navbar from '../Components/Navbar/Navbar';
 
 
 function UserSettings() {
+    const emailRef = useRef()
+    const [IsEmailEditable, setIsEmailEditable] = useState(false)
     const Username = 'Richard'
+
+    const HandleEmailEditable =()=>{
+        setIsEmailEditable(true)
+        if(emailRef.current){
+            emailRef.current.focus();
+        }
+    }
     return (
 
         <>
@@ -72,9 +81,11 @@ function UserSettings() {
 
                             <div className="mt-10 space-y-10 lg:mt-16">
                                 <div className="flex space-x-6 ">
-                                    <input type="text" value='b.davidson@northfalcon.com' className="w-1/2 pb-2 border-b-2 outline-none focus:border-opacity-65 border-opacity-35 border-slate-500" />
+                                   
+                                    <input ref={emailRef} type="text" value='b.davidson@northfalcon.com' disabled={!IsEmailEditable} className="w-1/2 pb-2 bg-transparent border-b-2 outline-none focus:border-opacity-65 border-opacity-35 border-slate-500" />
+                                   
                                     <div className="flex w-1/2 space-x-8">
-                                        <button className="flex items-center justify-center w-24 py-1 font-semibold text-white rounded-md bg-custom-dark-orange "><LiaEditSolid className='mr-1 text-lg lg:text-2xl' /><span className="">Edit</span></button>
+                                        <button onClick={HandleEmailEditable} className="flex items-center justify-center w-24 py-1 font-semibold text-white rounded-md bg-custom-dark-orange "><LiaEditSolid className='mr-1 text-lg lg:text-2xl' /><span className="">Edit</span></button>
                                         <button className="flex items-center justify-center w-24 py-1 font-semibold text-white rounded-md bg-[#213343] ">Save</button>
                                     </div>
                                 </div>
