@@ -2,8 +2,22 @@ import React from 'react'
 import CompleteLogo from '../../assets/Logo/CompleteLogo'
 import { Link } from 'react-router-dom'
 import { IoIosArrowBack } from "react-icons/io";
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { handleLogout } from '../../Utils/AuthService';
 
-function AdminNavbar({LogoutConfirm}) {
+
+
+function AdminNavbar() {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+ 
+    const LogoutConfirm =()=>{
+        handleLogout(dispatch,navigate)
+
+    }
+
+
     return (
         <div className="flex items-center justify-center w-full py-3 sm:px-10 bg-custom-dark">
             <div className='flex items-center justify-between w-11/12 '>

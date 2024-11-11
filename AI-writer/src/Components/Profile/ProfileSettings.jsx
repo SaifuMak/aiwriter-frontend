@@ -2,15 +2,26 @@ import React from 'react'
 import { GoTriangleRight } from "react-icons/go";
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { handleLogout } from '../../Utils/AuthService';
 
 
-function ProfileSettings({LogoutConfirm}) {
+function ProfileSettings() {
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
     const { Username, Email } = useSelector(state => state.auth);
 
+    const LogoutConfirm = () => {
+        handleLogout(dispatch, navigate)
+    }
+
+
+
     return (
+
         <div className="items-center justify-center w-full space-y-10 max-lg:justify-around max-lg:space-x-4 lg:w-3/12 max-lg:flex">
-
-
             <div className="flex flex-col items-center justify-center">
                 <div className="flex items-center text-5xl justify-center shadow-custom-dark-orange border-2  border-custom-dark-orange w-12 h-12 rounded-full max-lg:text-2xl lg:w-24 lg:h-24 text-custom-dark-orange bg-[#213343]">{Username ? Username[0] : 'U'}</div>
                 <div className="flex flex-col items-center justify-center mt-4 max-lg:text-sm ">
