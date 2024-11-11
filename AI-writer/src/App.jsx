@@ -27,6 +27,7 @@ import PaymentSuccessPage from './Pages/PaymentSuccessPage'
 import Signup from './Pages/Signup'
 
 import UserSettings from './Pages/UserSettings'
+import PaymentandBillingInfo from './Pages/PaymentandBillingInfo'
 
 function App() {
 
@@ -103,6 +104,10 @@ function App() {
 
               {<Route path='/settings' element={<PrivateRoutes />}>
                 <Route index element={<UserSettings />} />
+              </Route>}
+
+              {<Route path='/payments-billing-info' element={<PrivateRoutes />}>
+                <Route index element={<PaymentandBillingInfo />} />
               </Route>}
               
 

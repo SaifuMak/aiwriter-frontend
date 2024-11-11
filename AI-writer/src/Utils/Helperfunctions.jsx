@@ -52,4 +52,19 @@ export function ResetArticleGenerator(dispatch){
 
 }
 
+export function isValidEmail(email) {
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    return emailRegex.test(email);
+};
+
+
+export function isPasswordStrong (password)  {
+    // Regular expression to check if the password is at least 8 characters long,
+    // and contains both letters and numbers.
+    const strongPasswordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+    // Test the password against the regex
+    return strongPasswordRegex.test(password);
+};
+
  

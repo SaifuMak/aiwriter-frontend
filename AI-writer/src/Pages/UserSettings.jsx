@@ -1,24 +1,199 @@
-import React,{useState, useRef} from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { GoTriangleRight } from "react-icons/go";
 import { Link } from 'react-router-dom';
 import { LiaEditSolid } from "react-icons/lia";
 import Navbar from '../Components/Navbar/Navbar';
+import { useDispatch, useSelector } from 'react-redux';
+import { isValidEmail } from '../Utils/Helperfunctions';
+import { isPasswordStrong } from '../Utils/Helperfunctions';
+import Axiosinstance from '../Axios/Axiosinstance';
+import ErrorToast from '../Utils/ErrorToast';
+import SuccessToast from '../Utils/SuccessToast';
+import { Toaster, toast } from 'sonner';
+import { GetLoginStatus,handleLogout } from '../Utils/AuthService';
+import { useNavigate } from 'react-router-dom';
+import { LuLoader2 } from "react-icons/lu";
 
+import AdminNavbar from '../Components/Admin/AdminNavbar';
+import { IoEyeOutline } from "react-icons/io5";
+import { IoEyeOffOutline } from "react-icons/io5";
+import { loginSuccess } from '../Redux/Slices/AuthSlice';
+import ProfileSettings from '../Components/Profile/ProfileSettings';
 
 function UserSettings() {
-    const emailRef = useRef()
-    const [IsEmailEditable, setIsEmailEditable] = useState(false)
-    const Username = 'Richard'
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
-    const HandleEmailEditable =()=>{
-        setIsEmailEditable(true)
-        if(emailRef.current){
-            emailRef.current.focus();
+    const [email, setEmail] = useState('')
+
+    const emailRef = useRef()
+    const { IsAuthenticated, Username, Email } = useSelector(state => state.auth);
+
+    const [IsEmailEditable, setIsEmailEditable] = useState(false)
+    const [isEmailTypingStarted, setIsEmailTypingStarted] = useState(false)
+    const [emailError, setEmailError] = useState('')
+    const [Loading, setLoading] = useState(false)
+    const [PasswordApiLoading, setPasswordApiLoading] = useState(false)
+
+    const [IsPasswordVisible, setIsPasswordVisible] = useState(false)
+    const [IsConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false)
+    const [password, setPassword] = useState('')
+    const [passwordError, setPasswordError] = useState('')
+    const [confirmPasswordError, setConfirmPasswordError] = useState('')
+
+    const [confirmPassword, setConfirmPassword] = useState('')
+
+    const [IsPasswordNotMatching, setIsPasswordNotMatching] = useState(false)
+    // const Username = 'Richard'
+
+    const HandleEmail = (e) => {
+        if (!isEmailTypingStarted) {
+            setIsEmailTypingStarted(true)
+
+        }
+        setEmail(e.target.value)
+
+    }
+
+
+
+    const HandlePassword = (e) => {
+        if (!isPasswordStrong(e.target.value)) {
+            setPasswordError('Password must be 8+ characters with at least one letter and one number.')
+
+        }
+        else {
+            setPasswordError('')
+        }
+
+        setPassword(e.target.value)
+
+    }
+
+
+
+    const HandleConfirmPassword = (e) => {
+        setConfirmPassword(e.target.value)
+        if (e.target.value !== password) {
+            setConfirmPasswordError('passwords are not matching')
+        }
+        else {
+            setConfirmPasswordError('')
+
         }
     }
+
+    const HandleEmailEditable = () => {
+        setIsEmailEditable(true)
+        if (emailRef.current) {
+            emailRef.current.focus();
+
+        }
+
+    }
+
+    const ChangeEmailApi = async () => {
+        toast.dismiss()
+        setEmailError('')
+
+
+        if (!isEmailTypingStarted) {
+            return
+        }
+        if (!isValidEmail(email)) {
+            setEmailError('please enter a valid email')
+            return
+
+        }
+
+        const data = {
+            'email': email
+        }
+        setLoading(true)
+
+        try {
+            const response = await Axiosinstance.post('api/change-email', data)
+            console.log(response.data)
+            SuccessToast(response.data.message)
+            setLoading(false)
+            setIsEmailTypingStarted(false)
+            setIsEmailEditable(false)
+
+            GetLoginStatus(dispatch, setLoading)
+        }
+
+        catch (error) {
+            ErrorToast(error.response.data.error)
+            setLoading(false)
+        }
+    }
+
+
+    const ChangePasswordApi = async () => {
+
+        toast.dismiss()
+
+        if (!password.trim() || confirmPassword !== password) {
+            return
+        }
+
+        const data = {
+            'password': password,
+            'confirm_password': confirmPassword
+        }
+        setPasswordApiLoading(true)
+
+        try {
+            const response = await Axiosinstance.post('api/change-password', data)
+            console.log(response.data)
+            SuccessToast(response.data.message)
+            setConfirmPassword('')
+            setPassword('')
+            setPasswordApiLoading(false)
+
+        }
+
+        catch (error) {
+            ErrorToast(error.response.data.error)
+            setPasswordApiLoading(false)
+        }
+    }
+
+    const LogoutConfirm =()=>{
+        handleLogout(dispatch,navigate)
+    }
+
+
+    useEffect(() => {
+        const passwordCheckTimeout = setTimeout(() => {
+            if (confirmPassword) {
+                if (confirmPassword !== password) {
+                    setConfirmPasswordError('passwords are not matching')
+                }
+                else {
+                    setConfirmPasswordError('')
+
+                }
+            }
+        }, 500);
+
+        return () => clearTimeout(passwordCheckTimeout)
+
+    }, [confirmPassword, password])
+
+
+    useEffect(() => {
+        if (IsEmailEditable && emailRef.current) {
+            emailRef.current.focus();
+        }
+    }, [IsEmailEditable]);
+
     return (
 
         <>
+   
+        <AdminNavbar LogoutConfirm = {LogoutConfirm} />
+    
 
             <div className="flex items-center justify-center w-full mt-24 font-poppins">
 
@@ -34,40 +209,7 @@ function UserSettings() {
                         <Link to='#' className="flex items-center"><span className="lg:text-lg text-sm  text-[#EB1E1E]">Logout</span></Link>
                     </div>
 
-
-                    <div className="items-center justify-center w-full space-y-10 max-lg:justify-around max-lg:space-x-4 lg:w-3/12 max-lg:flex">
-
-
-                        <div className="flex flex-col items-center justify-center">
-                            <div className="flex items-center text-5xl justify-center shadow-custom-dark-orange border-2  border-custom-dark-orange w-12 h-12 rounded-full max-lg:text-2xl lg:w-24 lg:h-24 text-custom-dark-orange bg-[#213343]">{Username ? Username[0] : 'U'}</div>
-                            <div className="flex flex-col items-center justify-center mt-4 max-lg:text-sm ">
-                                <span className="font-semibold ">{Username}</span>
-                                <span className=" max-lg:text-xs">richardpaulson22@gmail.com</span>
-                            </div>
-                        </div>
-
-
-                        <div className="flex flex-col max-lg:text-sm items-center justify-center 2xl:px-10 px-6 text-center py-6 2xl:py-10 space-y-3 bg-[#F8F8F8]">
-                            <h6 className="font-semibold ">Your Credits:</h6>
-                            <p className="">Content Generation: 4500 words</p>
-                            <p className="">Plagiarism checker: 8500 words</p>
-                            <p className=" text-[#8C8888]">Renews: 29 Oct 2025</p>
-
-                            <div className="flex justify-between w-full ">
-                                <p className="underline cursor-pointer text-custom-dark-orange decoration-custom-dark-orange ">Plan Details</p>
-                                <p className="underline cursor-pointer text-custom-dark-orange decoration-custom-dark-orange ">Buy Addons</p>
-                            </div>
-                        </div>
-
-
-                        <div className="flex flex-col justify-center px-8 space-y-2 max-lg:hidden">
-                            <Link to='#' className="flex items-center "><GoTriangleRight className='lg:text-2xl ' /><span className="text-sm lg:text-lg ">Profile Settings</span></Link>
-                            <Link to='#' className="flex items-center"><GoTriangleRight className='lg:text-2xl' /><span className="text-sm lg:text-lg ">Plan Details</span></Link>
-                            <Link to='#' className="flex items-center"><GoTriangleRight className='lg:text-2xl' /><span className="text-sm lg:text-lg ">Billing</span></Link>
-                            <Link to='#' className="flex items-center"><GoTriangleRight className='lg:text-2xl' /><span className="text-sm lg:text-lg ">Help</span></Link>
-                            <Link to='#' className="flex items-center"><GoTriangleRight className='lg:text-2xl' /><span className="lg:text-lg text-sm  text-[#EB1E1E]">Logout</span></Link>
-                        </div>
-                    </div>
+                    <ProfileSettings LogoutConfirm={LogoutConfirm}/>
 
 
 
@@ -77,24 +219,39 @@ function UserSettings() {
                             <>
                                 <h5 className="text-xl font-semibold lg:text-2xl">Account Information</h5>
                                 <h6 className="mt-2 lg:text-lg">These details will be used to login to your account.</h6>
+                                {/* {emailError && (<h6 className="mt-2 lg:text-lg">These details will be used to login to your account.</h6>)} */}
                             </>
 
                             <div className="mt-10 space-y-10 lg:mt-16">
                                 <div className="flex space-x-6 ">
-                                   
-                                    <input ref={emailRef} type="text" value='b.davidson@northfalcon.com' disabled={!IsEmailEditable} className="w-1/2 pb-2 bg-transparent border-b-2 outline-none focus:border-opacity-65 border-opacity-35 border-slate-500" />
-                                   
+                                    <div className="w-1/2 ">
+                                        <input ref={emailRef} onChange={HandleEmail} type="text" value={isEmailTypingStarted ? email : Email} disabled={!IsEmailEditable} className={`w-1/2 ${IsEmailEditable ? '' : 'cursor-not-allowed'} pb-2 bg-transparent border-b-2 outline-none focus:border-opacity-65 w-full border-opacity-35 border-slate-500`} />
+                                        {emailError && <span className="text-sm text-red-500 ">{emailError}</span>}
+
+                                    </div>
+
                                     <div className="flex w-1/2 space-x-8">
-                                        <button onClick={HandleEmailEditable} className="flex items-center justify-center w-24 py-1 font-semibold text-white rounded-md bg-custom-dark-orange "><LiaEditSolid className='mr-1 text-lg lg:text-2xl' /><span className="">Edit</span></button>
-                                        <button className="flex items-center justify-center w-24 py-1 font-semibold text-white rounded-md bg-[#213343] ">Save</button>
+                                        <button onClick={HandleEmailEditable} className="flex items-center justify-center w-24 font-semibold text-white rounded-md h-9 bg-custom-dark-orange "><LiaEditSolid className='mr-1 text-lg lg:text-2xl' /><span className="">Edit</span></button>
+                                        {(email && email !== Email) && <button onClick={ChangeEmailApi} className="flex items-center justify-center w-24 h-9 font-semibold text-white rounded-md bg-[#213343] ">Save</button>}
                                     </div>
                                 </div>
-                                <div className="flex space-x-2 lg:space-x-6">
-                                    <input type="text" placeholder='New password' className="w-1/2 pb-2 border-b-2 outline-none focus:border-opacity-65 border-opacity-35 border-slate-500" />
-                                    <input type="text" placeholder='Confirm password' className="w-1/2 pb-2 border-b-2 outline-none focus:border-opacity-65 border-opacity-35 border-slate-500" />
 
+                                <div className="flex space-x-2 lg:space-x-6">
+
+                                    <div className="relative w-1/2">
+                                        <input onChange={HandlePassword} value={password} type={IsPasswordVisible ? 'text' : 'password'} placeholder='New password' className="w-full pb-2 duration-150 border-b-2 outline-none focus:border-opacity-65 border-opacity-35 border-slate-500" />
+                                        {password && <span onClick={() => setIsPasswordVisible(!IsPasswordVisible)} className="absolute right-2">{IsPasswordVisible ? <IoEyeOutline /> : <IoEyeOffOutline />}</span>}
+                                        {(passwordError && password) && <span className="text-sm text-red-500 ">{passwordError}</span>}
+                                    </div>
+
+                                    <div className="relative w-1/2">
+                                        <input onChange={HandleConfirmPassword} value={confirmPassword} type={IsConfirmPasswordVisible ? 'text' : 'password'} placeholder='Confirm password' className="w-full pb-2 duration-150 border-b-2 outline-none focus:border-opacity-65 border-opacity-35 border-slate-500" />
+                                        {confirmPassword && <span onClick={() => setIsConfirmPasswordVisible(!IsConfirmPasswordVisible)} className="absolute right-2">{IsConfirmPasswordVisible ? <IoEyeOutline /> : <IoEyeOffOutline />}</span>}
+                                        {(confirmPasswordError && confirmPassword) && <span className="text-sm text-red-500 ">{confirmPasswordError}</span>}
+                                    </div>
                                 </div>
-                                <button className="bg-[#213343] font-semibold text-white w-48 py-1.5 rounded-md text-nowrap">Change Password</button>
+
+                                <button onClick={ChangePasswordApi} className="bg-[#213343] flex justify-center items-center font-semibold text-white w-48 h-10 rounded-md text-nowrap">{PasswordApiLoading ? <LuLoader2 className='text-2xl animate-spin ' /> : 'Change Password'}</button>
 
                             </div>
                         </div>
@@ -102,6 +259,8 @@ function UserSettings() {
 
                 </div>
             </div>
+            <Toaster />
+
 
         </>
     )
