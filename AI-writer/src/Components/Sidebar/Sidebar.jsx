@@ -51,7 +51,7 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened,results }) {
 
 
 
-  const getWordsCount = async () => {
+  const getCreditsCount = async () => {
 
     try {
 
@@ -71,7 +71,7 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened,results }) {
 
 
   useEffect(() => {
-    getWordsCount()
+    getCreditsCount()
 
   }, [results])
 

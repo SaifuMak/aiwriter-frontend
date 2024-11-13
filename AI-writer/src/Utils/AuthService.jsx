@@ -3,6 +3,9 @@ import Axiosinstance from "../Axios/Axiosinstance"
 import { loginSuccess,setLogout } from "../Redux/Slices/AuthSlice"
 import { useState } from "react"
 import { useDispatch } from "react-redux"
+import { ResetWordsCount } from "../Redux/Slices/AssetsSlice"
+import {setWordsCount} from "../Redux/Slices/AssetsSlice"
+import { setPlanDetails } from "../Redux/Slices/AssetsSlice"
 
 
 export const GetLoginStatus = async (dispatch,setLoading) => {
@@ -16,6 +19,7 @@ export const GetLoginStatus = async (dispatch,setLoading) => {
       const username = response.data.name
 
       dispatch(loginSuccess({ username, email }));
+      dispatch(ResetWordsCount())
 
       setLoading(false)
     }
@@ -26,6 +30,35 @@ export const GetLoginStatus = async (dispatch,setLoading) => {
       setLoading(false)
 
 
+    }
+  }
+
+
+
+
+
+  export const getPlanDetails = async (dispatch) => {
+
+    try {
+
+      const response = await Axiosinstance.get('payment/get-assets-information')
+      const ArticleWords = response.data.words_count
+      const PlagiarisedWords = response.data.plaigarism_words
+      const PlanName = response.data.name_of_plan
+      const PlanAmount = response.data.amount
+      const PlanPurchasedDate = response.data.created_at
+      
+      const RenewalDate = response.data.renewal_date
+
+
+
+      dispatch(setWordsCount({ ArticleWords, PlagiarisedWords }))
+      dispatch(setPlanDetails({PlanName,PlanAmount,PlanPurchasedDate,RenewalDate}))
+
+    }
+
+    catch (error) {
+      console.log(error)
     }
   }
 

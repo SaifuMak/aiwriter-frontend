@@ -4,7 +4,10 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     ArticleWords : 0,
     PlagiarisedWords : 0,
-   
+    PlanName : 'Nil',
+    PlanAmount : 0,
+    PlanPurchasedDate : 'Nil',
+    RenewalDate : 'Nil'
 };  
 
 
@@ -21,6 +24,13 @@ const AssetsSlice = createSlice({
 
         },
 
+        setPlanDetails(state,action){
+            state.PlanAmount = action.payload.PlanAmount;
+            state.PlanName = action.payload.PlanName;
+            state.PlanPurchasedDate = action.payload.PlanPurchasedDate;
+            state.RenewalDate = action.payload.RenewalDate;
+        },
+
         ResetWordsCount(state){
             state.ArticleWords = 0;
             state.PlagiarisedWords = 0;
@@ -31,5 +41,5 @@ const AssetsSlice = createSlice({
 });
 
 
-export const {setWordsCount,ResetWordsCount} = AssetsSlice.actions;
+export const {setWordsCount,ResetWordsCount,setPlanDetails} = AssetsSlice.actions;
 export default AssetsSlice.reducer;

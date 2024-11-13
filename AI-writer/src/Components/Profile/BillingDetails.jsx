@@ -1,0 +1,133 @@
+import React, { useState, useEffect } from 'react'
+import InputBox from '../ArticleGenerationComponents/SmallComponents/InputBox';
+import DropDown from '../ArticleGenerationComponents/SmallComponents/DropDown';
+import { countries } from 'countries-list';
+import GeneralLoader from '../GeneralComponets/Loaders/GeneralLoader';
+
+
+function BillingDetails({BillingDescription,isLoading=true}) {
+    const OuterContainerInputBoxStyle = 'flex  w-full space-x-10'
+
+
+    const [emptyFields, setEmptyFields] = useState([]);
+    const [IsCountyDropdownOpened, setIsCountyDropdownOpened] = useState(false)
+    const [SelectedCountry, setSelectedCountry] = useState('')
+
+
+
+    const [formData, setFormData] = useState({
+
+        email: '',
+        name: '',
+        password: '',
+        confirmPassword: '',
+
+        firstName: '',
+        lastName: '',
+        city: '',
+        state: '',
+        country: '',
+        zipCode: '',
+        company: '',
+        taxId: '',
+        phone_number: '',
+        action: 'signup',
+
+    });
+
+    const countryNames = Object.values(countries).map(country => country.name).sort((a, b) => a.localeCompare(b)); // Sort alphabetically;
+
+
+
+    const HandleInputchange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+
+    }
+
+
+    const HandleCountrydropdown = () => {
+        setIsCountyDropdownOpened(!IsCountyDropdownOpened)
+    }
+
+
+    const HandleCountrySelection = (option) => {
+        setFormData({
+            ...formData,
+            country: option
+
+        });
+        setSelectedCountry(option)
+        setIsCountyDropdownOpened(false)
+    }
+
+    return (
+        <div>
+
+            <div className="">
+                <h2 className="text-2xl tracking-wide ">Billing Information</h2>
+                <p className="mt-3 ">{BillingDescription}</p>
+            </div>
+
+
+            <div className="mt-12 space-y-6 ">
+
+                <div className={OuterContainerInputBoxStyle}>
+                    <InputBox placeholder='First Name' name='firstName' value={formData.firstName} onchange={HandleInputchange} is_null={emptyFields.includes('firstName')} />
+                    <InputBox placeholder='Last Name' name='lastName' value={formData.lastName} onchange={HandleInputchange} is_null={emptyFields.includes('lastName')} />
+                </div>
+
+
+                <div className={OuterContainerInputBoxStyle}>
+                    <InputBox placeholder='City' name='city' value={formData.city} onchange={HandleInputchange} is_null={emptyFields.includes('city')} />
+                    <InputBox placeholder='State/Suburb' name='state' value={formData.state} onchange={HandleInputchange} is_null={emptyFields.includes('state')} />
+                </div>
+
+
+                <div className={OuterContainerInputBoxStyle}>
+                    <DropDown
+                        options={countryNames}
+                        Toggle={HandleCountrydropdown}
+                        IsOpened={IsCountyDropdownOpened}
+                        HandleCountrySelection={HandleCountrySelection}
+                        SelectedCountry={formData.country}
+                        is_null={emptyFields.includes('country')}
+                    />
+                    <InputBox placeholder='Zip Code' name='zipCode' value={formData.zipCode} onchange={HandleInputchange} is_null={emptyFields.includes('zipCode')} />
+                </div>
+
+
+                <div className={OuterContainerInputBoxStyle}>
+                    <InputBox placeholder='Company' name='company' value={formData.company} onchange={HandleInputchange} is_null={emptyFields.includes('company')} />
+                    <InputBox placeholder='VAT/Tax ID' name='taxId' value={formData.taxId} onchange={HandleInputchange} is_null={emptyFields.includes('taxId')} />
+
+
+                </div>
+
+                <div className={OuterContainerInputBoxStyle}>
+                    <InputBox placeholder='Phone Number' name='phone_number' value={formData.phone_number} onchange={HandleInputchange} is_null={emptyFields.includes('phone_number')} />
+
+                    <span className="w-1/2"></span>
+
+                </div>
+            </div>
+
+            <div className="mt-9 ">
+                <button className=" bg-[#44AA55] rounded-md flex justify-center items-center w-32 h-9 font-semibold text-white" disabled={isLoading}>{isLoading ? <GeneralLoader/> :'SAVE'} </button>
+           
+            </div>
+
+
+
+            <div className="flex items-center justify-center px-20 pt-10">
+                <p className="text-center  text-[#333333] text-sm">We respect your privacy. We store your data securely and used for accessing account
+                    related information. You may also get promotional Emails from Sembytes.</p>
+            </div>
+        </div>
+    )
+}
+
+export default BillingDetails

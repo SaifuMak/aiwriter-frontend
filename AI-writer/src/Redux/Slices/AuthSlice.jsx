@@ -7,6 +7,7 @@ const initialState = {
     IsAuthenticated: false,
     Username :'',
     Email:'',
+    
     // Profile_img :profile
     
 };
