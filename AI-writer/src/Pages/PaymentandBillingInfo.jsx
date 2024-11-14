@@ -8,6 +8,10 @@ import BillingDetails from '../Components/Profile/BillingDetails';
 import Axiosinstance from '../Axios/Axiosinstance';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPlanDetails } from '../Utils/AuthService';
+import ErrorToast from '../Utils/ErrorToast';
+import SuccessToast from '../Utils/SuccessToast';
+
+
 
 function PaymentandBillingInfo() {
 
@@ -22,35 +26,85 @@ function PaymentandBillingInfo() {
 
     const [PaymentHistoryData, setPaymentHistoryData] = useState(null)
     const [IsTableLoading, setIsTableLoading] = useState(true)
+    const [IsBillingLoading, setIsBillingLoading] = useState(false)
 
 
     const { ArticleWords, PlagiarisedWords, PlanName, PlanAmount, PlanPurchasedDate, RenewalDate } = useSelector(state => state.Assets);
 
 
-    const getPaymentHistory = async (page=1) => {
-        
 
-       
+
+    const [emptyFields, setEmptyFields] = useState([]);
+    const [IsCountyDropdownOpened, setIsCountyDropdownOpened] = useState(false)
+    const [SelectedCountry, setSelectedCountry] = useState('')
+    const [IsBillingDataEdited, setIsBillingDataEdited] = useState(false)
+
+
+
+    const [formData, setFormData] = useState({
+
+        firstName: '',
+        lastName: '',
+        city: '',
+        state: '',
+        country: '',
+        zipCode: '',
+        company: '',
+        taxId: '',
+        phone_number: '',
+
+    });
+
+    const checkEmptyFields = (formData) => {
+        // if (!IsPayButtonClicked) {
+        //     return
+        // }
+        const emptyFieldsArray = [];
+
+        Object.keys(formData).forEach((field) => {
+
+            if (formData[field] == null || typeof formData[field] !== 'string' || !formData[field].trim()) {
+                emptyFieldsArray.push(field);  // Push field name to the array if empty
+            }
+
+
+        });
+
+
+
+        setEmptyFields(emptyFieldsArray);  // Update the state with empty fields
+        return emptyFieldsArray.length > 0;
+    };
+
+
+
+
+
+
+    const getPaymentHistory = async (page = 1) => {
+
+
+
         try {
             const response = await Axiosinstance.get(`payment/payment-history?page=${page}`)
             if (response.data) {
                 setPaymentHistoryData(response.data.results)
-                
+
                 if (response.data.next) {
                     // Parse the URL using the URL constructor
                     const nextUrl = new URL(response.data.next);
-    
+
                     // Extract the page parameter from the URL's query string
                     const nextPageNumber = nextUrl.searchParams.get('page');
                     console.log('Next page:', nextPageNumber);
                     setNextPage(nextPageNumber)
 
-                    
+
 
                     // Optionally, you can use this page number to update other state or UI
                 }
-                
-                else{
+
+                else {
                     setNextPage(response.data.next)
 
                 }
@@ -60,22 +114,22 @@ function PaymentandBillingInfo() {
                 if (response.data.previous) {
                     // Parse the URL using the URL constructor
                     const PrevUrl = new URL(response.data.previous);
-    
+
                     // Extract the page parameter from the URL's query string
                     const prevPageNumber = PrevUrl.searchParams.get('page');
-                   
+
                     console.log('prev page:', prevPageNumber);
                     setPreviousPage(prevPageNumber)
 
                     // Optionally, you can use this page number to update other state or UI
                 }
-                else{
+                else {
                     setPreviousPage(response.data.previous)
                     console.log('prev page:', prevPageNumber);
 
 
                 }
-                
+
 
             }
             setIsTableLoading(false)
@@ -87,11 +141,114 @@ function PaymentandBillingInfo() {
         }
     }
 
+
+
+    const GetBillinginfo = async () => {
+
+        setIsBillingLoading(true)
+
+        try {
+            const response = await Axiosinstance.get('payment/get-billing-details')
+            const {
+                firstName,
+                lastName,
+                city,
+                state,
+                country,
+                zipCode,
+                company,
+                taxId,
+                phone_number,
+            } = response.data;
+
+            // Populate the formData with the response
+            setFormData(prevData => ({
+                ...prevData,
+                firstName,
+                lastName,
+                city,
+                state,
+                country,
+                zipCode,
+                company,
+                taxId,
+                phone_number,
+            }));
+            setIsBillingLoading(false)
+
+
+        }
+        catch (error) {
+            setIsBillingLoading(false)
+        }
+    }
+
+
+
+
+    const ConfirmBillinginfo = async () => {
+        toast.dismiss()
+
+        if (!IsBillingDataEdited) {
+            return
+        }
+
+        checkEmptyFields(formData)
+
+        const emptyFieldsArray = [];
+
+        Object.keys(formData).forEach((field) => {
+            console.log(field)
+
+
+            if (!formData[field].trim()) {
+                emptyFieldsArray.push(field);  // Push field name to the array if empty
+            }
+        });
+
+
+        if (emptyFieldsArray.length > 0) {
+            ErrorToast('Please fill the required fields')
+            // await GetLoginStatus()
+            return
+        }
+
+        if (formData.phone_number.length > 15) {
+            ErrorToast('Phone number must not exceed 15 characters.')
+            return
+        }
+
+
+        if (formData.zipCode.length > 20) {
+            ErrorToast('ZipCode must not exceed 20 characters.')
+            return
+        }
+
+        try {
+            const response = await Axiosinstance.post('payment/get-billing-details', formData)
+            console.log(response.data, '++++++++++++++++++/////////////////////////////////')
+            SuccessToast(response.data.message)
+            setIsBillingDataEdited(false)
+
+        }
+        catch (error) {
+            setIsBillingLoading(false)
+            setIsBillingDataEdited(false)
+
+        }
+
+    }
+
+
+
     useEffect(() => {
+        GetBillinginfo()
         getPlanDetails(dispatch)
         getPaymentHistory()
 
     }, [])
+
+
 
     return (
 
@@ -120,7 +277,7 @@ function PaymentandBillingInfo() {
                         <div className="p-8 space-y-10 border rounded-lg border-slate-300">
                             <div className="flex justify-between ">
                                 <div className="">
-                                    <h6 className="text-xl font-semibold ">Your Plan:{nextPage} {PlanName}</h6>
+                                    <h6 className="text-xl font-semibold ">Your Plan:{PlanName}</h6>
                                     <p className="text-[#808080] text-xl"><span className=" text-custom-dark-orange">${PlanAmount / 100}</span>/month</p>
                                 </div>
                                 <div className="">
@@ -131,6 +288,7 @@ function PaymentandBillingInfo() {
                                     <button className="px-4 py-1.5 font-semibold text-white rounded-md bg-custom-dark-orange">UPGRADE NOW</button>
                                 </div>
                             </div>
+
 
                             <div className="flex items-center justify-between ">
                                 <div className="">
@@ -156,12 +314,12 @@ function PaymentandBillingInfo() {
                                 <Table TableColumns={TableColumns} PaymentHistoryData={PaymentHistoryData} IsTableLoading={IsTableLoading} isLoaderColor={true} LoaderSize='4xl' />
                                 <div className="flex justify-end w-full mt-2 ">
                                     <div className="flex justify-between w-1/2">
-                                        {nextPage && <button onClick={()=> getPaymentHistory(nextPage)} className="px-6 py-1 font-semibold text-white rounded-md bg-custom-dark-orange">Next{nextPage}</button>}
-                                        {previousPage && <button onClick={()=> getPaymentHistory(previousPage)}  className="px-6 py-1 font-semibold text-white rounded-md bg-custom-dark-orange">prev{previousPage}</button>}
-                                    <div className="flex ">
-                                        <span className="">pages</span>
-                                       <p className="text-center "><span className="px-2 ml-2 text-center rounded-sm bg-slate-200">1</span> of 10</p>
-                                    </div>
+                                        {nextPage && <button onClick={() => getPaymentHistory(nextPage)} className="px-6 py-1 font-semibold text-white rounded-md bg-custom-dark-orange">Next{nextPage}</button>}
+                                        {previousPage && <button onClick={() => getPaymentHistory(previousPage)} className="px-6 py-1 font-semibold text-white rounded-md bg-custom-dark-orange">prev{previousPage}</button>}
+                                        <div className="flex ">
+                                            <span className="">pages</span>
+                                            <p className="text-center "><span className="px-2 ml-2 text-center rounded-sm bg-slate-200">1</span> of 10</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -169,7 +327,7 @@ function PaymentandBillingInfo() {
 
 
                         <div className="px-6 py-10 border rounded-lg border-slate-300">
-                            <BillingDetails BillingDescription={BillingDescription} />
+                            <BillingDetails setIsBillingDataEdited={setIsBillingDataEdited} ConfirmBillinginfo={ConfirmBillinginfo} isLoading={IsBillingLoading} BillingDescription={BillingDescription} formData={formData} setFormData={setFormData} setSelectedCountry={setSelectedCountry} SelectedCountry={SelectedCountry} setIsCountyDropdownOpened={setIsCountyDropdownOpened} emptyFields={emptyFields} IsCountyDropdownOpened={IsCountyDropdownOpened} />
 
                         </div>
 

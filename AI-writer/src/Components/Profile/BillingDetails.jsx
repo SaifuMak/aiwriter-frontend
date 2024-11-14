@@ -5,41 +5,18 @@ import { countries } from 'countries-list';
 import GeneralLoader from '../GeneralComponets/Loaders/GeneralLoader';
 
 
-function BillingDetails({BillingDescription,isLoading=true}) {
+function BillingDetails({BillingDescription,setIsBillingDataEdited,ConfirmBillinginfo,isLoading=true ,formData, setFormData, setSelectedCountry, SelectedCountry,setIsCountyDropdownOpened, emptyFields, IsCountyDropdownOpened}) {
     const OuterContainerInputBoxStyle = 'flex  w-full space-x-10'
 
 
-    const [emptyFields, setEmptyFields] = useState([]);
-    const [IsCountyDropdownOpened, setIsCountyDropdownOpened] = useState(false)
-    const [SelectedCountry, setSelectedCountry] = useState('')
-
-
-
-    const [formData, setFormData] = useState({
-
-        email: '',
-        name: '',
-        password: '',
-        confirmPassword: '',
-
-        firstName: '',
-        lastName: '',
-        city: '',
-        state: '',
-        country: '',
-        zipCode: '',
-        company: '',
-        taxId: '',
-        phone_number: '',
-        action: 'signup',
-
-    });
+    
 
     const countryNames = Object.values(countries).map(country => country.name).sort((a, b) => a.localeCompare(b)); // Sort alphabetically;
 
 
 
     const HandleInputchange = (e) => {
+        setIsBillingDataEdited(true)
         const { name, value } = e.target;
         setFormData({
             ...formData,
@@ -55,6 +32,7 @@ function BillingDetails({BillingDescription,isLoading=true}) {
 
 
     const HandleCountrySelection = (option) => {
+        setIsBillingDataEdited(true)
         setFormData({
             ...formData,
             country: option
@@ -116,8 +94,7 @@ function BillingDetails({BillingDescription,isLoading=true}) {
             </div>
 
             <div className="mt-9 ">
-                <button className=" bg-[#44AA55] rounded-md flex justify-center items-center w-32 h-9 font-semibold text-white" disabled={isLoading}>{isLoading ? <GeneralLoader/> :'SAVE'} </button>
-           
+                <button onClick={ConfirmBillinginfo} className=" bg-[#44AA55] rounded-md flex justify-center items-center w-32 h-9 font-semibold text-white" disabled={isLoading}>{isLoading ? <GeneralLoader/> :'SAVE'} </button>
             </div>
 
 

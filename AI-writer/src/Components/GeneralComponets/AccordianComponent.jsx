@@ -10,7 +10,7 @@ import PlanCards from './PlanCards';
 import { useEffect } from 'react';
 
 
-function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWordsForCustomPlan, CustomContentWords, HandlePlagiarismWordsForCustomPlan, CustomPlagiarisedWords, ShowPlanLists, IsCustomPlanSelected,CustomPrice }) {
+function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWordsForCustomPlan, CustomContentWords, HandlePlagiarismWordsForCustomPlan, CustomPlagiarisedWords, ShowPlanLists, IsCustomPlanSelected, CustomPrice }) {
     const [expanded, setExpanded] = useState(false);
     const featuresLineStyle = 'text-sm text-center text-[#3E3E3E]  flex  space-x-1'
 
@@ -212,6 +212,7 @@ function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWo
                                                                 <span className="text-xs ">3,00,000</span>
 
                                                             </div>
+
                                                             <SliderComponets
                                                                 Handlefunction={HandleArticleWordsForCustomPlan}
                                                                 WordsCount={CustomContentWords}

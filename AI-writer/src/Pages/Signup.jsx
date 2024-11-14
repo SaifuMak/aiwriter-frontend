@@ -25,6 +25,7 @@ import AccordianComponent from '../Components/GeneralComponets/AccordianComponen
 
 import PayPalCheckout from '../Components/GeneralComponets/Payments/PayPalCheckout'
 import StripeCheckout from '../Components/GeneralComponets/Payments/StripeCheckout'
+import PaymentComponent from '../Components/GeneralComponets/Payments/PaymentComponent'
 
 import { LuLoader } from 'react-icons/lu'
 
@@ -34,9 +35,11 @@ import { LuLoader2 } from "react-icons/lu";
 
 import { RxCross2 } from "react-icons/rx";
 
+import stripePromise from '../Stripe/Stripe'
 
 
-const stripePromise = loadStripe('pk_test_51QE1VQJN7jDpKSSQxJ8sJ6r7TRweKoTKY8bCwzwMRLmVTNenHhHFfi6QwDpS3I1raNNwo52VpQie8SrlDzx63Vjp00VIO5XxmF');
+
+// const stripePromise = loadStripe('pk_test_51QE1VQJN7jDpKSSQxJ8sJ6r7TRweKoTKY8bCwzwMRLmVTNenHhHFfi6QwDpS3I1raNNwo52VpQie8SrlDzx63Vjp00VIO5XxmF');
 
 function Signup() {
     const [IsCountyDropdownOpened, setIsCountyDropdownOpened] = useState(false)
@@ -944,44 +947,14 @@ function Signup() {
                         </div>
                     </div>
 
-
-                    <div className="flex flex-col items-center justify-center w-full px-8 py-16 mt-16 space-y-10 border rounded-lg border-slate-300">
-                        <div className="flex flex-col items-center justify-center space-y-8 ">
-                            <h2 className="text-2xl font-semibold ">Payment</h2>
-
-
-
-                            <div className="flex items-center justify-center space-x-8 ">
-                                <button onClick={() => HandleSelectedPaymentOption('STRIPE')} className={`flex items-center justify-center px-8 py-2 space-x-4 border rounded-lg ${selectedPaymentMethod === 'STRIPE' ? 'border-custom-dark-orange ' : 'border-[#B0B0B0]'} `} >
-                                    <span className="text-[#6366F1] font-semibold text-xl">Stripe</span>
-                                    <div className="w-9 h-9 ">
-                                        <img src={stripeImg} alt="" className="object-cover w-full h-full " />
-                                    </div>
-                                </button>
-
-
-                                <button onClick={() => HandleSelectedPaymentOption('PAYPAL')} className={`flex items-center justify-center px-8 py-2 space-x-4 border ${selectedPaymentMethod === 'PAYPAL' ? 'border-custom-dark-orange' : 'border-[#B0B0B0]'} rounded-lg border-[#B0B0B0]`}>
-                                    <span className="text-[#2563EB] font-semibold text-xl">Paypal</span>
-                                    <div className="w-9 h-9 ">
-                                        <img src={paypalImg} alt="" className="object-cover w-full h-full " />
-                                    </div>
-                                </button>
-                            </div>
-
-                            {IsAuthenticated ? (
-                                <button onClick={SignupPayment} className="bg-[#44AA55] flex  justify-center items-center text-lg rounded-md  text-white font-semibold  h-12 w-full"> {IsLoading ? <><span className="">Processing</span><LuLoader2 className='ml-2 text-2xl text-white animate-spin' /> </> : ' PAY'}</button>
-
-
-                            ) : (
-                                <button onClick={SignupPayment} className="bg-[#44AA55] flex  justify-center items-center text-lg rounded-md  text-white font-semibold  h-12 w-full"> {IsLoading ? <><span className="">Processing</span><LuLoader2 className='ml-2 text-2xl text-white animate-spin' /> </> : 'SIGN UP & PAY'}</button>
-
-
-                            )}
-                            {/* <PayPalCheckout /> */}
-                            {/* {selectedPaymentMethod === 'STRIPE' && <StripeCheckout SelectedPlanDetails={SelectedPlanDetails} />} */}
-                        </div>
-                    </div>
+                    <PaymentComponent
+                        HandleSelectedPaymentOption={HandleSelectedPaymentOption}
+                        selectedPaymentMethod={selectedPaymentMethod}
+                        HandlePayment={SignupPayment}
+                        IsLoading={IsLoading}
+                    />
                 </div>
+
             </div>
 
             <Toaster />

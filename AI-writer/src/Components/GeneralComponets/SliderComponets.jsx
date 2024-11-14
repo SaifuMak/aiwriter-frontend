@@ -3,7 +3,7 @@ import Slider from '@mui/material/Slider';
 
 
 
-function SliderComponets({Handlefunction,WordsCount}) {
+function SliderComponets({Handlefunction,WordsCount,Step=5000, MinimumValue=10000}) {
   return (
     
     <Slider
@@ -12,8 +12,8 @@ function SliderComponets({Handlefunction,WordsCount}) {
     onChange={Handlefunction} // Update state on change
     valueLabelDisplay="auto" // Show value label when dragging
     // color="success" // Change slider color
-    step={5000} // Step increment
-    min={10000} // Minimum value
+    step={Step} // Step increment
+    min={MinimumValue} // Minimum value
     max={300000} // Maximum value
     sx={{
         color: 'success.main', // Change the color of the slider

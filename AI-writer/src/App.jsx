@@ -28,6 +28,9 @@ import Signup from './Pages/Signup'
 
 import UserSettings from './Pages/UserSettings'
 import PaymentandBillingInfo from './Pages/PaymentandBillingInfo'
+import AddOnCredits from './Pages/AddOnCredits'
+
+
 
 function App() {
 
@@ -108,6 +111,11 @@ function App() {
 
               {<Route path='/payments-billing-info' element={<PrivateRoutes />}>
                 <Route index element={<PaymentandBillingInfo />} />
+              </Route>}
+
+
+              {<Route path='/buy-more-credits' element={<PrivateRoutes />}>
+                <Route index element={<AddOnCredits />} />
               </Route>}
               
               
