@@ -7,6 +7,7 @@ import ErrorToast from '../Utils/ErrorToast'
 import { Toaster, toast } from 'sonner';
 import Axiosinstance from '../Axios/Axiosinstance'
 import stripePromise from '../Stripe/Stripe'
+import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler'
 
 
 function AddOnCredits() {
@@ -62,26 +63,31 @@ function AddOnCredits() {
 
     const HandlePayment = async () => {
         toast.dismiss()
+
         if (selectedPaymentMethod === 'STRIPE') {
             await handleStripePayment()
         }
         else {
             ErrorToast('paypal payment is not allowed')
+
         }
     }
 
     const handleStripePayment = async () => {
+
         if (FinalPrice === 0) {
             ErrorToast('Payment amount must be greater than zero.')
             return
         }
+        setIsLoading(true)
+
 
         const data = {
             'amount': FinalPrice,
             'content_words': CustomContentWords,
             'plagiarised_words': CustomPlagiarisedWords,
             'PlanName': 'TOPUP',
-            'plan_details': 'Add more credits to your current plan and   , you can maximize your services and stay productive, knowing that your credits are available whenever you need them. It’s a seamless way to ensure that you never miss out on the features '
+            'plan_details': `By opting for the top-up plan, you will receive ${CustomContentWords} content credits and ${CustomPlagiarisedWords} plagiarism credits, each with a one-month validity. This plan allows you to extend your access and make the most of your services without interruptions.`
         }
 
         console.log(data)
@@ -91,16 +97,25 @@ function AddOnCredits() {
 
             const { sessionId } = response.data;
             // Redirect to Stripe Checkout
+
             const { error } = await stripe.redirectToCheckout({ sessionId });
             if (error) console.error('Stripe Checkout error');
+            
+            setTimeout(() => {
+                setIsLoading(false)
+
+            }, 1000);
+
         }
 
         catch (error) {
-            ErrorToast('something went wrong')
-
-
-
+            HandleForbiddenGenericErrors(error)
+            setTimeout(() => {
+            setIsLoading(false)
+                
+            }, 500);
         }
+        
 
     }
 

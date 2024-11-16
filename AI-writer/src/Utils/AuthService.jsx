@@ -47,12 +47,13 @@ export const GetLoginStatus = async (dispatch,setLoading) => {
       const PlanName = response.data.name_of_plan
       const PlanAmount = response.data.amount
       const PlanPurchasedDate = response.data.created_at
-      
+      const AddOnArticleWords = response.data.add_on_words_count
+      const AddOnPlagiarisedWords = response.data.add_on_plaigarism_words
+
+
       const RenewalDate = response.data.renewal_date
 
-
-
-      dispatch(setWordsCount({ ArticleWords, PlagiarisedWords }))
+      dispatch(setWordsCount({ ArticleWords, PlagiarisedWords,AddOnArticleWords,AddOnPlagiarisedWords}))
       dispatch(setPlanDetails({PlanName,PlanAmount,PlanPurchasedDate,RenewalDate}))
 
     }

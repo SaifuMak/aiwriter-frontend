@@ -100,7 +100,7 @@ function App() {
                 <Route index element={<ArticleRewriter />} />
               </Route>}
 
-              {<Route path='/register' element={<UnrestrictedRoutes />}>
+              {<Route path='/purchase-plan' element={<UnrestrictedRoutes />}>
                 <Route index element={<Signup />} />
               </Route>}
               
@@ -109,7 +109,7 @@ function App() {
                 <Route index element={<UserSettings />} />
               </Route>}
 
-              {<Route path='/payments-billing-info' element={<PrivateRoutes />}>
+              {<Route path='/plan-details' element={<PrivateRoutes />}>
                 <Route index element={<PaymentandBillingInfo />} />
               </Route>}
 

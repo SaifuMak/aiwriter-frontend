@@ -51,7 +51,7 @@ const Table = ({ TableColumns,isLoaderColor,LoaderSize, PaymentHistoryData, IsTa
 
                 ) : (
                     <div className="flex items-center justify-center min-h-[380px]  ">
-                        <h3 className=" text-slate-600"> Payment History Not Found </h3>
+                        <h3 className=" text-slate-600"> No transactions have been recorded so far. </h3>
                     </div>
 
                 )

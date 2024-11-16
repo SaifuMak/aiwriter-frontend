@@ -6,13 +6,13 @@ import { useNavigate } from 'react-router-dom';
 import { handleLogout } from '../../Utils/AuthService';
 
 
-function ProfileSettings() {
+function ProfileSettings({HandleAddonCreditsEligibility}) {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const { Username, Email } = useSelector(state => state.auth);
-    const { ArticleWords, PlagiarisedWords,PlanName,PlanAmount,PlanPurchasedDate,RenewalDate } = useSelector(state => state.Assets);
+    const { ArticleWords, PlagiarisedWords, PlanName, PlanAmount, PlanPurchasedDate, RenewalDate } = useSelector(state => state.Assets);
 
 
     const LogoutConfirm = () => {
@@ -35,14 +35,23 @@ function ProfileSettings() {
 
             <div className="flex flex-col max-lg:text-sm items-center justify-center 2xl:px-10 px-6 text-center py-6 2xl:py-10 space-y-3 bg-[#F8F8F8]">
                 <h6 className="font-semibold ">Your Credits:</h6>
+
                 <p className="">Content Generation: {ArticleWords} words</p>
                 <p className="">Plagiarism checker: {PlagiarisedWords} words</p>
                 <p className=" text-[#8C8888]">Renews: {RenewalDate}</p>
 
-                <div className="flex justify-between w-full ">
-                    <p className="underline cursor-pointer text-custom-dark-orange decoration-custom-dark-orange ">Plan Details</p>
-                    <p className="underline cursor-pointer text-custom-dark-orange decoration-custom-dark-orange ">Buy Addons</p>
-                </div>
+                {PlanAmount === 0 ? (
+              <Link to='/purchase-plan'><p className="underline cursor-pointer text-custom-dark-orange decoration-custom-dark-orange ">Purchase plan</p></Link>
+
+                ) : (
+                    <div className="flex justify-between w-full ">
+
+                        <p className="underline cursor-pointer text-custom-dark-orange decoration-custom-dark-orange ">Plan Details</p>
+                        <p onClick={HandleAddonCreditsEligibility} className="underline cursor-pointer text-custom-dark-orange decoration-custom-dark-orange ">Buy Addons</p>
+                    </div>
+
+                )}
+
             </div>
 
 

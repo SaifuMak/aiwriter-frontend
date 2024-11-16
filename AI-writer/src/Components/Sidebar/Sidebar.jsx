@@ -15,20 +15,23 @@ import { HiOutlineDocumentMagnifyingGlass } from "react-icons/hi2";
 import { ResetRewriteArticle } from '../../Redux/Slices/ArticleRewriterSlice'
 import { MdOutlineDocumentScanner } from "react-icons/md";
 
-import { Link } from 'react-router-dom';
 import Axiosinstance from '../../Axios/Axiosinstance'
+import { Link } from 'react-router-dom';
+
+import { BsCashCoin } from "react-icons/bs";
 
 
-function Sidebar({ setIsProfilePopup, setIsSidedbarOpened,results }) {
+function Sidebar({ setIsProfilePopup, setIsSidedbarOpened, results }) {
 
 
 
   const dispatch = useDispatch()
   const { IsAuthenticated, Username, Email } = useSelector(state => state.auth);
   const { pageSelected } = useSelector(state => state.Navigation);
-  const { ArticleWords, PlagiarisedWords } = useSelector(state => state.Assets);
+  const { ArticleWords, PlagiarisedWords, PlanAmount } = useSelector(state => state.Assets);
 
   const { IsRewriteArticleLoadingCompleted } = useSelector((state) => state.ArticleRewriter);
+
 
 
 
@@ -58,8 +61,10 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened,results }) {
       const response = await Axiosinstance.get('payment/get-assets-information')
       const ArticleWords = response.data.words_count
       const PlagiarisedWords = response.data.plaigarism_words
+      const AddOnArticleWords = response.data.add_on_words_count
+      const AddOnPlagiarisedWords = response.data.add_on_plaigarism_words
 
-      dispatch(setWordsCount({ ArticleWords, PlagiarisedWords }))
+      dispatch(setWordsCount({ ArticleWords, PlagiarisedWords, AddOnArticleWords, AddOnPlagiarisedWords }))
 
     }
 
@@ -156,8 +161,15 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened,results }) {
           <span className="text-sm">{PlagiarisedWords}</span>
         </div>
 
+        {PlanAmount !== 0 ? (<div className="">
+          <Link to='/plan-details'> <button className="flex items-center justify-center max-xl:text-sm rounded-sm w-full py-1 xl:py-1.5 text-white hover:bg-hover-button-color  bg-custom-dark-orange "><GrUploadOption className='mr-1' />Upgrade</button></Link>
+        </div>)
+          : (
+            <div className="">
+              <Link to='/purchase-plan'> <button className="flex items-center justify-center max-xl:text-sm rounded-sm w-full py-1 xl:py-1.5 text-white hover:bg-hover-button-color  bg-custom-dark-orange "><BsCashCoin className='mt-1 mr-1' />Purchase</button></Link>
+            </div>
+          )}
 
-        <button className="flex items-center justify-center max-xl:text-sm rounded-sm w-full py-1 xl:py-1.5 text-white hover:bg-hover-button-color  bg-custom-dark-orange "><GrUploadOption className='mr-1' />Upgrade</button>
       </section>
 
 

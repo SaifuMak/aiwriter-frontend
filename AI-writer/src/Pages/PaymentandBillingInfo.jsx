@@ -10,12 +10,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getPlanDetails } from '../Utils/AuthService';
 import ErrorToast from '../Utils/ErrorToast';
 import SuccessToast from '../Utils/SuccessToast';
+import { useNavigate } from 'react-router-dom';
+import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler';
 
 
 
 function PaymentandBillingInfo() {
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const [nextPage, setNextPage] = useState(null);
     const [previousPage, setPreviousPage] = useState(null);
@@ -29,7 +32,7 @@ function PaymentandBillingInfo() {
     const [IsBillingLoading, setIsBillingLoading] = useState(false)
 
 
-    const { ArticleWords, PlagiarisedWords, PlanName, PlanAmount, PlanPurchasedDate, RenewalDate } = useSelector(state => state.Assets);
+    const { ArticleWords, PlagiarisedWords,AddOnArticleWords,AddOnPlagiarisedWords, PlanName, PlanAmount, PlanPurchasedDate, RenewalDate } = useSelector(state => state.Assets);
 
 
 
@@ -240,6 +243,18 @@ function PaymentandBillingInfo() {
     }
 
 
+    const HandleAddonCreditsEligibility =  async() =>{
+        try{
+            const response = await Axiosinstance.get('payment/add-on-credits')
+            navigate('/buy-more-credits')
+        }
+        catch(error){
+            HandleForbiddenGenericErrors(error)
+
+        }
+
+    }
+
 
     useEffect(() => {
         GetBillinginfo()
@@ -271,7 +286,7 @@ function PaymentandBillingInfo() {
                         <Link to='#' className="flex items-center"><span className="lg:text-lg text-sm  text-[#EB1E1E]">Logout</span></Link>
                     </div>
 
-                    <ProfileSettings />
+                    <ProfileSettings HandleAddonCreditsEligibility={HandleAddonCreditsEligibility} />
 
                     <div className="space-y-20 lg:w-9/12 max-lg:mt-6 ">
                         <div className="p-8 space-y-10 border rounded-lg border-slate-300">
@@ -284,25 +299,35 @@ function PaymentandBillingInfo() {
                                     <h6 className="text-xl font-semibold">Renewal Date:</h6>
                                     <p className="text-[#808080] text-lg">{RenewalDate}</p>
                                 </div>
+                                
                                 <div className="">
-                                    <button className="px-4 py-1.5 font-semibold text-white rounded-md bg-custom-dark-orange">UPGRADE NOW</button>
+                                    {PlanAmount === 0 ? (
+                                   <Link to='/purchase-plan'><button className="px-4 py-1.5 font-semibold text-white rounded-md bg-custom-dark-orange">PURCHASE PLAN</button></Link> 
+
+                                    ):(
+                                        <Link to='/purchase-plan'><button className="px-4 py-1.5 font-semibold text-white rounded-md bg-custom-dark-orange">UPGRADE NOW</button></Link>
+
+                                    )}
                                 </div>
                             </div>
 
 
-                            <div className="flex items-center justify-between ">
-                                <div className="">
+                            <div className="flex items-center justify-between w-full ">
+                                <div className="w-full space-y-3 ">
                                     <h6 className="text-lg font-semibold ">Plan Details:</h6>
-                                    <div className="flex">
-                                        <p className="text-lg ">Content Generation:  <span className="text-custom-dark-orange">{ArticleWords} words</span></p>
-                                        <p className="ml-4 text-lg ">Plagiarism Checker: <span className="text-custom-dark-orange">{PlagiarisedWords} words</span></p>
+                                    <div className="flex ">
+                                        <p className="w-1/2 ">Content Generation:  <span className="text-custom-dark-orange">{ArticleWords} words</span></p>
+                                        <p className="w-1/2 ml-4">Plagiarism Checker: <span className="text-custom-dark-orange">{PlagiarisedWords} words</span></p>
                                     </div>
+                                    <div className="flex ">
+                                        <p className="w-1/2 ">Add-On Content Generation:  <span className="text-custom-dark-orange">{ArticleWords} words</span></p>
+                                        <p className="w-1/2 ml-4 ">Add-On Plagiarism Generation: <span className="text-custom-dark-orange">{PlagiarisedWords} words</span></p>
+                                    </div> 
                                 </div>
 
-
-                                <div className="">
-                                    <Link to='#'><span className="text-lg underline text-custom-dark-orange">Buy Addons</span></Link>
-                                </div>
+                              {PlanAmount !== 0 && (<div className="">
+                                 <span onClick={HandleAddonCreditsEligibility} className="text-lg cursor-pointer hover:underline text-nowrap text-custom-dark-orange">Buy Addons</span>
+                                </div>)}
                             </div>
                         </div>
 
@@ -316,10 +341,10 @@ function PaymentandBillingInfo() {
                                     <div className="flex justify-between w-1/2">
                                         {nextPage && <button onClick={() => getPaymentHistory(nextPage)} className="px-6 py-1 font-semibold text-white rounded-md bg-custom-dark-orange">Next{nextPage}</button>}
                                         {previousPage && <button onClick={() => getPaymentHistory(previousPage)} className="px-6 py-1 font-semibold text-white rounded-md bg-custom-dark-orange">prev{previousPage}</button>}
-                                        <div className="flex ">
+                                        {/* <div className="flex ">
                                             <span className="">pages</span>
                                             <p className="text-center "><span className="px-2 ml-2 text-center rounded-sm bg-slate-200">1</span> of 10</p>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                             </div>

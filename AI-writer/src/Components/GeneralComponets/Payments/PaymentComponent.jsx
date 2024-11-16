@@ -35,11 +35,11 @@ function PaymentComponent({ HandleSelectedPaymentOption, selectedPaymentMethod, 
                 </div>
 
                 {IsAuthenticated ? (
-                    <button onClick={HandlePayment} className="bg-[#44AA55] flex  justify-center items-center text-lg rounded-md  text-white font-semibold  h-12 w-full"> {IsLoading ? <><span className="">Processing</span><LuLoader2 className='ml-2 text-2xl text-white animate-spin' /> </> : ' PAY'}</button>
+                    <button disabled={IsLoading} onClick={HandlePayment} className="bg-[#44AA55] flex  justify-center items-center text-lg rounded-md  text-white font-semibold  h-12 w-full"> {IsLoading ? <><span className="">Processing</span><LuLoader2 className='ml-2 text-2xl text-white animate-spin' /> </> : ' PAY'}</button>
 
 
                 ) : (
-                    <button onClick={HandlePayment} className="bg-[#44AA55] flex  justify-center items-center text-lg rounded-md  text-white font-semibold  h-12 w-full"> {IsLoading ? <><span className="">Processing</span><LuLoader2 className='ml-2 text-2xl text-white animate-spin' /> </> : 'SIGN UP & PAY'}</button>
+                    <button disabled={IsLoading} onClick={HandlePayment} className="bg-[#44AA55] flex  justify-center items-center text-lg rounded-md  text-white font-semibold  h-12 w-full"> {IsLoading ? <><span className="">Processing</span><LuLoader2 className='ml-2 text-2xl text-white animate-spin' /> </> : 'SIGN UP & PAY'}</button>
 
 
                 )}

@@ -9,6 +9,8 @@ import Axiosinstance from '../Axios/Axiosinstance'
 import { setLogout, loginSuccess } from '../Redux/Slices/AuthSlice'
 import { useDispatch, useSelector } from 'react-redux';
 
+import AdminNavbar from '../Components/Admin/AdminNavbar'
+
 import SuccessToast from '../Utils/SuccessToast';
 import ErrorToast from '../Utils/ErrorToast';
 
@@ -36,6 +38,8 @@ import { LuLoader2 } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 
 import stripePromise from '../Stripe/Stripe'
+
+import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler'
 
 
 
@@ -477,8 +481,11 @@ function Signup() {
             }
 
         }
+
+        
         catch (error) {
             console.log(error, '&&&&&&&&&&&&&')
+
             //   dispatch(setLogout())
             //   navigate('/login')
             setIsCheckingAuthStatus(false)
@@ -553,6 +560,8 @@ function Signup() {
         }
         catch (error) {
             console.log(error.response.data)
+           
+
 
         }
 
@@ -712,6 +721,11 @@ function Signup() {
         }
         else {
             ErrorToast('paypal payment is not allowed')
+            setTimeout(() => {
+            setIsLoading(false)
+                
+            }, 300);
+
         }
     }
 
@@ -734,6 +748,8 @@ function Signup() {
 
 
     return (
+        <>
+        <AdminNavbar />
         <div className="flex items-center justify-center pb-20 font-poppins">
             <div className="flex py-10 mt-10 max-md:flex-col max-md:justify-center max-md:items-center xl:w-11/12 2xl:w-10/12 md:space-x-6 xl:space-x-16 2xl:space-x-28 max-xl:px-10 ">
 
@@ -983,8 +999,8 @@ function Signup() {
 
             {IsLoginPopup && <LoginPopup HandleCloseLoginPopup={HandleCloseLoginPopup} setIsPayButtonClicked={setIsPayButtonClicked} />}
 
-
         </div>
+        </>
     )
 }
 

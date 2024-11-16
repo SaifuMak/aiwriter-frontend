@@ -4,7 +4,7 @@ import ProfileDetails from '../../Components/Profile/ProfileDetails';
 import Axiosinstance from '../../Axios/Axiosinstance';
 import { loginSuccess, setLogout } from '../../Redux/Slices/AuthSlice'
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ResetArticleGenerator } from '../../Utils/Helperfunctions'
 import CardComponent from '../../Components/CardComponent';
 import { setSelectedPage } from '../../Redux/Slices/NavigationSlice'
@@ -12,7 +12,7 @@ import { setSelectedPage } from '../../Redux/Slices/NavigationSlice'
 import Sidebar from '../../Components/Sidebar/Sidebar'
 import ArticleCard from '../../Components/ArticleCard'
 import { LuLoader2 } from "react-icons/lu";
-
+import Popup from '../../Components/ArticleGenerationComponents/SmallComponents/Popup';
 
 function Home() {
   const dispatch = useDispatch()
@@ -20,14 +20,19 @@ function Home() {
   const [IsSidebarVisible, setIsSidebarVisible] = useState(false)
   const [IsProfilePopup, setIsProfilePopup] = useState(false)
   const [isloading, setLoading] = useState(false)
-  const { IsAuthenticated } = useSelector(state => state.auth);
+  const [ShowPopUp, setShowPopUp] = useState(false)
 
-   useEffect(() => {
-     dispatch(setSelectedPage('Home'))
-   
-    
-   }, [])
-   
+
+  const { IsAuthenticated } = useSelector(state => state.auth);
+  const { PlanAmount } = useSelector(state => state.Assets);
+
+
+  useEffect(() => {
+    dispatch(setSelectedPage('Home'))
+
+
+  }, [])
+
 
 
   const GetLoginStatus = async () => {
@@ -112,7 +117,14 @@ function Home() {
               </div>
 
               <h4 className="pl-4 text-xl text-white xl:text-2xl max-lg:hidden "> Welcome MakTal</h4>
-              <button className="px-3 py-2 text-sm font-semibold text-white md:px-6 rounded-3xl hover:bg-hover-button-color bg-custom-dark-orange">Plan Details</button>
+              {PlanAmount === 0 ? (
+                <Link to='/purchase-plan'><button className="px-3 py-2 text-sm font-semibold text-white md:px-6 rounded-3xl hover:bg-hover-button-color bg-custom-dark-orange">Purchase Plan </button></Link>
+
+              ) : (
+
+                <Link to='/plan-details'><button className="px-3 py-2 text-sm font-semibold text-white md:px-6 rounded-3xl hover:bg-hover-button-color bg-custom-dark-orange">Plan Details</button></Link>
+
+              )}
             </div>
 
 
@@ -151,6 +163,8 @@ function Home() {
                 ]}
                 buttonText='START WRITING'
                 LinkTo='/choose-article-writer'
+                EnablePopUp={setShowPopUp}
+
               // FunctionToCall={ResetArticleGenerator}
               />
 
@@ -162,6 +176,8 @@ function Home() {
                 ]}
                 buttonText='REWRITE NOW'
                 LinkTo='/quick-article-generation'
+                EnablePopUp={setShowPopUp}
+
               // FunctionToCall={ResetArticleGenerator}
               />
 
@@ -172,6 +188,7 @@ function Home() {
                 ]}
                 buttonText='CHECK NOW'
                 LinkTo='/plagiarism-checker'
+                EnablePopUp={setShowPopUp}
               // FunctionToCall={ResetArticleGenerator}
               />
             </div>
@@ -181,7 +198,13 @@ function Home() {
 
       )}
 
-
+      {ShowPopUp && <Popup
+        ShowPopUp={setShowPopUp}
+        message='Oops! No active plan found. Please purchase a plan to proceed.'
+        actionLabel='Purchase'
+        cancelLabel='Cancel'
+        actionLink='/purchase-plan'
+      />}
 
     </>
   )

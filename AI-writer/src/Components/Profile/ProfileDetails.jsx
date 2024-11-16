@@ -53,14 +53,13 @@ const { IsAuthenticated, Username, Email  } = useSelector(state => state.auth);
 
     return (
 
-
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-55">
             <div ref={profileRef} className="w-[600px]  flex  justify-center  py-10 items-center  bg-custom-dark rounded-lg shadow-lg ">
                 <div className="flex flex-col items-center justify-center space-y-8 text-white ">
                     <div className="flex flex-col items-center justify-center ">
 
                         <span className="flex items-center justify-center w-24 h-24 text-3xl text-white duration-300 border-2 rounded-full cursor-pointer hover:bg-custom-dark-orange border-custom-dark-orange border-opacity-65 bg-custom-dark">
-                            M
+                            {Username ? Username[0] : 'U'}
                         </span>
 
                         <span className="mt-2 text-2xl ">{Username}</span>

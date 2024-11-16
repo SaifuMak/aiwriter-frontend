@@ -5,12 +5,16 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { handleLogout } from '../../Utils/AuthService';
+import { useSelector } from 'react-redux';
 
 
 
 function AdminNavbar() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
+
+    const { IsAuthenticated } = useSelector(state => state.auth);
+
  
     const LogoutConfirm =()=>{
         handleLogout(dispatch,navigate)
@@ -34,15 +38,17 @@ function AdminNavbar() {
 
                         <Link to='/' className='cursor-pointer '>
                         <span className="text-white ">Back to dashboard</span>
-
                         </Link>
+
+
                     </div>
                 </div>
 
-                <button onClick={LogoutConfirm} className="w-24 h-8 font-bold text-custom-dark hover:bg-gradient-to-r hover:from-orange-300 hover:to-orange-500 bg-custom-dark-orange rounded-2xl">Logout</button>
+              {IsAuthenticated &&  <button onClick={LogoutConfirm} className="w-24 h-8 font-bold text-custom-dark hover:bg-gradient-to-r hover:from-orange-300 hover:to-orange-500 bg-custom-dark-orange rounded-2xl">Logout</button>}
             </div>
         </div>
     )
 }
+
 
 export default AdminNavbar

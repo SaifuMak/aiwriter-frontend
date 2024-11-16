@@ -1,9 +1,23 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 
-function CardComponent({ title, description, buttonText, LinkTo, FunctionToCall, buttonAction, footer }) {
 
+function CardComponent({ title, description, buttonText, LinkTo, EnablePopUp,  buttonAction, footer }) {
+
+    const { PlanAmount } = useSelector(state => state.Assets);
+
+    const IsValidPlan =(event)=>{
+
+        if(PlanAmount === 0){
+            event.preventDefault();
+            EnablePopUp(true)
+            return
+        }
+        
+
+    }
     return (
         <div className="relative w-full px-6 py-5 space-y-3 border border-black cursor-pointer rounded-xl xl:px-8 xl:py-6 2xl:py-8 xl:space-y-6 border-opacity-30">
             <h5 className="text-xl font-semibold xl:text-2xl ">{title}</h5>
@@ -15,7 +29,7 @@ function CardComponent({ title, description, buttonText, LinkTo, FunctionToCall,
             </div>
 
             <div className="">
-                <Link to={LinkTo} className="px-4 py-1.5 text-center text-white rounded-md max-xl:text-sm sm:py-2 sm:px-6 2xl:py-2.5 hover:bg-hover-button-color bg-custom-dark-orange">{buttonText}</Link>
+                <Link to={LinkTo} onClick={IsValidPlan} className="px-4 py-1.5 text-center text-white rounded-md max-xl:text-sm sm:py-2 sm:px-6 2xl:py-2.5 hover:bg-hover-button-color bg-custom-dark-orange">{buttonText}</Link>
             </div>
             {/* <h6 className="max-xl:text-sm">{footer}</h6> */}
         </div>
