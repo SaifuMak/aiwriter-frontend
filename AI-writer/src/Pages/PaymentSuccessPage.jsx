@@ -1,16 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
 import Lottie from 'lottie-react';
 import animationData from '../assets/LottieFiles/GreyTick.json'
 import { LuMoveRight } from "react-icons/lu";
 import { Link } from 'react-router-dom';
-
-
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 
 function PaymentSuccessPage() {
     const { width, height } = useWindowSize();
+
+    const navigate = useNavigate();
+
+
+    // useEffect(() => {
+    //     // Redirect immediately when the page loads (even if coming from the back button)
+    //     if (window.history.state && window.history.state.idx < 1) {
+    //         // If we are on the page via the back button
+    //         navigate('/');  // Redirect to your desired page (e.g., homepage)
+    //     }
+
+    //     // This replaces the current entry in the history stack to prevent user from going back to this page
+    //     window.history.replaceState(null, '', window.location.href);
+
+    // }, [navigate]);
+
+
+    
     return (
 
         <div className="z-10 flex items-center justify-center w-full h-screen bg-custom-dark">

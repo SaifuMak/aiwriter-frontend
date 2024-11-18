@@ -35,7 +35,7 @@ const Table = ({ TableColumns,isLoaderColor,LoaderSize, PaymentHistoryData, IsTa
                                     <tr key={index} className="border-b hover:bg-gray-50">
                                         <td className={cellStyle}>{payment.created_at}</td>
                                         <td className={cellStyle}>{payment.invoice_id}</td>
-                                        <td className={cellStyle}>{payment.name_of_plan}(monthly)</td>
+                                        <td className={cellStyle}>{payment.name_of_plan}{payment.name_of_plan !== 'Add_on_credits' && '(monthly)'}</td>
                                         <td className={cellStyle}>${payment.cost_of_plan/100}</td>
                                         <td className='px-4 py-4 text-sm underline text-custom-dark-orange'>Download Invoice</td>
 

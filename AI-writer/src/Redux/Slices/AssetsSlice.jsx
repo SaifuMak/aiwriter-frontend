@@ -1,6 +1,8 @@
 // articleGenerationSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
+
+
 const initialState = {
     ArticleWords: 0,
     PlagiarisedWords: 0,

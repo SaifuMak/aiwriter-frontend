@@ -3,10 +3,9 @@ import Axiosinstance from "../Axios/Axiosinstance"
 import { loginSuccess,setLogout } from "../Redux/Slices/AuthSlice"
 import { useState } from "react"
 import { useDispatch } from "react-redux"
-import { ResetWordsCount } from "../Redux/Slices/AssetsSlice"
 import {setWordsCount} from "../Redux/Slices/AssetsSlice"
 import { setPlanDetails } from "../Redux/Slices/AssetsSlice"
-
+import { ResetWordsCount } from "../Redux/Slices/AssetsSlice"
 
 export const GetLoginStatus = async (dispatch,setLoading) => {
 
@@ -37,7 +36,7 @@ export const GetLoginStatus = async (dispatch,setLoading) => {
 
 
 
-  export const getPlanDetails = async (dispatch) => {
+  export const getPlanDetails = async (dispatch,setNewPlanPurchased) => {
 
     try {
 
@@ -49,9 +48,11 @@ export const GetLoginStatus = async (dispatch,setLoading) => {
       const PlanPurchasedDate = response.data.created_at
       const AddOnArticleWords = response.data.add_on_words_count
       const AddOnPlagiarisedWords = response.data.add_on_plaigarism_words
-
-
       const RenewalDate = response.data.renewal_date
+
+      if(setNewPlanPurchased){
+        setNewPlanPurchased(true)
+      }
 
       dispatch(setWordsCount({ ArticleWords, PlagiarisedWords,AddOnArticleWords,AddOnPlagiarisedWords}))
       dispatch(setPlanDetails({PlanName,PlanAmount,PlanPurchasedDate,RenewalDate}))
@@ -71,7 +72,10 @@ export const handleLogout = async(dispatch,navigate) => {
 
     try {
         const response = await Axiosinstance.post('api/logout',data)
+      dispatch(ResetWordsCount())
+
         dispatch(setLogout())
+
        
         
         navigate('/login')

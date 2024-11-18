@@ -72,7 +72,7 @@ function App() {
                 <Route index element={<PasswordChange />} />
               </Route>}
 
-              {<Route path='/article-generation' element={<UnrestrictedRoutes />}>
+              {<Route path='/article-generation' element={<PrivateRoutes />}>
                 <Route index element={<ArticleGeneration />} />
               </Route>}
 

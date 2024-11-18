@@ -12,6 +12,8 @@ import ErrorToast from '../Utils/ErrorToast';
 import SuccessToast from '../Utils/SuccessToast';
 import { useNavigate } from 'react-router-dom';
 import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler';
+import Popup from '../Components/ArticleGenerationComponents/SmallComponents/Popup'
+
 
 
 
@@ -30,6 +32,9 @@ function PaymentandBillingInfo() {
     const [PaymentHistoryData, setPaymentHistoryData] = useState(null)
     const [IsTableLoading, setIsTableLoading] = useState(true)
     const [IsBillingLoading, setIsBillingLoading] = useState(false)
+
+    const [isAddonPopup, setIsAddonPopup] = useState(false)
+
 
 
     const { ArticleWords, PlagiarisedWords,AddOnArticleWords,AddOnPlagiarisedWords, PlanName, PlanAmount, PlanPurchasedDate, RenewalDate } = useSelector(state => state.Assets);
@@ -244,11 +249,13 @@ function PaymentandBillingInfo() {
 
 
     const HandleAddonCreditsEligibility =  async() =>{
+        toast.dismiss()
         try{
             const response = await Axiosinstance.get('payment/add-on-credits')
             navigate('/buy-more-credits')
         }
         catch(error){
+            setIsAddonPopup(true)
             HandleForbiddenGenericErrors(error)
 
         }
@@ -320,8 +327,8 @@ function PaymentandBillingInfo() {
                                         <p className="w-1/2 ml-4">Plagiarism Checker: <span className="text-custom-dark-orange">{PlagiarisedWords} words</span></p>
                                     </div>
                                     <div className="flex ">
-                                        <p className="w-1/2 ">Add-On Content Generation:  <span className="text-custom-dark-orange">{ArticleWords} words</span></p>
-                                        <p className="w-1/2 ml-4 ">Add-On Plagiarism Generation: <span className="text-custom-dark-orange">{PlagiarisedWords} words</span></p>
+                                        <p className="w-1/2 ">Add-On Content Generation:  <span className="text-custom-dark-orange">{AddOnArticleWords} words</span></p>
+                                        <p className="w-1/2 ml-4 ">Add-On Plagiarism Generation: <span className="text-custom-dark-orange">{AddOnPlagiarisedWords} words</span></p>
                                     </div> 
                                 </div>
 
@@ -339,8 +346,8 @@ function PaymentandBillingInfo() {
                                 <Table TableColumns={TableColumns} PaymentHistoryData={PaymentHistoryData} IsTableLoading={IsTableLoading} isLoaderColor={true} LoaderSize='4xl' />
                                 <div className="flex justify-end w-full mt-2 ">
                                     <div className="flex justify-between w-1/2">
-                                        {nextPage && <button onClick={() => getPaymentHistory(nextPage)} className="px-6 py-1 font-semibold text-white rounded-md bg-custom-dark-orange">Next{nextPage}</button>}
-                                        {previousPage && <button onClick={() => getPaymentHistory(previousPage)} className="px-6 py-1 font-semibold text-white rounded-md bg-custom-dark-orange">prev{previousPage}</button>}
+                                        {nextPage && <button onClick={() => getPaymentHistory(nextPage)} className="px-6 py-1 font-semibold text-white rounded-md bg-custom-dark-orange">Next</button>}
+                                        {previousPage && <button onClick={() => getPaymentHistory(previousPage)} className="px-6 py-1 font-semibold text-white rounded-md bg-custom-dark-orange">prev</button>}
                                         {/* <div className="flex ">
                                             <span className="">pages</span>
                                             <p className="text-center "><span className="px-2 ml-2 text-center rounded-sm bg-slate-200">1</span> of 10</p>
@@ -364,7 +371,15 @@ function PaymentandBillingInfo() {
             <Toaster />
 
 
+            {isAddonPopup && <Popup
+                message='You’re unable to buy an add-on plan right now. Either your content credits must drop below 5000, or your plagiarism credits must drop below 1000, to enable purchases.'
+                ShowPopUp={setIsAddonPopup}
+                isButtons={false}
+            />}
+
         </>
+
+        
     )
 }
 

@@ -8,12 +8,15 @@ import { VscCheck } from "react-icons/vsc";
 import SliderComponets from './SliderComponets';
 import PlanCards from './PlanCards';
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 
-function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWordsForCustomPlan, CustomContentWords, HandlePlagiarismWordsForCustomPlan, CustomPlagiarisedWords, ShowPlanLists, IsCustomPlanSelected, CustomPrice }) {
+function AccordianComponent({ IsAuthenticated,HandlePlanSelection, AmountDifferenceInPlan, IsPurchasedCustomContentWordsEditable, IsPurchasedCustomPlagiarismWordsEditable, IsPurchasedCustomPlanEditable, selectedPlan, HandleArticleWordsForCustomPlan, CustomContentWords, HandlePlagiarismWordsForCustomPlan, CustomPlagiarisedWords, ShowPlanLists, IsCustomPlanSelected, CustomPrice }) {
+
     const [expanded, setExpanded] = useState(false);
-    const featuresLineStyle = 'text-sm text-center text-[#3E3E3E]  flex  space-x-1'
+    const { ArticleWords, PlanName, PlagiarisedWords, PlanAmount } = useSelector(state => state.Assets);
 
+    const featuresLineStyle = 'text-sm  text-[#3E3E3E]  flex  space-x-1'
 
 
     const handleExpansion = (index) => (event, isExpanded) => {
@@ -21,7 +24,11 @@ function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWo
         if (!isExpanded) {
             setExpanded(index); // Set the accordion to expanded only if it's not already expanded
         }
+
+        
     };
+
+  
 
 
 
@@ -73,6 +80,16 @@ function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWo
     }
 
     useEffect(() => {
+        // Retrieve the last expanded state from localStorage
+        const savedIndex = localStorage.getItem('expandedIndex');
+        if (savedIndex !== null) {
+            setExpanded(parseInt(savedIndex, 10));
+        }
+    }, []);
+
+
+    
+    useEffect(() => {
 
         console.log(selectedPlan, CustomContentWords, CustomPlagiarisedWords, ShowPlanLists, IsCustomPlanSelected)
 
@@ -82,6 +99,7 @@ function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWo
 
         if (IsCustomPlanSelected) {
             setExpanded(0);
+            
             return
         }
 
@@ -171,7 +189,6 @@ function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWo
                                                         </>
                                                     )}
 
-
                                                 </div>
                                             </div>
 
@@ -200,9 +217,21 @@ function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWo
                                     </div> */}
 
                                                 <div className="w-11/12 mt-10 space-y-4 ">
-                                                    <h6 className="text-center text-[#808080] "><span className="text-3xl text-custom-dark-orange">${PricePlans[selectedPlan].price}</span>/month</h6>
-                                                    <p className="text-center text-[#808080] text-sm ">(Charged monthly)</p>
+                                                    {(PlanName !== selectedPlan || IsPurchasedCustomPlanEditable) ? (
+                                                        <h6 className="text-center text-[#808080] "><span className="text-3xl text-custom-dark-orange">${PricePlans[selectedPlan].price}</span>/month</h6>
 
+                                                    ) : (
+                                                        <h6 className="text-center text-[#808080] "><span className="text-3xl text-custom-dark-orange">${PlanAmount / 100}</span>/month</h6>
+
+                                                    )}
+                                                    <p className="text-center text-[#808080] text-sm ">(Charged monthly)</p>
+                                                    {(selectedPlan !== 'CUSTOM' || IsPurchasedCustomPlanEditable) && AmountDifferenceInPlan !== 0 && IsAuthenticated && PlanAmount !== 0 && (<p className="mb-4  tracking-wide text-center text-[#808080] ">
+                                                        {AmountDifferenceInPlan < 0 ? (
+                                                            <span className="">You have to pay <span className="font-semibold ">${Math.abs(AmountDifferenceInPlan)}</span> more monthly</span>
+                                                        ) : (
+                                                            <span className="">You will save   <span className="font-semibold ">${Math.abs(AmountDifferenceInPlan)}</span>  monthly</span>
+                                                        )}
+                                                    </p>)}
                                                     {IsCustomPlanSelected && (<div className="pt-4 space-y-7 ">
                                                         <h5 className="text-center ">Content Generation:</h5>
                                                         <div className="relative flex items-center justify-center w-full px-10 ">
@@ -212,12 +241,21 @@ function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWo
                                                                 <span className="text-xs ">3,00,000</span>
 
                                                             </div>
+                                                            {(IsPurchasedCustomContentWordsEditable || PlanName !== 'CUSTOM') ? (
+                                                                <SliderComponets
+                                                                    Handlefunction={HandleArticleWordsForCustomPlan}
+                                                                    WordsCount={CustomContentWords}
+                                                                />
 
-                                                            <SliderComponets
-                                                                Handlefunction={HandleArticleWordsForCustomPlan}
-                                                                WordsCount={CustomContentWords}
-                                                            />
+                                                            ) : (
+                                                                <SliderComponets
+                                                                    Handlefunction={HandleArticleWordsForCustomPlan}
+                                                                    WordsCount={ArticleWords}
+                                                                />
+                                                            )}
                                                         </div>
+
+                                                        
                                                     </div>)}
 
 
@@ -230,10 +268,24 @@ function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWo
                                                                 <span className="text-xs ">3,00,000</span>
                                                             </div>
 
-                                                            <SliderComponets
-                                                                Handlefunction={HandlePlagiarismWordsForCustomPlan}
-                                                                WordsCount={CustomPlagiarisedWords}
-                                                            />
+
+
+
+                                                            {(IsPurchasedCustomPlagiarismWordsEditable || PlanName !== 'CUSTOM') ? (
+                                                                <SliderComponets
+                                                                    Handlefunction={HandlePlagiarismWordsForCustomPlan}
+                                                                    WordsCount={CustomPlagiarisedWords}
+                                                                />
+
+                                                            ) : (
+                                                                <SliderComponets
+                                                                    Handlefunction={HandlePlagiarismWordsForCustomPlan}
+                                                                    WordsCount={PlagiarisedWords}
+                                                                />
+
+                                                            )}
+
+
                                                         </div>
                                                     </div>)}
 
@@ -243,12 +295,24 @@ function AccordianComponent({ HandlePlanSelection, selectedPlan, HandleArticleWo
 
 
 
-                                                <div className="flex flex-col w-9/12 space-y-3">
-                                                    <h6 className="font-semibold text-center ">Plan Details</h6>
-                                                    {PricePlans[selectedPlan].details.map((details, index) => (
-                                                        <div className={featuresLineStyle}><VscCheck className='font-semibold shrink-0 mt-1 text-[#44AA55]' /><p className="">{details}</p></div>
-                                                    ))}
-                                                </div>
+                                                {(PlanName !== selectedPlan) ? (
+
+                                                    <div className="flex flex-col w-9/12 space-y-3">
+                                                        <h6 className="font-semibold text-center ">Plan Details</h6>
+                                                        {PricePlans[selectedPlan].details.map((details, index) => (
+                                                            <div className={featuresLineStyle}><VscCheck className='font-semibold shrink-0 mt-1 text-[#44AA55]' /><p className="">{details}</p></div>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex flex-col w-9/12 space-y-3">
+                                                        <h6 className="font-semibold text-center ">Plan Details</h6>
+
+                                                        <div className={featuresLineStyle}><VscCheck className='font-semibold shrink-0 mt-1 text-[#44AA55]' /><p className="">Content Generation - {ArticleWords} words</p></div>
+                                                        <div className={featuresLineStyle}><VscCheck className='font-semibold shrink-0 mt-1 text-[#44AA55]' /><p className="">Plagiarism Checker - {PlagiarisedWords} words</p></div>
+                                                        <div className={featuresLineStyle}><VscCheck className='font-semibold shrink-0 mt-1 text-[#44AA55]' /><p className="">Buy Addons when needed</p></div>
+
+                                                    </div>
+                                                )}
 
                                             </div>
                                         </Typography>
