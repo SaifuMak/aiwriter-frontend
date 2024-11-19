@@ -29,7 +29,7 @@ import Signup from './Pages/Signup'
 import UserSettings from './Pages/UserSettings'
 import PaymentandBillingInfo from './Pages/PaymentandBillingInfo'
 import AddOnCredits from './Pages/AddOnCredits'
-
+import NoPageFound from './Pages/NoPageFound'
 
 
 function App() {
@@ -63,9 +63,11 @@ function App() {
               </Route>}
 
 
-              {<Route path='/payment-success' element={<UnrestrictedRoutes />}>
+              {<Route path='/payment-success' element={<PrivateRoutes />}>
                 <Route index element={<PaymentSuccessPage />} />
               </Route>}
+
+           
 
               
               {<Route path='/password-change' element={<PrivateRoutes />}>
@@ -127,6 +129,9 @@ function App() {
               {/* <Route path="/article-generation" element={<ArticleGeneration />} /> */}
 
               {/* <Route path="/verify-email" element={<EmailConfirmation />} /> */}
+
+           
+              <Route path="*" element={<NoPageFound />} />
 
             </Routes>
           </Router>

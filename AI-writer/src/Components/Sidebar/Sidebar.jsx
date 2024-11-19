@@ -5,7 +5,7 @@ import { GrDocumentTime } from "react-icons/gr";
 import { LuFileEdit } from "react-icons/lu";
 import { GrUploadOption } from "react-icons/gr";
 import { IoMenuOutline } from "react-icons/io5";
-import { setWordsCount } from '../../Redux/Slices/AssetsSlice'
+import { setWordsCount,setPlanDetails } from '../../Redux/Slices/AssetsSlice'
 
 import CompleteLogo from '../../assets/Logo/CompleteLogo';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,7 +28,7 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened, results }) {
   const dispatch = useDispatch()
   const { IsAuthenticated, Username, Email } = useSelector(state => state.auth);
   const { pageSelected } = useSelector(state => state.Navigation);
-  const { ArticleWords, PlagiarisedWords, PlanAmount } = useSelector(state => state.Assets);
+  const { ArticleWords, PlagiarisedWords, PlanAmount,PlanName } = useSelector(state => state.Assets);
 
   const { IsRewriteArticleLoadingCompleted } = useSelector((state) => state.ArticleRewriter);
 
@@ -63,8 +63,16 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened, results }) {
       const PlagiarisedWords = response.data.plaigarism_words
       const AddOnArticleWords = response.data.add_on_words_count
       const AddOnPlagiarisedWords = response.data.add_on_plaigarism_words
+      const PlanAmount = response.data.amount
+      const PlanName = response.data.name_of_plan
+      const PlanPurchasedDate = response.data.created_at
+      const RenewalDate = response.data.renewal_date
+
+
 
       dispatch(setWordsCount({ ArticleWords, PlagiarisedWords, AddOnArticleWords, AddOnPlagiarisedWords }))
+      dispatch(setPlanDetails({ PlanAmount, PlanName, PlanPurchasedDate, RenewalDate }))
+
 
     }
 
@@ -148,7 +156,16 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened, results }) {
       </section>
 
 
-      <section className="w-full px-2 py-5 space-y-2 border rounded-lg xl:space-y-5 xl:px-4 border-custom-dark-orange border-opacity-60 ">
+      <section className="w-full px-2 py-5 space-y-2 border rounded-lg xl:space-y-4 xl:px-4 border-custom-dark-orange border-opacity-60 ">
+   
+
+
+      <div className="flex flex-col space-y-1 text-white">
+          <span className="font-medium ">Current Plan</span>
+          <span className="text-sm">{PlanName === 'Nil'? 'No Plan': PlanName}</span>
+        </div>
+
+
 
         <div className="flex flex-col space-y-1 text-white">
           <span className="font-medium ">Content credits</span>
@@ -177,7 +194,7 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened, results }) {
 
         <div onClick={() => setIsProfilePopup(true)} className="flex items-center justify-between px-2 cursor-pointer xl:px-4 ">
           <div className="flex items-center justify-center space-x-2">
-            <div className="flex items-center justify-center w-6 h-6 rounded-full max-lg:text-sm xl:w-8 xl:h-8 bg-custom-dark-orange">M</div>
+            <div className="flex items-center justify-center w-6 h-6 rounded-full max-lg:text-sm xl:w-8 xl:h-8 bg-custom-dark-orange">{Username? Username[0]: 'U'}</div>
             <span className="text-base xl:text-lg">{Username}</span>
           </div>
 

@@ -13,7 +13,20 @@ function PaymentSuccessPage() {
     const { width, height } = useWindowSize();
 
     const navigate = useNavigate();
-
+    const [timeLeft, setTimeLeft] = useState(10); // Set initial time
+  
+    useEffect(() => {
+      if (timeLeft <= 0) {
+        navigate('/'); // Navigate to home page when timer hits 0
+        return;
+      }
+  
+      const timer = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1); // Decrement timer
+      }, 1000);
+  
+      return () => clearInterval(timer); // Cleanup interval on component unmount
+    }, [timeLeft, navigate]);
 
     // useEffect(() => {
     //     // Redirect immediately when the page loads (even if coming from the back button)
@@ -47,8 +60,10 @@ function PaymentSuccessPage() {
                     <h3 className="text-5xl text-white ">Thank you!</h3>
                     <h3 className="mt-8 text-4xl font-semibold text-center text-white ">Your payment was successfully processed!</h3>
                     <Link to='/'>
-                    <button className="flex items-center justify-center px-6 py-2 mt-4 text-white duration-150 rounded-lg group hover:bg-slate-700">back to home page  <LuMoveRight className="mt-1 text-lg transition-transform duration-300 translate-x-0 opacity-0 group-hover:opacity-100 group-hover:translate-x-3" /> </button>
+                    <button className="flex items-center justify-center px-6 py-2 mt-4 text-white duration-150 rounded-lg group  hover:bg-slate-700">back to home page  <LuMoveRight className="mt-1 text-lg transition-transform duration-300 translate-x-0 opacity-0 group-hover:opacity-100 group-hover:translate-x-3" /> </button>
                     </Link>
+                    <span className=" text-center mt-2 text-white">redirecting to home page in <span className="font-semibold">{timeLeft}</span>  seconds</span>
+
                     {/* <LuMoveRight className="ml-2 text-lg transition-transform duration-200 translate-x-0 opacity-0 group-hover:opacity-100 group-hover:translate-x-1" /> */}
                 </div>
 

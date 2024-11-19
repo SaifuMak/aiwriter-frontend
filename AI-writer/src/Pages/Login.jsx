@@ -12,7 +12,7 @@ import ErrorToast from '../Utils/ErrorToast';
 import { useNavigate, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import CompleteLogo from '../assets/Logo/CompleteLogo';
-
+import  GeneralLoader from  '../Components/GeneralComponets/Loaders/GeneralLoader'
 
 
 
@@ -54,17 +54,20 @@ function Login() {
         }
 
         try {
-            // setIsLoading(true)
+            setIsLoading(true)
             const response = await Axiosinstance.post('api/login', data)
             dispatch(loginSuccess({}));
 
 
             SuccessToast('success')
+
             navigate('/')
+            setIsLoading(false)
+            
         }
 
         catch (error) {
-            // setIsLoading(false)
+            setIsLoading(false)
 
             ErrorToast('Incorrect email or password', true, true)
 
@@ -135,7 +138,7 @@ function Login() {
 
                     <input onChange={handlePassword} value={Password} type={isPasswordVisible ? 'text' : 'password'} className="p-1 mt-8 text-white focus:text-custom-dark-orange bg-transparent border-b border-white outline-none focus:border-custom-dark-orange transition duration-300 w-72 sm:w-[360px]" placeholder='Password' />
                 </div>
-                <button onClick={loginSubmit} className="w-full py-2 mt-12 text-white rounded-md bg-custom-dark-orange ">Login</button>
+                <button disabled={IsLoading} onClick={loginSubmit} className="w-full flex justify-center items-center h-10 mt-12 text-white rounded-md bg-custom-dark-orange ">{ IsLoading ? <GeneralLoader/> : 'Login'}</button>
 
                 <Link to='/forgot-password' className="mt-8 cursor-pointer text-custom-dark-orange ">Forgot password?</Link>
 

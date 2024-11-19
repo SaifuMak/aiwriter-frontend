@@ -45,6 +45,9 @@ import { setPlanDetails, setWordsCount } from '../Redux/Slices/AssetsSlice'
 import { ResetWordsCount } from '../Redux/Slices/AssetsSlice'
 // const stripePromise = loadStripe('pk_test_51QE1VQJN7jDpKSSQxJ8sJ6r7TRweKoTKY8bCwzwMRLmVTNenHhHFfi6QwDpS3I1raNNwo52VpQie8SrlDzx63Vjp00VIO5XxmF');
 
+import SearchableDropdown from '../Components/ArticleGenerationComponents/SmallComponents/SearchableDropdown'
+
+
 function Signup() {
     const [IsCountyDropdownOpened, setIsCountyDropdownOpened] = useState(false)
     const [SelectedCountry, setSelectedCountry] = useState('')
@@ -133,6 +136,8 @@ function Signup() {
     const [IsPurchasedCustomPlanEditable, setIsPurchasedCustomPlanEditable] = useState(false)
     const [IsPurchasedCustomContentWordsEditable, setIsPurchasedCustomContentWordsEditable] = useState(false)
     const [IsPurchasedCustomPlagiarismWordsEditable, setIsPurchasedCustomPlagiarismWordsEditable] = useState(false)
+   
+    const [searchQuery, setSearchQuery] = useState("");
 
 
 
@@ -264,6 +269,7 @@ function Signup() {
 
         });
         setSelectedCountry(option)
+        setSearchQuery(option)
         setIsCountyDropdownOpened(false)
     }
 
@@ -1013,13 +1019,24 @@ function Signup() {
 
 
                                 <div className={OuterContainerInputBoxStyle}>
-                                    <DropDown
+                                    {/* <DropDown
                                         options={countryNames}
                                         Toggle={HandleCountrydropdown}
                                         IsOpened={IsCountyDropdownOpened}
                                         HandleCountrySelection={HandleCountrySelection}
                                         SelectedCountry={formData.country}
                                         is_null={emptyFields.includes('country')}
+                                    /> */}
+
+                                    <SearchableDropdown
+                                        options={countryNames}
+                                        Toggle={HandleCountrydropdown}
+                                        IsOpened={IsCountyDropdownOpened}
+                                        HandleCountrySelection={HandleCountrySelection}
+                                        SelectedCountry={formData.country}
+                                        is_null={emptyFields.includes('country')}
+                                        searchQuery={searchQuery} 
+                                        setSearchQuery ={setSearchQuery}
                                     />
                                     <InputBox placeholder='Zip Code' name='zipCode' value={formData.zipCode} onchange={HandleInputchange} is_null={emptyFields.includes('zipCode')} />
                                 </div>

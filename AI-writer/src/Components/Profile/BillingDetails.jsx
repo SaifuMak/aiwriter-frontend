@@ -3,13 +3,14 @@ import InputBox from '../ArticleGenerationComponents/SmallComponents/InputBox';
 import DropDown from '../ArticleGenerationComponents/SmallComponents/DropDown';
 import { countries } from 'countries-list';
 import GeneralLoader from '../GeneralComponets/Loaders/GeneralLoader';
+import SearchableDropdown from '../ArticleGenerationComponents/SmallComponents/SearchableDropdown';
 
-
-function BillingDetails({BillingDescription,setIsBillingDataEdited,ConfirmBillinginfo,isLoading=true ,formData, setFormData, setSelectedCountry, SelectedCountry,setIsCountyDropdownOpened, emptyFields, IsCountyDropdownOpened}) {
+function BillingDetails({ BillingDescription, setIsBillingDataEdited, ConfirmBillinginfo, isLoading = true, formData, setFormData, setSelectedCountry, SelectedCountry, setIsCountyDropdownOpened, emptyFields, IsCountyDropdownOpened }) {
     const OuterContainerInputBoxStyle = 'flex  w-full space-x-10'
 
+    const [searchQuery, setSearchQuery] = useState("");
 
-    
+
 
     const countryNames = Object.values(countries).map(country => country.name).sort((a, b) => a.localeCompare(b)); // Sort alphabetically;
 
@@ -39,6 +40,7 @@ function BillingDetails({BillingDescription,setIsBillingDataEdited,ConfirmBillin
 
         });
         setSelectedCountry(option)
+        setSearchQuery(option)
         setIsCountyDropdownOpened(false)
     }
 
@@ -66,14 +68,27 @@ function BillingDetails({BillingDescription,setIsBillingDataEdited,ConfirmBillin
 
 
                 <div className={OuterContainerInputBoxStyle}>
-                    <DropDown
+                    {/* <DropDown
                         options={countryNames}
                         Toggle={HandleCountrydropdown}
                         IsOpened={IsCountyDropdownOpened}
                         HandleCountrySelection={HandleCountrySelection}
                         SelectedCountry={formData.country}
                         is_null={emptyFields.includes('country')}
+                    /> */}
+
+                    <SearchableDropdown
+                        options={countryNames}
+                        Toggle={HandleCountrydropdown}
+                        IsOpened={IsCountyDropdownOpened}
+                        HandleCountrySelection={HandleCountrySelection}
+                        SelectedCountry={formData.country}
+                        is_null={emptyFields.includes('country')}
+                        searchQuery={searchQuery} 
+                        setSearchQuery ={setSearchQuery}
                     />
+
+                    
                     <InputBox placeholder='Zip Code' name='zipCode' value={formData.zipCode} onchange={HandleInputchange} is_null={emptyFields.includes('zipCode')} />
                 </div>
 
@@ -81,8 +96,6 @@ function BillingDetails({BillingDescription,setIsBillingDataEdited,ConfirmBillin
                 <div className={OuterContainerInputBoxStyle}>
                     <InputBox placeholder='Company' name='company' value={formData.company} onchange={HandleInputchange} is_null={emptyFields.includes('company')} />
                     <InputBox placeholder='VAT/Tax ID' name='taxId' value={formData.taxId} onchange={HandleInputchange} is_null={emptyFields.includes('taxId')} />
-
-
                 </div>
 
                 <div className={OuterContainerInputBoxStyle}>
@@ -94,7 +107,7 @@ function BillingDetails({BillingDescription,setIsBillingDataEdited,ConfirmBillin
             </div>
 
             <div className="mt-9 ">
-                <button onClick={ConfirmBillinginfo} className=" bg-[#44AA55] rounded-md flex justify-center items-center w-32 h-9 font-semibold text-white" disabled={isLoading}>{isLoading ? <GeneralLoader/> :'SAVE'} </button>
+                <button onClick={ConfirmBillinginfo} className=" bg-[#44AA55] rounded-md flex justify-center items-center w-32 h-9 font-semibold text-white" disabled={isLoading}>{isLoading ? <GeneralLoader /> : 'SAVE'} </button>
             </div>
 
 
