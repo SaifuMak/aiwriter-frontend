@@ -34,10 +34,6 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened, results }) {
 
 
 
-
-
-
-
   const getMenuStyle = (page) => {
     console.log(page, pageSelected, 'selected page, real selected  ')
     return page === pageSelected ? 'text-[#FB923C] bg-[#FFFFFF1A]' : 'text-white'

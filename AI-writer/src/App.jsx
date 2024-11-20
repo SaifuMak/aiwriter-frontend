@@ -30,7 +30,7 @@ import UserSettings from './Pages/UserSettings'
 import PaymentandBillingInfo from './Pages/PaymentandBillingInfo'
 import AddOnCredits from './Pages/AddOnCredits'
 import NoPageFound from './Pages/NoPageFound'
-
+import Admin from './Pages/Admin/Admin'
 
 function App() {
 
@@ -118,6 +118,10 @@ function App() {
 
               {<Route path='/buy-more-credits' element={<PrivateRoutes />}>
                 <Route index element={<AddOnCredits />} />
+              </Route>}
+
+              {<Route path='/admin-dashboard' element={<PrivateRoutes />}>
+                <Route index element={<Admin />} />
               </Route>}
               
               

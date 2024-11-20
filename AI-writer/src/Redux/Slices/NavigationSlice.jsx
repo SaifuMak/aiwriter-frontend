@@ -21,7 +21,8 @@ const NavigationSlice = createSlice({
 
         setIsSessionExpired(state, action){
             state.IsSessionExpired = action.payload
-        }
+        },
+       
    
        
     },

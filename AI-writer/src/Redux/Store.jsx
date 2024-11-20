@@ -8,6 +8,7 @@ import PlagiarismSlice from './Slices/PlagiarismSlice';
 import NavigationSlice from './Slices/NavigationSlice';
 import ArticleRewriterSlice from './Slices/ArticleRewriterSlice';
 import AssetsSlice from './Slices/AssetsSlice';
+import AdminSlice from './Slices/AdminSlice';
 import { combineReducers } from 'redux';
 
 
@@ -31,7 +32,8 @@ const rootReducer = combineReducers({
     SelectedTool : SelectedToolSlice,
     Navigation : NavigationSlice,
     ArticleRewriter : ArticleRewriterSlice,
-    Assets : AssetsSlice
+    Assets : AssetsSlice,
+    Adminslice : AdminSlice
     
 });
   
