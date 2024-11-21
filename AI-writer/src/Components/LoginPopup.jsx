@@ -74,6 +74,8 @@ function LoginPopup({ HandleCloseLoginPopup, setIsPayButtonClicked }) {
         setIsLoading(false)
 
     }
+
+    
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-55">
             <div className="relative bg-[#42515F] flex flex-col justify-center h-auto  max-sm:-mt-56  items-center py-8 sm:py-12 px-4 sm:px-10 rounded-md">

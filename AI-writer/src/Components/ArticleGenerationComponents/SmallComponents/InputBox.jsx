@@ -16,8 +16,6 @@ function InputBox({ placeholder, name, value, onchange, is_null, Is_check_passwo
      
       {(!IsPasswordStrong && !Is_password_null && Is_check_password) && <span className="absolute left-0 text-xs text-red-500 -bottom-9 2xl:-bottom-5 ">Password must be 8+ characters and contain letters and numbers.</span>} */}
 
-
-
     </div>
 
     {is_null && <span className="text-xs text-red-500 ">*This field is required</span>}

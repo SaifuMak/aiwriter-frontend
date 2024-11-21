@@ -32,6 +32,8 @@ import AddOnCredits from './Pages/AddOnCredits'
 import NoPageFound from './Pages/NoPageFound'
 import Admin from './Pages/Admin/Admin'
 
+import Testing from './Pages/Testing'
+
 function App() {
 
   return (
@@ -42,6 +44,11 @@ function App() {
           <Router>
 
             <Routes>
+
+            {<Route path='/testing' element={<UnrestrictedRoutes />}>
+                <Route index element={<Testing />} />
+              </Route>}
+              
 
 
               {/* <Route path="/" element={<Home />} /> */}

@@ -41,10 +41,10 @@ function Admin() {
     return (
         <>
             <AdminNavbar isFullWidth={true} isDashboard={false} />
-            <div className='flex items-center justify-center w-full '>
+            <div className='flex items-center justify-center w-full font-poppins '>
                 <div className="relative flex w-full ">
 
-                    <div className="2xl:w-[260px] w-2/12 min:h-screen  pt-6 2xl:pt-8 bg-[#213343]">
+                    <div className="2xl:w-[280px] w-2/12 min:h-screen  pt-6 2xl:pt-8 bg-[#213343]">
 
                         <AdminSidebar />
 
@@ -52,7 +52,7 @@ function Admin() {
 
                     <div className="w-10/12 ">
                         {currentPageOfAdmin === 'Dashboard' && <Dashboard />}
-                        {currentPageOfAdmin === 'Manage Users' && <UserList GetUsersList={GetUsersList} UsersData={UsersData} IsLoading={IsLoading}  />}
+                        {currentPageOfAdmin === 'Manage Users' && <UserList GetUsersList={GetUsersList} UsersData={UsersData} IsLoading={IsLoading} setIsLoading={setIsLoading}  />}
                         {currentPageOfAdmin === 'Settings' && <Settings />}
                         {currentPageOfAdmin === 'Moderators' && <Moderators />}
                         {currentPageOfAdmin === 'Dashboard' && <Dashboard />}
