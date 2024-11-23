@@ -51,13 +51,11 @@ function ArticleGeneration() {
     const [articleHTML, setArticleHTML] = useState('');
     const [isArticleGenerated, setisArticleGenerated] = useState(false)
 
-
     const [IsSidedbarOpened, setIsSidedbarOpened] = useState(false)
     const [IsMobileArticleSidebarOpened, setIsMobileArticleSidebarOpened] = useState(false)
 
     const [IsProfilePopup, setIsProfilePopup] = useState(false)
     const [tempTitle, setTempTitle] = useState('')
-
 
 
     // other  actions 
@@ -561,7 +559,6 @@ function ArticleGeneration() {
                     {(currentStep === 7) && <FinalArticle articleHTML={articleHTML} isArticleGenerated={isArticleGenerated} setisArticleGenerated={setisArticleGenerated} />}
 
                 </div>
-
 
                 {/* <Toaster position="bottom-right" /> */}
                 {/* <Toaster  /> */}

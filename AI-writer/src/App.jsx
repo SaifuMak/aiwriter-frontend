@@ -31,8 +31,8 @@ import PaymentandBillingInfo from './Pages/PaymentandBillingInfo'
 import AddOnCredits from './Pages/AddOnCredits'
 import NoPageFound from './Pages/NoPageFound'
 import Admin from './Pages/Admin/Admin'
-
 import Testing from './Pages/Testing'
+
 
 function App() {
 
@@ -49,8 +49,6 @@ function App() {
                 <Route index element={<Testing />} />
               </Route>}
               
-
-
               {/* <Route path="/" element={<Home />} /> */}
 
               {<Route path='/login' element={<PublicRoutes />}>
@@ -74,9 +72,7 @@ function App() {
                 <Route index element={<PaymentSuccessPage />} />
               </Route>}
 
-           
-
-              
+          
               {<Route path='/password-change' element={<PrivateRoutes />}>
                 <Route index element={<PasswordChange />} />
               </Route>}
@@ -130,6 +126,8 @@ function App() {
               {<Route path='/admin-dashboard' element={<PrivateRoutes />}>
                 <Route index element={<Admin />} />
               </Route>}
+
+            
               
               
               {/* <Route path="/login" element={<Login />} /> */}

@@ -2,20 +2,25 @@ import React from 'react'
 import AdminSidebar from '../../Components/Admin/AdminSidebar'
 import AdminNavbar from '../../Components/Admin/AdminNavbar'
 import Dashboard from '../../Components/Admin/Dashboard'
-import { useSelector } from 'react-redux'
 import UserList from '../../Components/Admin/UserList'
 import Settings from '../../Components/Admin/Settings'
 import Moderators from '../../Components/Admin/Moderators'
 import Subscriptions from '../../Components/Admin/Subscriptions'
 import { useEffect,useState } from 'react'
 import Axiosinstance from '../../Axios/Axiosinstance'
-
+import SessionExpiredPopup from '../../Components/ArticleGenerationComponents/SmallComponents/SessionExpiredPopup'
+import { HandleForbiddenGenericErrors } from '../../Utils/ErrorMessageHandler'
+import { useSelector, useDispatch } from 'react-redux'
+import OpacityLoader from '../../Components/GeneralComponets/Loaders/OpacityLoader'
 
 function Admin() {
+    const dispatch = useDispatch()
+    const { IsSessionExpired } = useSelector((state) => state.Navigation);
 
     const { currentPageOfAdmin } = useSelector(state => state.Adminslice);
 
     const [UsersData, setUsersData] = useState([])
+     const [SubscriptionsData, setSubscriptionsData] = useState([])
     const [IsLoading, setIsLoading] = useState(true)
 
 
@@ -24,15 +29,33 @@ function Admin() {
         try {
 
             const response = await Axiosinstance.get('app-admin/get-users-list')
-            console.log(response.data)
             setUsersData(response.data)
             setIsLoading(false)
         }
         catch (error){
             console.log(error)
             setIsLoading(false)
+            HandleForbiddenGenericErrors(error,dispatch)
 
         
+        }
+    }
+
+
+
+    const GetSubscriptionsListofUsers = async () => {
+
+        try {
+
+            const response = await Axiosinstance.get('app-admin/get-users-subscriptions')
+            console.log(response.data)
+            setSubscriptionsData(response.data)
+            setIsLoading(false)
+        }
+        catch (error){
+            console.log(error)
+            setIsLoading(false)
+            HandleForbiddenGenericErrors(error,dispatch)
         }
     }
 
@@ -44,7 +67,7 @@ function Admin() {
             <div className='flex items-center justify-center w-full font-poppins '>
                 <div className="relative flex w-full ">
 
-                    <div className="2xl:w-[280px] w-2/12 min:h-screen  pt-6 2xl:pt-8 bg-[#213343]">
+                    <div className=" w-2/12 min-h-screen  pt-6 2xl:pt-8 bg-[#213343]">
 
                         <AdminSidebar />
 
@@ -56,10 +79,12 @@ function Admin() {
                         {currentPageOfAdmin === 'Settings' && <Settings />}
                         {currentPageOfAdmin === 'Moderators' && <Moderators />}
                         {currentPageOfAdmin === 'Dashboard' && <Dashboard />}
-                        {currentPageOfAdmin === 'Subscriptions' && <Subscriptions />}
+                        {currentPageOfAdmin === 'Subscriptions' && <Subscriptions GetSubscriptionsListofUsers={GetSubscriptionsListofUsers} setIsLoading={setIsLoading} IsLoading={IsLoading} SubscriptionsData={SubscriptionsData} />}
                     </div>
                 </div>
             </div>
+          {IsSessionExpired &&   <SessionExpiredPopup/>}
+         {IsLoading && <OpacityLoader/> } 
         </>
     )
 }

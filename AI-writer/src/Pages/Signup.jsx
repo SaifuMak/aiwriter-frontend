@@ -277,6 +277,8 @@ function Signup() {
         setShowPlanLists(true)
     }
 
+
+
     // const HandleFillSelectedPlanDetails = (plan = selectedPlan) => {
 
     //     const selectedPlan = PricePlans[plan];
@@ -330,14 +332,15 @@ function Signup() {
                 };
             }
         }
-
         return PlanDetails
-
     }
+
+
 
     const handleChangePlanAlert = () => {
         setIsChangePlanAlert(false)
     }
+
 
 
     const HandlePlanSelection = (plan) => {
@@ -351,19 +354,16 @@ function Signup() {
         setselectedPreviousPlan(selectedPlan)
         setIsCustomPlanSelected(true)
         // HandleFillSelectedPlanDetails('CUSTOM')
-
     }
 
 
     const HandlePurchasedCustomPlan = () => {
-
         setselectedPlan('STARTER')
         setIsCustomPlanSelected(false)
         setShowPlanLists(true)
-
-
     }
 
+    
     const CustomPlanDisabled = () => {
         setselectedPlan(selectedPreviousPlan)
         // HandleFillSelectedPlanDetails(selectedPreviousPlan)
