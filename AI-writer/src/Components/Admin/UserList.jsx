@@ -3,15 +3,15 @@ import GeneralLoader from '../GeneralComponets/Loaders/GeneralLoader'
 import ManageUsers from './ManageUsers'
 import Axiosinstance from '../../Axios/Axiosinstance'
 import Dashboard from './Dashboard'
+import Pagination from '../GeneralComponets/Pagination'
 
-
-function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading }) {
+function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading, nextPage, prevPage, currentPage, TotalPages }) {
     const cellStyle = '2xl:py-4 text-center  py-2 px-4'
     const [IsUserDetailsPopup, setIsUserDetailsPopup] = useState(false)
     const [userDetails, setuserDetails] = useState(null)
     const [ShowUserDetails, setShowUserDetails] = useState(false)
     const [UserUpdated, setUserUpdated] = useState(false)
-    
+
 
     const TableColumns = ['ID', 'Name', 'Email', 'Country', 'Join date', 'Plan', 'Renewal date', 'Last login', 'View details']
 
@@ -43,7 +43,7 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading }) {
 
 
     useEffect(() => {
-        GetUsersList()
+        GetUsersList(currentPage)
     }, [UserUpdated])
 
 
@@ -101,7 +101,7 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading }) {
                     {IsLoading ? (
 
                         <div className="flex items-center justify-center h-screen ">
-                            <GeneralLoader isLoaderColor={true} LoaderSize='5xl' />
+                            {/* <GeneralLoader isLoaderColor={true} LoaderSize='5xl' /> */}
                         </div>
 
                     ) : (
@@ -120,13 +120,13 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading }) {
 
                                         <tr key={index} className="border-b hover:bg-stone-50">
                                             <td className={cellStyle}>{index + 1}</td>
-                                            <td className={cellStyle}>{user.name ? user.name : '_'}</td>
-                                            <td className={cellStyle}>{user.email ? user.email : '_'}</td>
-                                            <td className={cellStyle}>{user.details?.country ? user.details.country : '_'}</td>
-                                            <td className={cellStyle}>{user.subscriptions.length > 0 ? user.subscriptions[0].created_at : '_'}</td>
-                                            <td className={cellStyle}>{user.subscriptions.length > 0 ? user.subscriptions[0].name_of_plan : '_'}</td>
-                                            <td className={cellStyle}>{user.subscriptions.length > 0 ? user.subscriptions[0].renewal_date : '_'}</td>
-                                            <td className={cellStyle}>{user.last_login ? user.last_login : '_'}</td>
+                                            <td className={cellStyle}>{user.name ? user.name : 'N/A'}</td>
+                                            <td className={cellStyle}>{user.email ? user.email : 'N/A'}</td>
+                                            <td className={cellStyle}>{user.details?.country ? user.details.country : 'N/A'}</td>
+                                            <td className={cellStyle}>{user.subscriptions.length > 0 ? user.subscriptions[0].created_at : 'N/A'}</td>
+                                            <td className={cellStyle}>{user.subscriptions.length > 0 ? user.subscriptions[0].name_of_plan : 'N/A'}</td>
+                                            <td className={cellStyle}>{user.subscriptions.length > 0 ? user.subscriptions[0].renewal_date : 'N/A'}</td>
+                                            <td className={cellStyle}>{user.last_login ? user.last_login : 'N/A'}</td>
                                             <td onClick={() => GetUserDetails(user.email)} className='px-4 py-2 text-center cursor-pointer hover:underline 2xl:py-4 text-custom-dark-orange'>View details</td>
                                         </tr>
                                     ))}
@@ -136,10 +136,31 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading }) {
                             </table>
                         </div >
                     )
-
                     }
 
                     {/* {IsUserDetailsPopup && <ManageUsers userDetails={userDetails} formData={formData} ShowUserDetails={ShowUserDetails} />} */}
+
+
+
+                    <Pagination
+                        prevPage={prevPage}
+                        nextPage={nextPage}
+                        function_to_call={GetUsersList}
+                        currentPage={currentPage}
+                        TotalPages={TotalPages}
+                    />
+
+
+                    {/* <div className="flex justify-end px-8 mt-8 space-x-4 ">
+                        <div className="flex justify-between w-7/12">
+                            <div className="space-x-2 ">
+                                <button onClick={() => GetUsersList(prevPage)} disabled={prevPage < 1} className={`px-6 py-1 text-white rounded-md  ${prevPage > 0 ? ' bg-custom-dark-orange' : 'bg-custom-dark-orange opacity-40'} bg-custom-dark-orange `}>prev</button>
+
+                                <button onClick={() => GetUsersList(nextPage)} disabled={nextPage == 1} className={`px-6 py-1 text-white rounded-md ${nextPage ? ' bg-custom-dark-orange' : 'bg-custom-dark-orange opacity-40'} `}>next</button>
+                            </div>
+                            <p className="flex items-center justify-center ">page <span className="flex items-center justify-center px-2 mx-1 rounded-sm bg-slate-200">{currentPage} </span>  of {TotalPages}</p>
+                        </div>
+                    </div> */}
 
 
                 </div>

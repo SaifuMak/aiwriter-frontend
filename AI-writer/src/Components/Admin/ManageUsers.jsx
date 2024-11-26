@@ -54,7 +54,10 @@ function ManageUsers({ userDetails, formData, setIsUserDetailsPopup, setFormData
 
         try {
             const response = await Axiosinstance.post(`app-admin/user-details/${Email}`, formData)
+
             setUserUpdated(true)
+        setIsUserDetailsPopup(false)
+
 
         }
         catch (error) {
