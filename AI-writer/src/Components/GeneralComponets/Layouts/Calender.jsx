@@ -5,7 +5,6 @@ import 'react-calendar/dist/Calendar.css'; // Import the default styles
 
 function Calender({setDate,minDate}) {
 
-
     const handleDateChange = (date) => {
         // setDate(date.toDateString()); // Update the displayed date
         setDate(new Date(date))
