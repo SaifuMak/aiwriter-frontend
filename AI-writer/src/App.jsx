@@ -32,7 +32,8 @@ import AddOnCredits from './Pages/AddOnCredits'
 import NoPageFound from './Pages/NoPageFound'
 import Admin from './Pages/Admin/Admin'
 import Testing from './Pages/Testing'
-
+import History from './Pages/History'
+import PlagiarismHistory from './Components/PlagiarismHistory'
 
 function App() {
 
@@ -123,12 +124,20 @@ function App() {
                 <Route index element={<AddOnCredits />} />
               </Route>}
 
+              {<Route path='/saved-files' element={<PrivateRoutes />}>
+                <Route index element={<History />} />
+              </Route>}
+
               {<Route path='/admin-dashboard' element={<PrivateRoutes />}>
                 <Route index element={<Admin />} />
               </Route>}
 
+              {<Route path='/plagiarism-history' element={<PrivateRoutes />}>
+                <Route index element={<PlagiarismHistory />} />
+              </Route>}
+
             
-              
+                 
               
               {/* <Route path="/login" element={<Login />} /> */}
               

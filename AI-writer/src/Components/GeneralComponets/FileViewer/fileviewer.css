@@ -1,0 +1,91 @@
+.file-viewer-container .file-content {
+    line-height: 1.6 !important;
+    padding: 20px !important;
+  }
+
+.file-content {
+    line-height: 1.6 !important;
+    padding: 20px  !important;
+  }
+  
+  .file-content h1 {
+    /* color: #000;  */
+    font-weight: 500  !important;
+    font-size: 2.3rem  !important;
+    margin-bottom: 1rem;
+  }
+  
+  .file-content p {
+    /* color: #343434;  */
+    font-size: 18px;
+    margin-bottom: 1.2rem;
+  }
+  
+  .file-content h2 {
+    /* color: #000;  */
+    font-size: 1.6rem  !important;
+    margin-top: 3.5rem;
+    margin-bottom: 1rem  !important;
+  }
+  
+  .file-content h3 {
+    /* color: #000; */
+    font-size: 1.2rem  !important;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .file-content ul {
+    list-style: none; /* Remove default list styling */
+    padding: 0;
+    margin: 0;
+  }
+  
+  .file-content li {
+    position: relative;
+    padding-left: 1em;
+    margin-bottom: 1rem;
+    font-size: 18px;
+    /* color: #343434; */
+  }
+  
+  .file-content li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.4em;
+    height: 0.4em;
+    background-color: #FB923C; /* Custom bullet color */
+    border-radius: 50%;
+  }
+  
+  .file-content li span {
+    font-weight: 500;
+    color: #FB923C;
+  }
+  
+  .file-content pre{
+    background-color: #333; /* Black background for code */
+    color:  white; /* White text for contrast */
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-size: 16px;
+    margin: 20px 0;
+    display: block;
+  }
+  
+  .file-content code {
+    background-color: #333; /* Black background for code */
+    color:  white; /* White text for contrast */
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-size: 16px;
+    margin: 20px 0;
+    display: block;
+  }
+  
+  

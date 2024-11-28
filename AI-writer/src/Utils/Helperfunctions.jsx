@@ -9,6 +9,10 @@ export function countWords(text) {
     return  text.split(/\s+/).filter(Boolean).length;
 }
 
+export function truncateText(text,maxLength){
+    return text.slice(0,maxLength) + '...';
+}
+
 export  function truncateUrl(url,maxLength){
     const trimmedUrl = url.replace(/^https?:\/\//, '');
     if(trimmedUrl.length > maxLength){

@@ -116,7 +116,7 @@ function Admin() {
                 </div>
             </div>
             {IsSessionExpired && <SessionExpiredPopup />}
-            {IsLoading && <OpacityLoader />}
+            {/* {IsLoading && <OpacityLoader />} */}
         </>
     )
 }

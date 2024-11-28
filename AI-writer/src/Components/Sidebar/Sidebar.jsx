@@ -21,7 +21,7 @@ import { Link } from 'react-router-dom';
 import { BsCashCoin } from "react-icons/bs";
 
 
-function Sidebar({ setIsProfilePopup, setIsSidedbarOpened, results }) {
+function Sidebar({ setIsProfilePopup, IsLogoVisible= true, setIsSidedbarOpened, results }) {
 
 
 
@@ -90,7 +90,7 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened, results }) {
 
     <div className='flex flex-col items-center h-full px-2 py-16 space-y-12 md:py-10 md:space-y-10 xl:space-y-12 xl:px-4 bg-custom-dark'>
 
-      <section className='w-full border rounded-lg xl:py-2 border-custom-dark-orange border-opacity-60 ' >
+     {IsLogoVisible && ( <section className='w-full border rounded-lg xl:py-2 border-custom-dark-orange border-opacity-60 ' >
 
         <div className="w-32 mt-2 ml-1 xl:w-44 ">
           <Link to='/' className='cursor-pointer '>
@@ -98,7 +98,7 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened, results }) {
           </Link>
 
         </div>
-      </section>
+      </section>)}
 
       <section className="flex flex-col justify-start w-full space-y-1 ">
         <Link to='/' onClick={() => HandlePageChange('Home')} className='cursor-pointer '>
@@ -108,11 +108,14 @@ function Sidebar({ setIsProfilePopup, setIsSidedbarOpened, results }) {
           </div>
         </Link>
 
+        <Link to='/saved-files' onClick={() => HandlePageChange('History')} className='cursor-pointer '>
 
-        <div className='flex items-center  lg:text-base xl:text-base text-white space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer  hover:text-custom-dark-orange'>
+        <div className={`flex items-center  lg:text-base xl:text-base  space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer ${getMenuStyle('History')}  hover:text-custom-dark-orange`}>
           <AiOutlineFileSync className='' />
           <span className="">History</span>
         </div>
+        </Link>
+
 
 
         <Link to='/choose-article-writer' onClick={() => HandlePageChange('Article Writer')} className='cursor-pointer '>
