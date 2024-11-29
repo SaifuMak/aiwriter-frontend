@@ -5,6 +5,7 @@ const initialState = {
    selectedPage : 'Home',
    pageSelected : 'Home',
    IsSessionExpired : false,
+   HistoryTab : 'Article'
  
 
 };
@@ -23,11 +24,16 @@ const NavigationSlice = createSlice({
             state.IsSessionExpired = action.payload
         },
        
+
+        setHistoryTab(state, action){
+            state.HistoryTab = action.payload
+        },
+       
    
        
     },
 });
 
 
-export const {setSelectedPage,setIsSessionExpired} = NavigationSlice.actions;
+export const {setSelectedPage,setIsSessionExpired,setHistoryTab} = NavigationSlice.actions;
 export default NavigationSlice.reducer;

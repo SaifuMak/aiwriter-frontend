@@ -39,12 +39,6 @@ function Plagiarism() {
 
     // const { results, article } = useSelector((state) => state.Plagiarism);
 
-
-
-
-
-
-
     // This is the selected outlines  data 
     const [IsSidebarVisible, setIsSidebarVisible] = useState(false)
     const [SelectedFile, setSelectedFile] = useState(null)
@@ -132,6 +126,8 @@ function Plagiarism() {
         }
         fileInputRef.current.click(); // Trigger the file input when the button is clicked
     };
+
+
 
     const handleFileChange = (event) => {
         const file = event.target.files[0]; // Get the selected file
@@ -407,14 +403,12 @@ function Plagiarism() {
 
     // }, [Content, results, uniqueWordsArray]);
 
-
     function convertToHtmlFormat(text) {
         let htmlContent = text
             // Replace line breaks with <br>
             .replace(/\n/g, '<br>')
             // Replace two or more spaces with &nbsp;
             // .replace(/\s\s+/g, '&nbsp;&nbsp;');
-
         return htmlContent;
     }
 
@@ -468,29 +462,11 @@ function Plagiarism() {
 
 
 
-
-
-  
-
-    
-
-
-
-
-
     useEffect(() => {
         if (!Content || Isediting) return;
         const htmlText = convertToHtmlFormat(Content)
         const words = htmlText.split(/\s+/); // Split the article content by whitespace
-        // const words = htmlText.split(/(\s+|<br><br>)/);
-
-        // const cleanedContent = Content.replace(/<br\s*\/?>/g, ' <br> '); // Space around <br> to separate it from words
-
-        // // Split the cleaned content, keeping <br> as separate items
-        // const wordsAndBrTags = cleanedContent.split(/(\s+)/).filter(Boolean); // Filter to remove empty strings
-        // console.log(wordsAndBrTags, 'words and <br> tags *********'); // See the resulting array
-
-
+       
         let result = '';
         let matchBuffer = []; // Buffer to keep track of consecutive matching words
         let redWordCount = 0;
@@ -498,19 +474,15 @@ function Plagiarism() {
         words.forEach((word, index) => {
             // console.log(word, 'this is the list of words ');
             console.log(word, 'uncleaned *********')
-
             // Remove punctuation including both straight and curly apostrophes
             // const cleanedWord = word.toLowerCase().replace(/[.,!?'’]/g, '').trim();
             const cleanedWord = word.toLowerCase().replace(/[.,!?'’,)'′'`“”‘’`````]/g, '').replace(/<br\s*\/?>/g, '').trim();
             console.log(cleanedWord, 'cleaned ++')
 
-
-
             // console.log(cleanedWord, 'this is the cleaned word');
 
             if (uniqueWordsArray.includes(cleanedWord)) {
                 // console.log(cleanedWord, 'this word is plaigaiarised +++++  ');
-
                 // If the word is in uniqueWordsArray, add it to matchBuffer
                 matchBuffer.push(word);
                 // console.log(matchBuffer, 'this is buffer ')
@@ -646,7 +618,7 @@ function Plagiarism() {
 
 
 
-    
+
 
     const resultsRef = useRef(null);
 
@@ -669,6 +641,7 @@ function Plagiarism() {
         console.log(urls, 'these are the urls that got matched--------(((((((())))))))))))----------------- ')
         // setPlagiarisedUrl(prevUrls => [...prevUrls, ...urls])
        
+        
         setPlagiarisedUrl(prevUrls => {
             // Combine the previous URLs and new URLs
             const combinedUrls = [...prevUrls, ...urls];

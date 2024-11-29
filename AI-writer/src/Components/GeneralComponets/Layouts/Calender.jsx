@@ -2,7 +2,6 @@ import React,{useState} from 'react'
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'; // Import the default styles
 
-
 function Calender({setDate,minDate}) {
 
     const handleDateChange = (date) => {

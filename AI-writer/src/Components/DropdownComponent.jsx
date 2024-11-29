@@ -10,7 +10,7 @@ function DropdownComponent({ label, options, IsLabel = true, IsOpened, IsToolTip
     return (
         <div className={`relative  w-full ${IsDarkBackground ? 'mt-8' : ' mt-0'}`}>
            {IsLabel && <CustomToolTip title={ToolTipInfo}>
-                 <label className="inline-flex items-center mb-1 text-sm text-white lg:text-base xl:text-lg ">{label} {IsToolTip && <MdInfoOutline className='text-white ml-1 text-sm font-bold' />}</label>
+                 <label className="inline-flex items-center mb-1 text-sm text-white lg:text-base xl:text-lg ">{label} {IsToolTip && <MdInfoOutline className='ml-1 text-sm font-bold text-white' />}</label>
             </CustomToolTip>}
             <div
                 className={`relative w-full px-4 py-1.5 lg:py-2 xl:py-2.5 ${IsDarkBackground ? 'bg-[#42515F]' : 'bg-[#ffffff]'}  border border-custom-dark-orange border-opacity-55  rounded-md ${isActive ? 'cursor-pointer' : 'cursor-not-allowed'} `}
@@ -31,7 +31,7 @@ function DropdownComponent({ label, options, IsLabel = true, IsOpened, IsToolTip
                     {options.map((option, index) => (
                         <li
                             key={index}
-                            className={`block ${option === value  ? 'bg-custom-lighter-orange': '' } px-4 py-2 text-sm lg:text-base  ${IsDarkBackground ? 'hover:bg-[#455665] text-gray-300' : 'text-gray-900 hover:bg-stone-50'}  cursor-pointer  `}
+                            className={`block ${(option === value && IsDarkBackground)  ? 'bg-custom-lighter-orange': '' } px-4 py-2 text-sm lg:text-base  ${IsDarkBackground ? 'hover:bg-[#455665] text-gray-300' : 'text-gray-900 hover:bg-stone-50'}  cursor-pointer  `}
                             onClick={() => HandleSelection(option)}
                         >
                             {option}

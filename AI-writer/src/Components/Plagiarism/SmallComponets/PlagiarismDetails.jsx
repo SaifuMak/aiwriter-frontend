@@ -6,7 +6,7 @@ import { FindPercentage } from '../../../Utils/Helperfunctions'
 import { truncateUrl } from "../../../Utils/Helperfunctions";
 
 
-function PlagiarismDetails({ setPlagiarisedUrl, PlagiarisedUrl, PlagiarisedCount, wordsCount, PlagiarisedResult, setUniqueWordsCount, setPlagiarismWordsCount, setPlagiarismPercentage, setUniquePercentage }) {
+function PlagiarismDetails({ setPlagiarisedUrl, TruncateValue=40, PlagiarisedUrl, PlagiarisedCount, wordsCount, PlagiarisedResult, setUniqueWordsCount, setPlagiarismWordsCount, setPlagiarismPercentage, setUniquePercentage }) {
 
 
 
@@ -77,7 +77,7 @@ function PlagiarismDetails({ setPlagiarisedUrl, PlagiarisedUrl, PlagiarisedCount
 
                             <div className="flex w-11/12 ">
                                 <a href={data.url} target="_blank" rel="noopener noreferrer" className="ml-1 text-[#0176FF]">
-                                    {truncateUrl(data.url, 40)}
+                                    {truncateUrl(data.url, TruncateValue)}
                                 </a>
                             </div>
 
@@ -96,7 +96,7 @@ function PlagiarismDetails({ setPlagiarisedUrl, PlagiarisedUrl, PlagiarisedCount
                     {PlagiarisedUrl.length > 0 && (< div className="border border-[#FB923C] space-y-4 rounded-md p-3 mt-4   ">
                         
                         {PlagiarisedCount === 0 ? (
-                            <h2 className="font-semibold">We couldn't find an exact match for plagiarism in your uploaded article, but there are still similar contents found in the URLs listed above.</h2>
+                            <h2 className="font-semibold">We couldn't find an exact match for plagiarism in your uploaded article, but there are still similar contents found in the URLs listed below.</h2>
                         ) : (
                             <h2 className="font-semibold ">We've discovered similar content in the  URL(s) below. We encourage you to take a look at them! </h2>
                         )}
@@ -104,7 +104,7 @@ function PlagiarismDetails({ setPlagiarisedUrl, PlagiarisedUrl, PlagiarisedCount
                         {PlagiarisedUrl.length > 0 && PlagiarisedUrl.map((url, index) => (
                             <ul key={index} className="">
                                 <a href={url} target="_blank" rel="noopener noreferrer" className="ml-1  text-[#0176FF]  break-words">
-                                    {truncateUrl(url, 40)}
+                                    {truncateUrl(url, TruncateValue)}
                                 </a>
                             </ul>
 
