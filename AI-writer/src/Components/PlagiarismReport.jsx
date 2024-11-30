@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import AnimatedBackButton from './GeneralComponets/Buttons/AnimatedBackButton'
 import CircularPercentage from './ArticleGenerationComponents/SmallComponents/CircularPercentage'
 import { countWords, countCharacters, FindPercentage } from '../Utils/Helperfunctions'
 import PlagiarismDetails from './Plagiarism/SmallComponets/PlagiarismDetails'
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
+import { LuDownload } from "react-icons/lu";
+import { IoMdDownload } from "react-icons/io";
 
 
 function PlagiarismReport({ File, onClose }) {
@@ -64,7 +68,22 @@ function PlagiarismReport({ File, onClose }) {
         },
     ];
 
+    const contentRef = useRef();
 
+    const handleDownloadPdf = async () => {
+        const element = contentRef.current;
+        const canvas = await html2canvas(element);
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'px',
+            format: [canvas.width, canvas.height],
+        });
+        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+        pdf.save('document.pdf'); // Download the PDF
+    };
+
+    
 
     function convertToHtmlFormat(text) {
         let htmlContent = text
@@ -91,7 +110,6 @@ function PlagiarismReport({ File, onClose }) {
 
 
     useEffect(() => {
-
 
         const uniqueWordsSet = new Set();
 
@@ -224,57 +242,63 @@ function PlagiarismReport({ File, onClose }) {
     }, [results])
 
 
-
-
-
     return (
-        <div className='w-full min-h-screen py-10 px-28 lg:w-10/12'>
-            <AnimatedBackButton HandleGoBack={onClose} />
-
-            <div className="mb-6">
-                <h1 className="text-2xl font-semibold tracking-wider">
-                    Plagiarism  Report
-                </h1>
+        <div className='w-full min-h-screen mt-16 lg:w-10/12'>
+            <div className="flex items-center justify-between w-full px-28">
+                <AnimatedBackButton HandleGoBack={onClose} />
+                <div className="">
+                    <button onClick={handleDownloadPdf} className="flex items-center px-4 py-2 text-xl border rounded-lg border-custom-dark-orange bg-custom-lighter-orange hover:bg-custom-light-orange">Download<LuDownload className='ml-2 text-xl font-semibold'/></button>
+                </div>
             </div>
+            <div className="py-8 px-28">
 
-            <div className="grid grid-cols-3 gap-x-10 gap-y-4">
-                {data.map((item, index) => (
-                    <div key={index} className={OuterDivstyle}>
-                        {item.type === 'circular' ? (
-                            <CircularPercentage
-                                percentage={item.percentage}
-                                pathcolor={item.pathColor}
-                                textcolor={item.textColor}
-                            />
-                        ) : (
-                            <h4 className="mt-2 text-3xl font-semibold text-center text-custom-black-text">
-                                {item.value}
+                <div className="mb-6">
+                    <h1 className="text-2xl font-semibold tracking-wider">
+                        Plagiarism  Report
+                    </h1>
+                </div>
+
+                <div className="grid grid-cols-3 gap-x-10 gap-y-4">
+                    {data.map((item, index) => (
+                        <div key={index} className={OuterDivstyle}>
+                            {item.type === 'circular' ? (
+                                <CircularPercentage
+                                    percentage={item.percentage}
+                                    pathcolor={item.pathColor}
+                                    textcolor={item.textColor}
+                                />
+                            ) : (
+                                <h4 className="mt-2 text-3xl font-semibold text-center text-custom-dark-orange">
+                                    {item.value}
+                                </h4>
+                            )}
+                            <h4 className="mt-3 font-semibold text-center text-custom-black-text">
+                                {item.label}
                             </h4>
-                        )}
-                        <h4 className="mt-3 font-semibold text-center text-custom-black-text">
-                            {item.label}
-                        </h4>
-                    </div>
-                ))}
-            </div>
+                        </div>
+                    ))}
+                </div>
 
-            <div className='w-full  text-lg  max-h-[1000px] overflow-auto outline-none mt-10 p-6 rounded-lg  border border-slate-200'>
-                <h2 className="mb-10 text-2xl font-semibold">Content</h2>
-                <div
-                    className="prose focus:outline-none"
-                    suppressContentEditableWarning={true}
-                    dangerouslySetInnerHTML={{ __html: highlightedArticle }}
-                />
-            </div>
+                <div className='w-full  text-lg  max-h-[1000px] overflow-auto outline-none mt-10 p-6 rounded-lg  border border-slate-200'>
+                    <h2 className="mb-10 text-2xl font-semibold">Content</h2>
+                    <div
+                        className="prose focus:outline-none"
+                        suppressContentEditableWarning={true}
+                        dangerouslySetInnerHTML={{ __html: highlightedArticle }}
+                    />
+                </div>
 
-            <div className="w-full">
-                {PlagiarisedCount === 0 && PlagiarisedUrl.length === 0 ? (
-                    <div className="flex items-center justify-center w-full h-full mt-10 ">
-                        <p className="font-semibold tracking-wide text-center text-slate-500 ">Congratulations! Your content is authentic and does not contain any plagiarized material. Keep it up!</p>
-                    </div>
-                ) : (
-                    <PlagiarismDetails PlagiarisedUrl={PlagiarisedUrl} TruncateValue={120} setPlagiarisedUrl={setPlagiarisedUrl} PlagiarisedResult={results}   PlagiarisedCount={PlagiarisedCount}  />
-                )}
+
+                <div className="w-full">
+                    {PlagiarisedCount === 0 && PlagiarisedUrl.length === 0 ? (
+                        <div className="flex items-center justify-center w-full h-full mt-10 ">
+                            <p className="font-semibold tracking-wide text-center text-slate-500 ">Congratulations! Your content is authentic and does not contain any plagiarized material. Keep it up!</p>
+                        </div>
+                    ) : (
+                        <PlagiarismDetails PlagiarisedUrl={PlagiarisedUrl} TruncateValue={120} setPlagiarisedUrl={setPlagiarisedUrl} PlagiarisedResult={results} PlagiarisedCount={PlagiarisedCount} />
+                    )}
+
+                </div>
 
             </div>
         </div>

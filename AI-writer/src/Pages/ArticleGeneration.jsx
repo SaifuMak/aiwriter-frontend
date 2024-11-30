@@ -133,10 +133,6 @@ function ArticleGeneration() {
     }
 
 
-
-
-
-
     // api calls 
 
     const Regeneratekeywords = async () => {
@@ -152,7 +148,6 @@ function ArticleGeneration() {
         const data = {
             'topic': title,
         }
-
 
 
         try {
@@ -174,7 +169,6 @@ function ArticleGeneration() {
 
             if (keywordsArray.length < 4 || keywordsArray.length > 5) {
 
-               
                 setTimeout(() => {
                     dispatch(setLoading(false))
 
@@ -186,15 +180,12 @@ function ArticleGeneration() {
                 }, 2000);
             
             return
-
             
         }
-
             const UpdatedKeywords = [...keywordsArray, ...keywords]
             dispatch(setKeywords(UpdatedKeywords))
             dispatch(setCurrentStep(1))
             dispatch(setLoading(false))
-
         }
 
         catch (error) {
@@ -203,11 +194,6 @@ function ArticleGeneration() {
                 dispatch(setLoading(false))
             }, 500);
             HandleForbiddenGenericErrors(error, dispatch)
-
-            // setTimeout(() => {
-            // ErrorToast(error.response.data.error)
-
-            // }, 500);
 
         }
     }
@@ -219,7 +205,6 @@ function ArticleGeneration() {
     const Fetchkeywords = async () => {
 
         toast.dismiss()
-
 
         if (!title) {
             ErrorToast('Please enter a title to proceed.')
@@ -236,7 +221,6 @@ function ArticleGeneration() {
             dispatch(setTitle(tempTitle))
             dispatch(setRefTitle(tempTitle))
 
-
             try {
                 dispatch(setLoading(true))
                 const response = await Axiosinstance.post('api/generate-keywords', data)
@@ -246,10 +230,6 @@ function ArticleGeneration() {
                     ? articles.split('\n').map(item => item.replace(/^\d+\.\s*/, '').trim())
                     : [];
                 console.log(keywordsArray, 'keywordsArray ////////////////')
-
-                // console.log(keywords, 'keywords ////////////////')
-                // console.log(keywordsArray, 'keywords array  ////////////////')
-                // console.log(keywordsArray.length, 'keywords array length  ////////////////')
 
                 if (keywordsArray.length < 4 || keywordsArray.length > 5) {
 

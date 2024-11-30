@@ -14,10 +14,15 @@ import CustomToolTip from './ArticleGenerationComponents/SmallComponents/CustomT
 import DropdownComponent from './DropdownComponent';
 import _ from 'lodash';  // Import Lodash
 import ToggleButtton from './GeneralComponets/Buttons/ToggleButtton';
+import { useDispatch } from 'react-redux';
+import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler';
 
 
 
 function ArticleHistory() {
+
+    const dispatch = useDispatch()
+
     const [SavedFiles, setSavedFiles] = useState([])
     const [IsLoading, setIsLoading] = useState(true)
     const [VisibleFile, setVisibleFile] = useState('')
@@ -40,6 +45,7 @@ function ArticleHistory() {
     const Sortby = ['Show All', 'Bookmarked', 'Oldest First'];
 
     const cellStyle = '2xl:py-8   py-2 px-4'
+
 
     const fetchSavedFiles = async (page = 1, articleId = null) => {
         try {
@@ -70,6 +76,7 @@ function ArticleHistory() {
         }
         catch (error) {
             console.log(error)
+            HandleForbiddenGenericErrors(error,dispatch)
             setIsLoading(false)
         }
     }
@@ -91,6 +98,7 @@ function ArticleHistory() {
         }
         catch (error) {
             console.log(error)
+            HandleForbiddenGenericErrors(error,dispatch)
             ErrorToast(error.response.data.error)
             setIsTyping(false)
             setIsLoading(false)

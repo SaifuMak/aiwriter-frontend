@@ -8,12 +8,19 @@ import ToggleButtton from './GeneralComponets/Buttons/ToggleButtton';
 import DropdownComponent from './DropdownComponent';
 import CustomToolTip from './ArticleGenerationComponents/SmallComponents/CustomToolTip';
 import { FaRegBookmark } from "react-icons/fa";
+import { FaRegStar } from "react-icons/fa6";
 import PlagiarismReport from './PlagiarismReport';
+import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler';
+import { useDispatch } from 'react-redux';
+import SuccessToast from '../Utils/SuccessToast';
+
 
 
 function PlagiarismHistory() {
-    const Sortby = ['Show All', 'Bookmarked', 'Oldest First'];
 
+    const dispatch = useDispatch()
+
+    const Sortby = ['Show All', 'Bookmarked', 'Oldest First'];
     const cellStyle = '2xl:py-8   py-2 px-4'
 
     const [IsProfilePopup, setIsProfilePopup] = useState(false)
@@ -27,9 +34,9 @@ function PlagiarismHistory() {
     const [prevPage, setPrevPage] = useState(null); // Previous page URL
     const [currentPage, setCurrentPage] = useState(1)
     const [TotalPages, setTotalPages] = useState(null)
-
     const [SortByDropdown, setSortByDropdown] = useState(false)
     const [SelectedSortByOption, setSelectedSortByOption] = useState('')
+
 
 
     const handleToggleDropdown = () => {
@@ -50,14 +57,10 @@ function PlagiarismHistory() {
         setVisibleFile(file)
     }
 
-
     const fetchPlagairismHistory = async (page = 1) => {
-
         try {
 
-            const response = await Axiosinstance.get(`api/plagiarism-check-history?page=${page}`);
-
-            // const response = await Axiosinstance.get(`api/generated-files-history?page=${page}`)
+            const response = await Axiosinstance.get(`api/plagiarism-check-history?page=${page}&sortby=${SelectedSortByOption}`);
             setCurrentPage(page)
             const nextpage = getPageNumber(response.data.next)
             const previous = getPageNumber(response.data.previous)
@@ -70,17 +73,39 @@ function PlagiarismHistory() {
             setIsLoading(false)
         }
         catch (error) {
+            HandleForbiddenGenericErrors(error, dispatch)
             console.log(error)
             setIsLoading(false)
         }
     }
 
 
+    const HandleFavorite = async (Id) => {
+
+        toast.dismiss()
+
+        try {
+            const response = await Axiosinstance.post('api/toggle-plagiarism-report-favourite', { 'id': Id })
+            SuccessToast(response.data.message)
+            await fetchPlagairismHistory(currentPage)
+            setIsLoading(false)
+        }
+        catch (error) {
+            console.log(error)
+            HandleForbiddenGenericErrors(error, dispatch)
+
+            setIsLoading(false)
+        }
+    }
+
+
+
+
     useEffect(() => {
 
         fetchPlagairismHistory()
 
-    }, [])
+    }, [SelectedSortByOption])
 
 
 
@@ -138,10 +163,10 @@ function PlagiarismHistory() {
                                         <tr key={index} className="border-b ">
 
                                             <td onClick={() => HandleFavorite(file.id)} className='px-4 py-6 cursor-pointer 2xl:py-4'>
-                                                <CustomToolTip title={file.is_favourited ? 'Remove Bookmark' : 'Mark as Bookmark'} position='bottom'>
+                                                <CustomToolTip title={file.is_favourited ? 'Unfavourite' : 'Add to Favourites'} position='bottom'>
 
                                                     <span className="">
-                                                        <FaRegBookmark className={` ${file.is_favourited ? 'text-custom-dark-orange' : ''}`} />
+                                                        <FaRegStar className={` ${file.is_favourited ? 'text-custom-dark-orange' : ''}`} />
                                                     </span>
                                                 </CustomToolTip >
                                             </td>

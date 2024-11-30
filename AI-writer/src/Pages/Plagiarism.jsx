@@ -4,7 +4,6 @@ import Navbar from '../Components/Navbar/Navbar'
 import Sidebar from '../Components/Sidebar/Sidebar'
 import MobileSidebar from '../Components/Sidebar/MobileSidebar'
 
-
 import { Toaster, toast } from 'sonner';
 import { LuUploadCloud } from "react-icons/lu";
 import { RiDeleteBin7Line } from "react-icons/ri";
