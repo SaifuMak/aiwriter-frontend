@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import InputComponent from './SmallComponents/InputComponent';
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { ValidateAccountBillingForm } from '../../Utils/Validations';
@@ -7,15 +7,15 @@ import SuccessToast from '../../Utils/SuccessToast';
 import { Toaster, toast } from 'sonner';
 import Axiosinstance from '../../Axios/Axiosinstance';
 import { formControlClasses } from '@mui/material';
+import { useSelector } from 'react-redux';
 
+function ManageUsers({ userDetails, formData, setIsUserDetailsPopup, setFormData, setUserUpdated }) {
 
-
-function ManageUsers({ userDetails, formData, setIsUserDetailsPopup, setFormData,setUserUpdated }) {
-
+    const { Email } = useSelector(state => state.auth);
 
     const [Iseditable, setIseditable] = useState(false)
     const [HasAPlan, setHasAPlan] = useState(false)
-  const [Email, setEmail] = useState('')
+    const [email, setEmail] = useState('')
 
 
     const HandleGoBack = () => {
@@ -40,23 +40,22 @@ function ManageUsers({ userDetails, formData, setIsUserDetailsPopup, setFormData
     };
 
 
-
     const confirmUpdate = async () => {
 
         toast.dismiss()
-        
+
         const error = ValidateAccountBillingForm(formData)
         if (error) {
             ErrorToast(error)
             return
         }
-       
+
 
         try {
-            const response = await Axiosinstance.post(`app-admin/user-details/${Email}`, formData)
+            const response = await Axiosinstance.post(`app-admin/user-details/${email}`, formData)
 
             setUserUpdated(true)
-        setIsUserDetailsPopup(false)
+            setIsUserDetailsPopup(false)
 
 
         }
@@ -69,10 +68,42 @@ function ManageUsers({ userDetails, formData, setIsUserDetailsPopup, setFormData
     }
 
 
+
+    const ConfirmSuspension = async () => {
+
+        toast.dismiss()
+
+
+        if (!email) {
+            ErrorToast('Email is not provided')
+            return
+        }
+        const data = {
+            'email': email
+        }
+
+        try {
+            const response = await Axiosinstance.post(`app-admin/suspend-account`, data)
+            SuccessToast(response.data.message)
+
+            setTimeout(() => {
+                setIsUserDetailsPopup(false)
+                setUserUpdated(true)
+            }, 1000);
+
+        }
+        catch (error) {
+            ErrorToast(error.response.data.error)
+        }
+
+    }
+
+
+
     useEffect(() => {
         setEmail(formData.email)
     }, [])
-    
+
 
 
     return (
@@ -176,8 +207,12 @@ function ManageUsers({ userDetails, formData, setIsUserDetailsPopup, setFormData
                             </div>
                         </div>
 
-                        {!Iseditable && (<div className="flex justify-end ">
-                            <button className="bg-[#F20000] text-white w-36 h-9 rounded-md">suspend</button>
+                        {(!Iseditable && Email !== email) && (<div className="flex justify-end ">
+                            {formData.is_suspended ? (
+                                <button onClick={ConfirmSuspension} className="bg-[#44AA55] text-white w-36 h-9 rounded-md">Activate</button>
+                            ) : (
+                                <button onClick={ConfirmSuspension} className="bg-[#F20000] text-white w-36 h-9 rounded-md">suspend</button>
+                            )}
                         </div>)}
                     </div>
                 </div>

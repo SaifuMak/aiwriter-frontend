@@ -119,7 +119,6 @@ function App() {
                 <Route index element={<PaymentandBillingInfo />} />
               </Route>}
 
-
               {<Route path='/buy-more-credits' element={<PrivateRoutes />}>
                 <Route index element={<AddOnCredits />} />
               </Route>}
@@ -137,8 +136,7 @@ function App() {
               </Route>}
 
             
-                 
-              
+            
               {/* <Route path="/login" element={<Login />} /> */}
               
               {/* <Route path="/password-change" element={<PasswordChange />} /> */}

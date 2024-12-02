@@ -1,6 +1,4 @@
-import React, { useState,useEffect } from 'react'
-import Logo from '../assets/Images/Logo.png'
-import LongArrow from '../assets/Icons/LongArrow'
+import React, { useState, useEffect } from 'react'
 
 import Axiosinstance from '../Axios/Axiosinstance'
 import { FaEye } from "react-icons/fa";
@@ -12,8 +10,7 @@ import ErrorToast from '../Utils/ErrorToast';
 import { useNavigate, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import CompleteLogo from '../assets/Logo/CompleteLogo';
-import  GeneralLoader from  '../Components/GeneralComponets/Loaders/GeneralLoader'
-
+import GeneralLoader from '../Components/GeneralComponets/Loaders/GeneralLoader'
 
 
 function Login() {
@@ -22,13 +19,12 @@ function Login() {
 
     const { IsAuthenticated } = useSelector(state => state.auth);
 
-
     const [Email, setEmail] = useState('')
     const [Password, setPassword] = useState('')
     const [isPasswordVisible, setisPasswordVisible] = useState(false)
     const [IsLoading, setIsLoading] = useState(false)
 
-    
+
     const handleEmail = (e) => {
         setEmail(e.target.value.trim())
     }
@@ -40,6 +36,7 @@ function Login() {
     const togglePasswordVisible = () => {
         setisPasswordVisible(() => !isPasswordVisible)
     }
+
 
     const loginSubmit = async () => {
         toast.dismiss()
@@ -58,54 +55,26 @@ function Login() {
             const response = await Axiosinstance.post('api/login', data)
             dispatch(loginSuccess({}));
 
-
             SuccessToast('success')
 
             navigate('/')
             setIsLoading(false)
-            
+
         }
 
-        catch (error) {
-            setIsLoading(false)
 
-            ErrorToast('Incorrect email or password', true, true)
+        catch (error) {
+          
+            setIsLoading(false)
+            console.log(error.response.data)
+
+            ErrorToast(error.response.data.error, true, true)
 
         }
         console.log(Email, Password)
         setIsLoading(false)
 
     }
-
-    
-    // const GetLoginStatus = async () => {
-    //     try {
-    //         const response = await Axiosinstance.get('api/check_login_status')
-    //         SuccessToast('yes he has the cookie ')
-
-    //         // setEmail(response.data.email)
-    //         // setName(response.data.name)
-
-
-    //         //   dispatch(loginSuccess({ username, email }));
-
-    //         // setIsAuthenticated(true)
-    //     }
-
-    //     catch (error) {
-
-    //         console.log(error, '&&&&&&&&&&&&&')
-    //         //   dispatch(setLogout())
-    //         //   navigate('/login')
-
-
-    //     }
-    // }
-
-
-    
-  
-    
 
 
 
@@ -138,7 +107,7 @@ function Login() {
 
                     <input onChange={handlePassword} value={Password} type={isPasswordVisible ? 'text' : 'password'} className="p-1 mt-8 text-white focus:text-custom-dark-orange bg-transparent border-b border-white outline-none focus:border-custom-dark-orange transition duration-300 w-72 sm:w-[360px]" placeholder='Password' />
                 </div>
-                <button disabled={IsLoading} onClick={loginSubmit} className="w-full flex justify-center items-center h-10 mt-12 text-white rounded-md bg-custom-dark-orange ">{ IsLoading ? <GeneralLoader/> : 'Login'}</button>
+                <button disabled={IsLoading} onClick={loginSubmit} className="flex items-center justify-center w-full h-10 mt-12 text-white rounded-md bg-custom-dark-orange ">{IsLoading ? <GeneralLoader /> : 'Login'}</button>
 
                 <Link to='/forgot-password' className="mt-8 cursor-pointer text-custom-dark-orange ">Forgot password?</Link>
 

@@ -13,8 +13,8 @@ import SuccessToast from '../Utils/SuccessToast';
 import { useNavigate } from 'react-router-dom';
 import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler';
 import Popup from '../Components/ArticleGenerationComponents/SmallComponents/Popup'
-
-
+import Pagination from '../Components/GeneralComponets/Pagination';
+import { getPageNumber, getTotalPagesCount } from '../Utils/Helperfunctions';
 
 
 function PaymentandBillingInfo() {
@@ -22,8 +22,10 @@ function PaymentandBillingInfo() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const [nextPage, setNextPage] = useState(null);
-    const [previousPage, setPreviousPage] = useState(null);
+    const [nextPage, setNextPage] = useState(null); // Next page URL
+    const [prevPage, setPrevPage] = useState(null); // Previous page URL
+    const [currentPage, setCurrentPage] = useState(1)
+    const [TotalPages, setTotalPages] = useState(null)
 
     const TableColumns = ['Date', 'Invoice number', 'Item description', 'Amount', 'Download Invoice']
 
@@ -32,12 +34,11 @@ function PaymentandBillingInfo() {
     const [PaymentHistoryData, setPaymentHistoryData] = useState(null)
     const [IsTableLoading, setIsTableLoading] = useState(true)
     const [IsBillingLoading, setIsBillingLoading] = useState(false)
-
     const [isAddonPopup, setIsAddonPopup] = useState(false)
 
 
 
-    const { ArticleWords, PlagiarisedWords,AddOnArticleWords,AddOnPlagiarisedWords, PlanName, PlanAmount, PlanPurchasedDate, RenewalDate } = useSelector(state => state.Assets);
+    const { ArticleWords, PlagiarisedWords, AddOnArticleWords, AddOnPlagiarisedWords, PlanName, PlanAmount, PlanPurchasedDate, RenewalDate } = useSelector(state => state.Assets);
 
 
 
@@ -95,51 +96,16 @@ function PaymentandBillingInfo() {
 
         try {
             const response = await Axiosinstance.get(`payment/payment-history?page=${page}`)
-            if (response.data) {
-                setPaymentHistoryData(response.data.results)
+            setCurrentPage(page)
+            const nextpage = getPageNumber(response.data.next)
+            const previous = getPageNumber(response.data.previous)
+            setNextPage(nextpage)
+            setPrevPage(previous)
 
-                if (response.data.next) {
-                    // Parse the URL using the URL constructor
-                    const nextUrl = new URL(response.data.next);
+            const totalPages = getTotalPagesCount(response.data.count, 5)
+            setTotalPages(totalPages)
+            setPaymentHistoryData(response.data.results)
 
-                    // Extract the page parameter from the URL's query string
-                    const nextPageNumber = nextUrl.searchParams.get('page');
-                    console.log('Next page:', nextPageNumber);
-                    setNextPage(nextPageNumber)
-
-
-
-                    // Optionally, you can use this page number to update other state or UI
-                }
-
-                else {
-                    setNextPage(response.data.next)
-
-                }
-
-
-
-                if (response.data.previous) {
-                    // Parse the URL using the URL constructor
-                    const PrevUrl = new URL(response.data.previous);
-
-                    // Extract the page parameter from the URL's query string
-                    const prevPageNumber = PrevUrl.searchParams.get('page');
-
-                    console.log('prev page:', prevPageNumber);
-                    setPreviousPage(prevPageNumber)
-
-                    // Optionally, you can use this page number to update other state or UI
-                }
-                else {
-                    setPreviousPage(response.data.previous)
-                    console.log('prev page:', prevPageNumber);
-
-
-                }
-
-
-            }
             setIsTableLoading(false)
 
         }
@@ -248,13 +214,13 @@ function PaymentandBillingInfo() {
     }
 
 
-    const HandleAddonCreditsEligibility =  async() =>{
+    const HandleAddonCreditsEligibility = async () => {
         toast.dismiss()
-        try{
+        try {
             const response = await Axiosinstance.get('payment/add-on-credits')
             navigate('/buy-more-credits')
         }
-        catch(error){
+        catch (error) {
             setIsAddonPopup(true)
             HandleForbiddenGenericErrors(error)
 
@@ -306,12 +272,12 @@ function PaymentandBillingInfo() {
                                     <h6 className="text-xl font-semibold">Renewal Date:</h6>
                                     <p className="text-[#808080] text-lg">{RenewalDate}</p>
                                 </div>
-                                
+
                                 <div className="">
                                     {PlanAmount === 0 ? (
-                                   <Link to='/purchase-plan'><button className="px-4 py-1.5 font-semibold text-white rounded-md bg-custom-dark-orange">PURCHASE PLAN</button></Link> 
+                                        <Link to='/purchase-plan'><button className="px-4 py-1.5 font-semibold text-white rounded-md bg-custom-dark-orange">PURCHASE PLAN</button></Link>
 
-                                    ):(
+                                    ) : (
                                         <Link to='/purchase-plan'><button className="px-4 py-1.5 font-semibold text-white rounded-md bg-custom-dark-orange">UPGRADE NOW</button></Link>
 
                                     )}
@@ -329,11 +295,11 @@ function PaymentandBillingInfo() {
                                     <div className="flex ">
                                         <p className="w-1/2 ">Add-On Content Generation:  <span className="text-custom-dark-orange">{AddOnArticleWords} words</span></p>
                                         <p className="w-1/2 ml-4 ">Add-On Plagiarism Generation: <span className="text-custom-dark-orange">{AddOnPlagiarisedWords} words</span></p>
-                                    </div> 
+                                    </div>
                                 </div>
 
-                              {PlanAmount !== 0 && (<div className="">
-                                 <span onClick={HandleAddonCreditsEligibility} className="text-lg cursor-pointer hover:underline text-nowrap text-custom-dark-orange">Buy Addons</span>
+                                {PlanAmount !== 0 && (<div className="">
+                                    <Link to='/buy-more-credits' onClick={HandleAddonCreditsEligibility} className="text-lg cursor-pointer hover:underline text-nowrap text-custom-dark-orange">Buy Addons</Link>
                                 </div>)}
                             </div>
                         </div>
@@ -344,16 +310,13 @@ function PaymentandBillingInfo() {
                             <h5 className="text-2xl ">Payments History</h5>
                             <div className="mt-4">
                                 <Table TableColumns={TableColumns} PaymentHistoryData={PaymentHistoryData} IsTableLoading={IsTableLoading} isLoaderColor={true} LoaderSize='4xl' />
-                                <div className="flex justify-end w-full mt-2 ">
-                                    <div className="flex justify-between w-1/2">
-                                        {nextPage && <button onClick={() => getPaymentHistory(nextPage)} className="px-6 py-1 font-semibold text-white rounded-md bg-custom-dark-orange">Next</button>}
-                                        {previousPage && <button onClick={() => getPaymentHistory(previousPage)} className="px-6 py-1 font-semibold text-white rounded-md bg-custom-dark-orange">prev</button>}
-                                        {/* <div className="flex ">
-                                            <span className="">pages</span>
-                                            <p className="text-center "><span className="px-2 ml-2 text-center rounded-sm bg-slate-200">1</span> of 10</p>
-                                        </div> */}
-                                    </div>
-                                </div>
+                                {(!IsTableLoading && PaymentHistoryData.length > 0) && (<Pagination
+                                    prevPage={prevPage}
+                                    nextPage={nextPage}
+                                    function_to_call={getPaymentHistory}
+                                    currentPage={currentPage}
+                                    TotalPages={TotalPages}
+                                />)}
                             </div>
                         </div>
 
@@ -379,7 +342,7 @@ function PaymentandBillingInfo() {
 
         </>
 
-        
+
     )
 }
 

@@ -7,10 +7,12 @@ const Table = ({ TableColumns,isLoaderColor,LoaderSize, PaymentHistoryData, IsTa
     const cellStyle = '2xl:py-4  py-2 px-4  '
     console.log(PaymentHistoryData, '-----------------')
 
+
     return (
+
         <>
             {IsTableLoading ? (
-                <div className="flex justify-center items-center min-h-[380px]">
+                <div className={`flex justify-center items-center ${IsTableLoading && 'min-h-[380px]'}`}>
                     {/* Add a simple spinner or any other loader */}
                    <GeneralLoader isLoaderColor={isLoaderColor} LoaderSize={LoaderSize} />
                 </div>
@@ -18,7 +20,7 @@ const Table = ({ TableColumns,isLoaderColor,LoaderSize, PaymentHistoryData, IsTa
             ) : (
 
                 PaymentHistoryData ? (
-                    <div className="p-2 overflow-x-auto  0  min-h-[380px] " >
+                    <div className={`p-2 overflow-x-auto    ${IsTableLoading && 'min-h-[380px]'} `} >
                         <table className="min-w-full bg-white ">
                             <thead >
                                 <tr className="border-b border-slate-400">

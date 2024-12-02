@@ -5,6 +5,8 @@ import Axiosinstance from '../../Axios/Axiosinstance'
 import Dashboard from './Dashboard'
 import Pagination from '../GeneralComponets/Pagination'
 
+
+
 function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading, nextPage, prevPage, currentPage, TotalPages }) {
     const cellStyle = '2xl:py-4 text-center  py-2 px-4'
     const [IsUserDetailsPopup, setIsUserDetailsPopup] = useState(false)
@@ -21,6 +23,7 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading, nextPage, 
         email: '',
         name: '',
         last_login: '',
+        is_suspended: '',
         name_of_plan: '',
         words_count: '',
         plaigarism_words: '',
@@ -47,6 +50,8 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading, nextPage, 
     }, [UserUpdated])
 
 
+
+
     const GetUserDetails = async (email) => {
 
         setIsLoading(true)
@@ -58,10 +63,12 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading, nextPage, 
 
             const user = response.data
 
+            
             setFormData({
                 email: user.email ? user.email : '',
                 last_login: user.last_login ? user.last_login : '',
                 name: user.name ? user.name : '',
+                is_suspended: user.is_suspended ? user.is_suspended : '',
 
                 name_of_plan: user.subscriptions.length > 0 ? user.subscriptions[0].name_of_plan : '',
                 created_at: user.subscriptions.length > 0 ? user.subscriptions[0].created_at : '',
@@ -151,16 +158,6 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading, nextPage, 
                     />
 
 
-                    {/* <div className="flex justify-end px-8 mt-8 space-x-4 ">
-                        <div className="flex justify-between w-7/12">
-                            <div className="space-x-2 ">
-                                <button onClick={() => GetUsersList(prevPage)} disabled={prevPage < 1} className={`px-6 py-1 text-white rounded-md  ${prevPage > 0 ? ' bg-custom-dark-orange' : 'bg-custom-dark-orange opacity-40'} bg-custom-dark-orange `}>prev</button>
-
-                                <button onClick={() => GetUsersList(nextPage)} disabled={nextPage == 1} className={`px-6 py-1 text-white rounded-md ${nextPage ? ' bg-custom-dark-orange' : 'bg-custom-dark-orange opacity-40'} `}>next</button>
-                            </div>
-                            <p className="flex items-center justify-center ">page <span className="flex items-center justify-center px-2 mx-1 rounded-sm bg-slate-200">{currentPage} </span>  of {TotalPages}</p>
-                        </div>
-                    </div> */}
 
 
                 </div>

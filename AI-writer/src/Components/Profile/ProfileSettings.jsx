@@ -34,11 +34,12 @@ function ProfileSettings({HandleAddonCreditsEligibility}) {
 
 
             <div className="flex flex-col max-lg:text-sm items-center justify-center 2xl:px-10 px-6 text-center py-6 2xl:py-10 space-y-3 bg-[#F8F8F8]">
+              
                 <h6 className="font-semibold ">Your Credits:</h6>
-
                 <p className="">Content Generation: {ArticleWords} words</p>
                 <p className="">Plagiarism checker: {PlagiarisedWords} words</p>
                 <p className=" text-[#8C8888]">Renews: {RenewalDate}</p>
+
 
                 {PlanAmount === 0 ? (
               <Link to='/purchase-plan'><p className="underline cursor-pointer text-custom-dark-orange decoration-custom-dark-orange ">Purchase plan</p></Link>
@@ -47,7 +48,7 @@ function ProfileSettings({HandleAddonCreditsEligibility}) {
                     <div className="flex justify-between w-full ">
 
                         <p className="underline cursor-pointer text-custom-dark-orange decoration-custom-dark-orange ">Plan Details</p>
-                        <p onClick={HandleAddonCreditsEligibility} className="underline cursor-pointer text-custom-dark-orange decoration-custom-dark-orange ">Buy Addons</p>
+                        <Link to='/buy-more-credits' onClick={HandleAddonCreditsEligibility} className="underline cursor-pointer text-custom-dark-orange decoration-custom-dark-orange ">Buy Addons</Link>
                     </div>
 
                 )}
