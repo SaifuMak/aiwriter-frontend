@@ -10,8 +10,6 @@ import { Toaster, toast } from 'sonner';
 import { convertDate } from '../../Utils/Helperfunctions';
 
 
-
-
 function Subscriptions({ GetSubscriptionsListofUsers, IsLoading, SubscriptionsData, nextPage, prevPage, currentPage, TotalPages }) {
   const TableColumns = ['ID', 'Email', 'Plan', 'Amount', 'Payment date', 'Transaction ID', 'View invoice']
   const cellStyle = '2xl:py-4 text-center  py-2 px-4'
@@ -37,7 +35,7 @@ function Subscriptions({ GetSubscriptionsListofUsers, IsLoading, SubscriptionsDa
     const convertedFromDate = convertDate(new Date(FromDate))
     const convertedToDate = convertDate(new Date(ToDate))
 
-    GetSubscriptionsListofUsers(currentPage, convertedFromDate, convertedToDate)
+    GetSubscriptionsListofUsers(1, convertedFromDate, convertedToDate)
 
   }
 
@@ -106,6 +104,7 @@ function Subscriptions({ GetSubscriptionsListofUsers, IsLoading, SubscriptionsDa
 
   return (
     <div className="w-full mt-4 ">
+
       {IsLoading ? (
 
         <div className="flex items-center justify-center w-full ">
@@ -145,7 +144,7 @@ function Subscriptions({ GetSubscriptionsListofUsers, IsLoading, SubscriptionsDa
             </div>
           </div>
 
-          {FromDate && <p className="">from : {convertDate(new Date(FromDate))}</p>}
+          {/* {FromDate && <p className="">from : {convertDate(new Date(FromDate))}</p>} */}
 
 
           {SubscriptionsData.length > 0 ? (
@@ -188,15 +187,15 @@ function Subscriptions({ GetSubscriptionsListofUsers, IsLoading, SubscriptionsDa
                 currentPage={currentPage}
                 TotalPages={TotalPages}
               />
-
             </>
 
           ) : (
-            <div className="flex items-center justify-center w-full">
-              <h5 className="">No results found</h5>
+            <div className="flex items-center justify-center w-full h-screen">
+              <h5 className="-mt-64 text-3xl text-custom-dark">No results found</h5>
 
             </div>
           )}
+
         </div >
 
 

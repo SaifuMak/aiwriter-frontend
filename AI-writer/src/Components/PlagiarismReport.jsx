@@ -246,11 +246,11 @@ function PlagiarismReport({ File, onClose }) {
         <div className='w-full min-h-screen mt-16 lg:w-10/12'>
             <div className="flex items-center justify-between w-full px-28">
                 <AnimatedBackButton HandleGoBack={onClose} />
-                <div className="">
+                {/* <div className="">
                     <button onClick={handleDownloadPdf} className="flex items-center px-4 py-2 text-xl border rounded-lg border-custom-dark-orange bg-custom-lighter-orange hover:bg-custom-light-orange">Download<LuDownload className='ml-2 text-xl font-semibold'/></button>
-                </div>
+                </div> */}
             </div>
-            <div className="py-8 px-28">
+            <div ref={contentRef}  className="py-8 px-28">
 
                 <div className="mb-6">
                     <h1 className="text-2xl font-semibold tracking-wider">

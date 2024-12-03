@@ -15,7 +15,7 @@ import SuccessToast from '../Utils/SuccessToast';
 
 
 
-function PlagiarismHistory() {
+function PlagiarismHistory({handleToggle, SelectedTab}) {
 
     const dispatch = useDispatch()
 
@@ -108,7 +108,6 @@ function PlagiarismHistory() {
     }, [SelectedSortByOption])
 
 
-
     return (
         <>
             {VisibleFile ? (
@@ -119,7 +118,13 @@ function PlagiarismHistory() {
                 <div className="w-full h-screen px-6 py-10 md:px-8 xl:px-12 lg:w-10/12">
                     <div className="flex ">
                         <h2 className="text-3xl font-semibold tracking-wider text-custom-black-text">Saved Files</h2>
-                        <ToggleButtton />
+                      
+                        {/* <ToggleButtton /> */}
+                        <div className="flex p-1.5 ml-6 rounded-md  w-42 bg-custom-light-orange">
+                            <button onClick={() => handleToggle('Article')} className={`px-2 py-1  cursor-pointer tracking-wider ${SelectedTab === 'Article' ? 'bg-custom-dark-orange font-semibold text-white  rounded-md' : ''}   `}>Article</button>
+                            <button onClick={() => handleToggle('Plagiarism')} className={`px-2 py-1 cursor-pointer tracking-wider ${SelectedTab === 'Plagiarism' ? 'bg-custom-dark-orange font-semibold text-white  rounded-md' : ''}`}>Plagiarism</button>
+                        </div>
+                   
                     </div>
                     <div className="flex items-center justify-between w-full mt-10 space-x-20 ">
                         <div className="w-2/12">

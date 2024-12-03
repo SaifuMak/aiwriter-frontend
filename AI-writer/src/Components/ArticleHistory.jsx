@@ -17,7 +17,7 @@ import { useDispatch } from 'react-redux';
 import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler';
 
 
-function ArticleHistory() {
+function ArticleHistory({ handleToggle, SelectedTab }) {
 
     const dispatch = useDispatch()
 
@@ -37,7 +37,7 @@ function ArticleHistory() {
     const [suggestions, setSuggestions] = useState([]);
     const [IsTyping, setIsTyping] = useState(false)
 
-    
+
 
     const TableColumns = ['', 'Title', 'Type', 'Generated on', '']
     const Sortby = ['Show All', 'Bookmarked', 'Oldest First'];
@@ -47,7 +47,7 @@ function ArticleHistory() {
 
     const fetchSavedFiles = async (page = 1, articleId = null) => {
         try {
-           
+
 
             const response = await Axiosinstance.get(`api/generated-files-history?page=${page}&sortby=${SelectedSortByOption}`);
 
@@ -72,7 +72,7 @@ function ArticleHistory() {
         }
         catch (error) {
             console.log(error)
-            HandleForbiddenGenericErrors(error,dispatch)
+            HandleForbiddenGenericErrors(error, dispatch)
             setIsLoading(false)
         }
     }
@@ -94,7 +94,7 @@ function ArticleHistory() {
         }
         catch (error) {
             console.log(error)
-            HandleForbiddenGenericErrors(error,dispatch)
+            HandleForbiddenGenericErrors(error, dispatch)
             ErrorToast(error.response.data.error)
             setIsTyping(false)
             setIsLoading(false)
@@ -190,7 +190,13 @@ function ArticleHistory() {
                 <div className="w-full h-screen px-6 py-10 md:px-8 xl:px-12 lg:w-10/12">
                     <div className="flex ">
                         <h2 className="text-3xl font-semibold tracking-wider text-custom-black-text">Saved Files</h2>
-                        <ToggleButtton />
+                       
+                        {/* <ToggleButtton /> */}
+                        <div className="flex p-1.5 ml-6 rounded-md cursor-pointer w-42 bg-custom-light-orange">
+                            <button onClick={() => handleToggle('Article')} className={`px-2 py-1  tracking-wider ${SelectedTab === 'Article' ? 'bg-custom-dark-orange font-semibold text-white  rounded-md' : ''}   `}>Article</button>
+                            <button onClick={() => handleToggle('Plagiarism')} className={`px-2 py-1  tracking-wider ${SelectedTab === 'Plagiarism' ? 'bg-custom-dark-orange font-semibold text-white  rounded-md' : ''}`}>Plagiarism</button>
+                        </div>
+                  
                     </div>
                     <div className="flex items-center justify-between w-full mt-10 space-x-20 ">
                         <div className="w-2/12">
