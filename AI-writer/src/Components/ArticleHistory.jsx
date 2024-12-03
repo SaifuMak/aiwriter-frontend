@@ -47,9 +47,7 @@ function ArticleHistory() {
 
     const fetchSavedFiles = async (page = 1, articleId = null) => {
         try {
-            // let url = articleId
-            //     ? `api/generated-files-history?id=${articleId}`  // Fetch a specific article by ID
-            //     : `api/generated-files-history?page=${page}`;  // Fetch the paginated list of articles
+           
 
             const response = await Axiosinstance.get(`api/generated-files-history?page=${page}&sortby=${SelectedSortByOption}`);
 
