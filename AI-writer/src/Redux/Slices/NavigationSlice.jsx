@@ -5,10 +5,11 @@ const initialState = {
    selectedPage : 'Home',
    pageSelected : 'Home',
    IsSessionExpired : false,
-   HistoryTab : 'Article'
- 
+   HistoryTab : 'Article',
+   demo : 'demo'
 
 };
+
 
 
 const NavigationSlice = createSlice({
@@ -28,6 +29,12 @@ const NavigationSlice = createSlice({
         setHistoryTab(state, action){
             state.HistoryTab = action.payload
         },
+
+
+        setdemo(state, action){
+            state.demo = action.payload
+        },
+       
        
    
        

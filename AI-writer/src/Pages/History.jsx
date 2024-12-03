@@ -12,7 +12,7 @@ function History() {
     const { HistoryTab } = useSelector(state => state.Navigation);
     const { IsSessionExpired } = useSelector((state) => state.Navigation);
     const [IsProfilePopup, setIsProfilePopup] = useState(false)
-
+ 
     return (
         <>
            
