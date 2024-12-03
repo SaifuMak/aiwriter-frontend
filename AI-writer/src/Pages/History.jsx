@@ -24,13 +24,10 @@ import SessionExpiredPopup from '../Components/ArticleGenerationComponents/Small
 function History() {
     const { HistoryTab } = useSelector(state => state.Navigation);
     const { IsSessionExpired } = useSelector((state) => state.Navigation);
-
     const [IsProfilePopup, setIsProfilePopup] = useState(false)
-    
 
     return (
         <>
-            {/* <AdminNavbar isDashboard={false} isFullWidth={true} /> */}
             <div className="flex justify-center h-full font-poppins ">
                 <div className=" 2xl:w-2/12 lg:w-3/12 max-lg:hidden">
                     <Sidebar setIsProfilePopup={setIsProfilePopup} />
