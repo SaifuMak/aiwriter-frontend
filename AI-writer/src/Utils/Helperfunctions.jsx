@@ -1,6 +1,18 @@
 import { useDispatch, useSelector } from 'react-redux';
 import {resetArticleGeneration} from '../Redux/Slices/ArticleGenerationSlice'
 
+
+
+
+export const convertDate = (date) => {
+    // Convert date to YYYY-MM-DD format
+    // const formattedDate = date.toISOString().split('T')[0]; // "2024-12-02"
+    const formattedDate = date.toLocaleDateString('en-CA'); // "2024-12-02"
+    // Send the formatted date to Django
+   return formattedDate;
+  };
+
+
 export function countWords(text) {
     // return text.split(/\s+/).filter(Boolean).length; // Split by whitespace and filter out empty strings
     // const plainText = text.replace(/<[^>]+>/g, '');
