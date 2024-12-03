@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import Axiosinstance from '../Axios/Axiosinstance';
-import { FaRegBookmark } from "react-icons/fa";
 import { FaRegStar } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
 import OpacityLoader from './GeneralComponets/Loaders/OpacityLoader';
@@ -16,7 +15,6 @@ import _ from 'lodash';  // Import Lodash
 import ToggleButtton from './GeneralComponets/Buttons/ToggleButtton';
 import { useDispatch } from 'react-redux';
 import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler';
-
 
 
 function ArticleHistory() {

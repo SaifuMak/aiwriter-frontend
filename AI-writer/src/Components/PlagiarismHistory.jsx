@@ -7,7 +7,6 @@ import OpacityLoader from './GeneralComponets/Loaders/OpacityLoader';
 import ToggleButtton from './GeneralComponets/Buttons/ToggleButtton';
 import DropdownComponent from './DropdownComponent';
 import CustomToolTip from './ArticleGenerationComponents/SmallComponents/CustomToolTip';
-import { FaRegBookmark } from "react-icons/fa";
 import { FaRegStar } from "react-icons/fa6";
 import PlagiarismReport from './PlagiarismReport';
 import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler';
@@ -19,6 +18,7 @@ import SuccessToast from '../Utils/SuccessToast';
 function PlagiarismHistory() {
 
     const dispatch = useDispatch()
+
 
     const Sortby = ['Show All', 'Bookmarked', 'Oldest First'];
     const cellStyle = '2xl:py-8   py-2 px-4'

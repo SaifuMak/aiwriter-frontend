@@ -1,19 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import AdminNavbar from '../Components/Admin/AdminNavbar'
 import Sidebar from '../Components/Sidebar/Sidebar'
-// import Axiosinstance from '../Axios/Axiosinstance'
-// import { FaRegBookmark } from "react-icons/fa";
-// import { FaRegStar } from "react-icons/fa6";
-// import { RxCross2 } from "react-icons/rx";
-// import OpacityLoader from '../Components/GeneralComponets/Loaders/OpacityLoader';
-// import FileViewer from '../Components/GeneralComponets/FileViewer/FileViewer';
-// import { getPageNumber, getTotalPagesCount } from '../Utils/Helperfunctions';
-// import Pagination from '../Components/GeneralComponets/Pagination';
 import { Toaster, toast } from 'sonner';
-// import SuccessToast from '../Utils/SuccessToast';
-// import ErrorToast from '../Utils/ErrorToast';
-// import CustomToolTip from '../Components/ArticleGenerationComponents/SmallComponents/CustomToolTip';
-// import DropdownComponent from '../Components/DropdownComponent';
 import _ from 'lodash';  // Import Lodash
 import ArticleHistory from '../Components/ArticleHistory';
 import PlagiarismHistory from '../Components/PlagiarismHistory';
