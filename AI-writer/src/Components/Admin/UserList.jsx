@@ -15,7 +15,7 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading, nextPage, 
     const [UserUpdated, setUserUpdated] = useState(false)
 
 
-    const TableColumns = ['ID', 'Name', 'Email', 'Country', 'Join date', 'Plan', 'Renewal date', 'Last login', 'View details']
+    const TableColumns = [ 'Name', 'Email', 'Country', 'Join date', 'Plan', 'Renewal date', 'Last login', 'View details']
 
 
     const [formData, setFormData] = useState({
@@ -121,12 +121,13 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading, nextPage, 
                                         ))}
                                     </tr>
                                 </thead>
+
                                 <tbody>
                                     {/* Add multiple rows as needed */}
                                     {UsersData && UsersData.map((user, index) => (
 
                                         <tr key={index} className="border-b hover:bg-stone-50">
-                                            <td className={cellStyle}>{index + 1}</td>
+                                            {/* <td className={cellStyle}>{index + 1}</td> */}
                                             <td className={cellStyle}>{user.name ? user.name : 'N/A'}</td>
                                             <td className={cellStyle}>{user.email ? user.email : 'N/A'}</td>
                                             <td className={cellStyle}>{user.details?.country ? user.details.country : 'N/A'}</td>
@@ -137,7 +138,6 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading, nextPage, 
                                             <td onClick={() => GetUserDetails(user.email)} className='px-4 py-2 text-center cursor-pointer hover:underline 2xl:py-4 text-custom-dark-orange'>View details</td>
                                         </tr>
                                     ))}
-
 
                                 </tbody>
                             </table>

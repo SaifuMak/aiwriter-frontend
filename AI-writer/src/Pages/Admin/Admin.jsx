@@ -68,10 +68,10 @@ function Admin() {
     }
 
 
-    const GetSubscriptionsListofUsers = async (page = 1,fromDate=null, toDate=null) => {
+    const GetSubscriptionsListofUsers = async (page = 1,fromDate=null, toDate=null,search=null) => {
 
         try {
-            const response = await Axiosinstance.get(`app-admin/get-users-subscriptions?page=${page}&fromDate=${fromDate}&toDate=${toDate}`)
+            const response = await Axiosinstance.get(`app-admin/get-users-subscriptions?page=${page}&fromDate=${fromDate}&toDate=${toDate}&search=${search}`)
             console.log(response.data)
             const nextpage = getPageNumber(response.data.next)
             const previous = getPageNumber(response.data.previous)
