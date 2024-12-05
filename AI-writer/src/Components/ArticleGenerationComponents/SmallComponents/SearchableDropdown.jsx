@@ -49,14 +49,16 @@ function SearchableDropdown({ IsOpened, options, Toggle, HandleCountrySelection,
                 className={`relative w-full py-2  border-b border-slate-400  `}
                 onClick={Toggle}
             >
-                <input onChange={handleSearch} type="text" placeholder='search' value={SelectedCountry || searchQuery || ''} className=" outline-none w-full" />
+                <input onChange={handleSearch} type="text" placeholder='Country' value={SelectedCountry || searchQuery || ''} className="w-full outline-none " />
                 {/* <span className={`block text-sm lg:text-base ${SelectedCountry ? ' text-black' : 'text-slate-400'}   truncate`}>{SelectedCountry ? SelectedCountry : 'Country'}</span> */}
-                {SelectedCountry && <span onClick={handleCancelButton} className="absolute cursor-pointer inset-y-0  flex items-center right-10 text-custom-dark-orange font-semibold "><RxCross2 /></span>}
-                <span className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-2 pointer-events-none">
+                {SelectedCountry && <span onClick={handleCancelButton} className="absolute inset-y-0 flex items-center font-semibold cursor-pointer right-10 text-custom-dark-orange "><RxCross2 /></span>}
+                <span className="absolute inset-y-0 right-0 flex items-center pr-2 cursor-pointer pointer-events-none">
                     {/* {IsOpened ? (<MdKeyboardArrowUp className='text-2xl rotate-180 text-custom-dark-orange' />) : (< MdKeyboardArrowDown className='text-2xl rotate-180 text-custom-dark-orange' />)} */}
                     <MdKeyboardArrowDown className={`${IsOpened ? 'rotate-180' : 'rotate-0'} text-custom-dark-orange transition-transform duration-150  transform  text-2xl`} />
                 </span>
             </div>
+
+
 
             {IsOpened && (
                 <ul className="absolute left-0 right-0 z-10 py-2 mt-1 overflow-auto bg-white rounded-md shadow-md max-h-40 scrollbar-hide">

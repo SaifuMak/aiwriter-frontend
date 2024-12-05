@@ -9,6 +9,9 @@ import Axiosinstance from '../../Axios/Axiosinstance';
 import { formControlClasses } from '@mui/material';
 import { useSelector } from 'react-redux';
 
+
+
+
 function ManageUsers({ userDetails, formData, setIsUserDetailsPopup, setFormData, setUserUpdated }) {
 
     const { Email } = useSelector(state => state.auth);
@@ -56,11 +59,12 @@ function ManageUsers({ userDetails, formData, setIsUserDetailsPopup, setFormData
 
             setUserUpdated(true)
             setIsUserDetailsPopup(false)
-
-
+            
         }
         catch (error) {
             console.log(error)
+            ErrorToast(error.response.data.error)
+
         }
 
 

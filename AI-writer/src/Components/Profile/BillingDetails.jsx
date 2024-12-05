@@ -5,7 +5,7 @@ import { countries } from 'countries-list';
 import GeneralLoader from '../GeneralComponets/Loaders/GeneralLoader';
 import SearchableDropdown from '../ArticleGenerationComponents/SmallComponents/SearchableDropdown';
 
-function BillingDetails({ BillingDescription, setIsBillingDataEdited, ConfirmBillinginfo, isLoading = true, formData, setFormData, setSelectedCountry, SelectedCountry, setIsCountyDropdownOpened, emptyFields, IsCountyDropdownOpened }) {
+function BillingDetails({IsBold = false, BillingDescription, setIsBillingDataEdited, ConfirmBillinginfo, isLoading = true, formData, setFormData, setSelectedCountry, SelectedCountry, setIsCountyDropdownOpened, emptyFields, IsCountyDropdownOpened }) {
     const OuterContainerInputBoxStyle = 'flex  w-full space-x-10'
 
     const [searchQuery, setSearchQuery] = useState("");
@@ -48,7 +48,7 @@ function BillingDetails({ BillingDescription, setIsBillingDataEdited, ConfirmBil
         <div>
 
             <div className="">
-                <h2 className="text-2xl tracking-wide ">Billing Information</h2>
+                <h2 className={`text-2xl ${IsBold ? 'font-semibold': ''} tracking-wide `}>Billing Information</h2>
                 <p className="mt-3 ">{BillingDescription}</p>
             </div>
 
@@ -60,23 +60,16 @@ function BillingDetails({ BillingDescription, setIsBillingDataEdited, ConfirmBil
                     <InputBox placeholder='Last Name' name='lastName' value={formData.lastName} onchange={HandleInputchange} is_null={emptyFields.includes('lastName')} />
                 </div>
 
-
+{/* 
                 <div className={OuterContainerInputBoxStyle}>
                     <InputBox placeholder='City' name='city' value={formData.city} onchange={HandleInputchange} is_null={emptyFields.includes('city')} />
                     <InputBox placeholder='State/Suburb' name='state' value={formData.state} onchange={HandleInputchange} is_null={emptyFields.includes('state')} />
-                </div>
+                </div> */}
 
 
                 <div className={OuterContainerInputBoxStyle}>
-                    {/* <DropDown
-                        options={countryNames}
-                        Toggle={HandleCountrydropdown}
-                        IsOpened={IsCountyDropdownOpened}
-                        HandleCountrySelection={HandleCountrySelection}
-                        SelectedCountry={formData.country}
-                        is_null={emptyFields.includes('country')}
-                    /> */}
-
+                <InputBox placeholder='Address' name='address' value={formData.address} onchange={HandleInputchange} is_null={emptyFields.includes('address')} />
+                  
                     <SearchableDropdown
                         options={countryNames}
                         Toggle={HandleCountrydropdown}
@@ -84,15 +77,29 @@ function BillingDetails({ BillingDescription, setIsBillingDataEdited, ConfirmBil
                         HandleCountrySelection={HandleCountrySelection}
                         SelectedCountry={formData.country}
                         is_null={emptyFields.includes('country')}
-                        searchQuery={searchQuery} 
-                        setSearchQuery ={setSearchQuery}
+                        searchQuery={searchQuery}
+                        setSearchQuery={setSearchQuery}
                     />
-
-                    
-                    <InputBox placeholder='Zip Code' name='zipCode' value={formData.zipCode} onchange={HandleInputchange} is_null={emptyFields.includes('zipCode')} />
                 </div>
 
 
+                <div className={OuterContainerInputBoxStyle}>
+                    <InputBox placeholder='State/Suburb' name='state' value={formData.state} onchange={HandleInputchange} is_null={emptyFields.includes('state')} />
+                    <InputBox placeholder='City' name='city' value={formData.city} onchange={HandleInputchange} is_null={emptyFields.includes('city')} />
+                </div>
+
+
+                <div className={OuterContainerInputBoxStyle}>
+                    <InputBox placeholder='Zip Code' name='zipCode' value={formData.zipCode} onchange={HandleInputchange} is_null={emptyFields.includes('zipCode')} />
+                    <InputBox placeholder='Phone Number' name='phone_number' value={formData.phone_number} onchange={HandleInputchange} is_null={emptyFields.includes('phone_number')} />
+                </div>
+
+                <div className={OuterContainerInputBoxStyle}>
+                    <InputBox placeholder='Company' name='company' value={formData.company} onchange={HandleInputchange} is_null={emptyFields.includes('company')} />
+                    <InputBox placeholder='VAT/Tax ID' name='taxId' value={formData.taxId} onchange={HandleInputchange} is_null={emptyFields.includes('taxId')} />
+                </div>
+
+{/* 
                 <div className={OuterContainerInputBoxStyle}>
                     <InputBox placeholder='Company' name='company' value={formData.company} onchange={HandleInputchange} is_null={emptyFields.includes('company')} />
                     <InputBox placeholder='VAT/Tax ID' name='taxId' value={formData.taxId} onchange={HandleInputchange} is_null={emptyFields.includes('taxId')} />
@@ -103,14 +110,12 @@ function BillingDetails({ BillingDescription, setIsBillingDataEdited, ConfirmBil
 
                     <span className="w-1/2"></span>
 
-                </div>
+                </div> */}
             </div>
 
             <div className="mt-9 ">
                 <button onClick={ConfirmBillinginfo} className=" bg-[#44AA55] rounded-md flex justify-center items-center w-32 h-9 font-semibold text-white" disabled={isLoading}>{isLoading ? <GeneralLoader /> : 'SAVE'} </button>
             </div>
-
-
 
             <div className="flex items-center justify-center px-20 pt-10">
                 <p className="text-center  text-[#333333] text-sm">We respect your privacy. We store your data securely and used for accessing account

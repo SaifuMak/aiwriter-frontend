@@ -25,7 +25,7 @@ import PulseLoader from 'react-spinners/PulseLoader'
 import { FindPercentage } from '../Utils/Helperfunctions'
 
 import { setSelectedPage } from '../Redux/Slices/NavigationSlice'
-
+import ProfileDetails from '../Components/Profile/ProfileDetails'
 
 import './styles/plagiarism.css';
 
@@ -703,6 +703,7 @@ function Plagiarism() {
                     <Sidebar results={results} setIsProfilePopup={setIsProfilePopup} />
                 </div>
 
+
                 {IsSidebarVisible && (<div className="fixed inset-0 z-50 bg-black bg-opacity-75">
                     <div className="absolute top-0 left-0 w-8/12 h-screen max-w-xs bg-white shadow-lg lg:h-full">
                         <Sidebar />
@@ -714,6 +715,13 @@ function Plagiarism() {
                         </button>
                     </div>
                 </div>)}
+
+
+                
+                {IsProfilePopup && (
+                <ProfileDetails setIsProfilePopup={setIsProfilePopup} />
+            )}
+
 
 
 

@@ -36,7 +36,6 @@ function WriterStep() {
 
     const StateManagementOfArticleWriter = () => {
       
-
         if (ArticleWriterSelected !== FinalArticleWriterSelected) {
             dispatch(resetArticleGeneration())
             dispatch(setFinalArticleWriterSelected(ArticleWriterSelected))
@@ -52,10 +51,6 @@ function WriterStep() {
 
         }
     }
-
-    
-
-
 
 
 

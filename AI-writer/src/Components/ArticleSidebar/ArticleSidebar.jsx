@@ -322,6 +322,7 @@ function ArticleSidebar({ Label, handleBackButtonClick, HandleRewriteArticle, sh
                         value={selectedToneOfVoice}
                         HandleSelection={handleToneOfVoiceSelection}
                         isActive={currentStep < 8}
+                        
 
                     />
 
@@ -334,6 +335,7 @@ function ArticleSidebar({ Label, handleBackButtonClick, HandleRewriteArticle, sh
                         value={selectedPointOfView}
                         HandleSelection={handlePointOfViewSelection}
                         isActive={currentStep < 8}
+
                     />
 
 
@@ -357,6 +359,7 @@ function ArticleSidebar({ Label, handleBackButtonClick, HandleRewriteArticle, sh
                         value={QualityType}
                         HandleSelection={handleQualitySelection}
                         isActive={currentStep < 8}
+
                     />
 
 
@@ -371,6 +374,7 @@ function ArticleSidebar({ Label, handleBackButtonClick, HandleRewriteArticle, sh
                         value={selectedWordLimit}
                         HandleSelection={handleWordsCount}
                         isActive={currentStep < 8}
+
 
                     />)}
 
@@ -457,6 +461,7 @@ function ArticleSidebar({ Label, handleBackButtonClick, HandleRewriteArticle, sh
                         value={selectedToneOfVoiceArticleRewriter}
                         HandleSelection={handleToneOfVoiceForArticleRewriter}
                         isActive={true}
+
                     />
 
 
@@ -468,6 +473,7 @@ function ArticleSidebar({ Label, handleBackButtonClick, HandleRewriteArticle, sh
                         value={selectedPointOfViewArticleRewriter}
                         HandleSelection={handlePointOfViewForArticleRewriter}
                         isActive={true}
+
                     />
 
 
@@ -491,6 +497,7 @@ function ArticleSidebar({ Label, handleBackButtonClick, HandleRewriteArticle, sh
                         value={QualityType}
                         HandleSelection={handleQualitySelection}
                         isActive={true}
+
                     />
 
 
@@ -506,6 +513,7 @@ function ArticleSidebar({ Label, handleBackButtonClick, HandleRewriteArticle, sh
                         value={selectedWordlimitArticleRewriter}
                         HandleSelection={handleWordLimitArticleRewriter}
                         isActive={true}
+
 
                     />
 
@@ -552,15 +560,9 @@ function ArticleSidebar({ Label, handleBackButtonClick, HandleRewriteArticle, sh
                                 <RxDoubleArrowRight className='text-lg lg:text-2xl text-custom-dark-orange' />
                             </div>
                         </div>
-
                     </div>
-
-
-
                 </>
             )}
-
-
         </div>
     )
 }

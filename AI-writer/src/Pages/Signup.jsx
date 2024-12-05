@@ -46,7 +46,7 @@ import { ResetWordsCount } from '../Redux/Slices/AssetsSlice'
 // const stripePromise = loadStripe('pk_test_51QE1VQJN7jDpKSSQxJ8sJ6r7TRweKoTKY8bCwzwMRLmVTNenHhHFfi6QwDpS3I1raNNwo52VpQie8SrlDzx63Vjp00VIO5XxmF');
 
 import SearchableDropdown from '../Components/ArticleGenerationComponents/SmallComponents/SearchableDropdown'
-
+import BillingDetails from '../Components/Profile/BillingDetails'
 
 function Signup() {
     const [IsCountyDropdownOpened, setIsCountyDropdownOpened] = useState(false)
@@ -78,6 +78,13 @@ function Signup() {
     const [AmountDifferenceInPlan, setAmountDifferenceInPlan] = useState('')
 
 
+    const [IsBillingDataEdited, setIsBillingDataEdited] = useState(false)
+    const [IsBillingLoading, setIsBillingLoading] = useState(false)
+
+    const BillingDescription = 'These details will be used to provide invoices for your purchases. Please make sure you are entering right details.'
+
+
+
 
 
 
@@ -94,6 +101,7 @@ function Signup() {
         lastName: '',
         city: '',
         state: '',
+        address: '',
         country: '',
         zipCode: '',
         company: '',
@@ -136,11 +144,8 @@ function Signup() {
     const [IsPurchasedCustomPlanEditable, setIsPurchasedCustomPlanEditable] = useState(false)
     const [IsPurchasedCustomContentWordsEditable, setIsPurchasedCustomContentWordsEditable] = useState(false)
     const [IsPurchasedCustomPlagiarismWordsEditable, setIsPurchasedCustomPlagiarismWordsEditable] = useState(false)
-   
+
     const [searchQuery, setSearchQuery] = useState("");
-
-
-
 
     const dispatch = useDispatch()
 
@@ -363,7 +368,7 @@ function Signup() {
         setShowPlanLists(true)
     }
 
-    
+
     const CustomPlanDisabled = () => {
         setselectedPlan(selectedPreviousPlan)
         // HandleFillSelectedPlanDetails(selectedPreviousPlan)
@@ -378,10 +383,6 @@ function Signup() {
     const toggleConfirmPassword = () => {
         setIsConfirmPasswordVisible(!IsConfirmPasswordVisible)
     }
-
-
-
-
 
     const HandleOpenLoginPopup = () => {
         setIsPayButtonClicked(false)
@@ -401,20 +402,20 @@ function Signup() {
 
 
 
-    const HasAnAccount = () => {
-        setAction('login')
+    // const HasAnAccount = () => {
+    //     setAction('login')
 
-        setFormData({
-            ...formData,
-            email: '',
-            name: '',
-            password: '',
-            confirmPassword: '',
-            action: 'login'
+    //     setFormData({
+    //         ...formData,
+    //         email: '',
+    //         name: '',
+    //         password: '',
+    //         confirmPassword: '',
+    //         action: 'login'
 
-        });
-        setAlreadyHasAccount(true)
-    }
+    //     });
+    //     setAlreadyHasAccount(true)
+    // }
 
 
     const isPasswordStrong = (password) => {
@@ -425,6 +426,8 @@ function Signup() {
         // Test the password against the regex
         return strongPasswordRegex.test(password);
     };
+
+
 
     const handleClearInputs = () => {
         setFormData(prevFormData => {
@@ -462,6 +465,9 @@ function Signup() {
 
 
     const checkEmptyFields = (formData) => {
+
+        const NotMandotoryFields = ['company', 'taxId']
+
         if (!IsPayButtonClicked) {
             return
         }
@@ -469,7 +475,7 @@ function Signup() {
 
         Object.keys(formData).forEach((field) => {
 
-            if (formData[field] == null || typeof formData[field] !== 'string' || !formData[field].trim()) {
+            if ((formData[field] == null || typeof formData[field] !== 'string' || !formData[field].trim()) && !NotMandotoryFields.includes(field)) {
                 emptyFieldsArray.push(field);  // Push field name to the array if empty
             }
 
@@ -498,8 +504,9 @@ function Signup() {
 
             const email = response.data.email
             const username = response.data.name
+            const IsAdmin = response.data.is_staff
 
-            dispatch(loginSuccess({ username, email }));
+            dispatch(loginSuccess({ username, email,IsAdmin }));
             setFormData({
                 ...formData,
                 action: 'logged',
@@ -521,8 +528,7 @@ function Signup() {
         catch (error) {
             console.log(error, '&&&&&&&&&&&&&')
 
-            //   dispatch(setLogout())
-            //   navigate('/login')
+
             setIsCheckingAuthStatus(false)
         }
     }
@@ -559,13 +565,13 @@ function Signup() {
     }
 
 
-
-
     const GetBillingInfo = async (email = null) => {
 
         // const data ={
         //     'email' : Email
         // }
+
+
         try {
             const response = await Axiosinstance.get(`api/register-login-payment/${email}`,)
             const {
@@ -573,6 +579,7 @@ function Signup() {
                 lastName,
                 city,
                 state,
+                address,
                 country,
                 zipCode,
                 company,
@@ -587,6 +594,7 @@ function Signup() {
                 lastName,
                 city,
                 state,
+                address,
                 country,
                 zipCode,
                 company,
@@ -597,9 +605,6 @@ function Signup() {
         }
         catch (error) {
             console.log(error.response.data)
-
-
-
         }
 
     }
@@ -608,17 +613,19 @@ function Signup() {
 
     const SignupPayment = async () => {
 
-
         setIsPayButtonClicked(true)
 
         toast.dismiss()
 
-        checkEmptyFields(formData)
+        // checkEmptyFields(formData)
 
         const emptyFieldsArray = [];
 
+    
+        const NotMandotoryFields = ['company', 'taxId']
+
         Object.keys(formData).forEach((field) => {
-            console.log(field)
+            console.log(field, 'field name')
 
             if (formData.action === 'login' && (field === 'name' || field === 'confirmPassword')) {
                 return;  // Skip these fields
@@ -626,7 +633,7 @@ function Signup() {
             if (formData.action === 'logged' && (field === 'name' || field === 'confirmPassword' || field === 'email' || field === 'password')) {
                 return;  // Skip these fields
             }
-            if (!formData[field].trim()) {
+            if (!formData[field].trim() && !NotMandotoryFields.includes(field)) {
                 emptyFieldsArray.push(field);  // Push field name to the array if empty
             }
         });
@@ -658,7 +665,6 @@ function Signup() {
             return
         }
 
-
         console.log(formData)
 
         let email
@@ -670,8 +676,8 @@ function Signup() {
             email = Email
         }
 
+        // alert('ready to call api')
         setIsLoading(true)
-
 
 
         try {
@@ -679,15 +685,12 @@ function Signup() {
             await GetLoginStatus()
             // await handleStripePayment()
             HandlePayment()
-
         }
-
 
         catch (error) {
             await GetLoginStatus(false)
             ErrorToast(Object.values(error.response.data)[0][0])
             setIsLoading(false)
-
 
         }
     }
@@ -717,7 +720,6 @@ function Signup() {
             if (error) console.error('Stripe Checkout error');
             setIsChangePlanAlert(false)
 
-
         } catch (error) {
 
             setIsLoading(false)
@@ -733,11 +735,8 @@ function Signup() {
                 }
                 else {
                     ErrorToast(error.response.data.error)
-
                 }
-
             }
-
         }
     };
 
@@ -953,11 +952,7 @@ function Signup() {
                                             <InputBox placeholder='Password' name='password' value={formData.password} onchange={HandleInputchange} HandlePasswordVisibility={togglePassword} is_password={true} is_null={emptyFields.includes('password')} />
                                         </div>
 
-
-
-
                                         <p onClick={RevokeHasAnAccount} className="cursor-pointer text-custom-dark-orange">Create a new account? Sign Up</p>
-
 
                                     </div>
                                 </div>
@@ -997,14 +992,7 @@ function Signup() {
                             </div>)}
 
 
-                            <div className="">
-                                <h2 className="text-2xl font-semibold tracking-wide ">Billing Information</h2>
-                                <p className="mt-3 ">These details will be used to provide invoices for your purchases. Please make sure you are entering
-                                    right details.</p>
-                            </div>
-
-
-                            <div className="space-y-6 ">
+                            {/* <div className="space-y-6 ">
 
                                 <div className={OuterContainerInputBoxStyle}>
                                     <InputBox placeholder='First Name' name='firstName' value={formData.firstName} onchange={HandleInputchange} is_null={emptyFields.includes('firstName')} />
@@ -1013,21 +1001,7 @@ function Signup() {
 
 
                                 <div className={OuterContainerInputBoxStyle}>
-                                    <InputBox placeholder='City' name='city' value={formData.city} onchange={HandleInputchange} is_null={emptyFields.includes('city')} />
-                                    <InputBox placeholder='State/Suburb' name='state' value={formData.state} onchange={HandleInputchange} is_null={emptyFields.includes('state')} />
-                                </div>
-
-
-                                <div className={OuterContainerInputBoxStyle}>
-                                    {/* <DropDown
-                                        options={countryNames}
-                                        Toggle={HandleCountrydropdown}
-                                        IsOpened={IsCountyDropdownOpened}
-                                        HandleCountrySelection={HandleCountrySelection}
-                                        SelectedCountry={formData.country}
-                                        is_null={emptyFields.includes('country')}
-                                    /> */}
-
+                                    <InputBox placeholder='Address' name='address' value={formData.address} onchange={HandleInputchange} is_null={emptyFields.includes('address')} />
                                     <SearchableDropdown
                                         options={countryNames}
                                         Toggle={HandleCountrydropdown}
@@ -1035,32 +1009,34 @@ function Signup() {
                                         HandleCountrySelection={HandleCountrySelection}
                                         SelectedCountry={formData.country}
                                         is_null={emptyFields.includes('country')}
-                                        searchQuery={searchQuery} 
-                                        setSearchQuery ={setSearchQuery}
+                                        searchQuery={searchQuery}
+                                        setSearchQuery={setSearchQuery}
                                     />
-                                    <InputBox placeholder='Zip Code' name='zipCode' value={formData.zipCode} onchange={HandleInputchange} is_null={emptyFields.includes('zipCode')} />
                                 </div>
 
+
+                                <div className={OuterContainerInputBoxStyle}>
+                                    <InputBox placeholder='State/Suburb' name='state' value={formData.state} onchange={HandleInputchange} is_null={emptyFields.includes('state')} />
+                                    <InputBox placeholder='City' name='city' value={formData.city} onchange={HandleInputchange} is_null={emptyFields.includes('city')} />
+                                </div>
+
+
+                                <div className={OuterContainerInputBoxStyle}>
+                                    <InputBox placeholder='Zip Code' name='zipCode' value={formData.zipCode} onchange={HandleInputchange} is_null={emptyFields.includes('zipCode')} />
+                                    <InputBox placeholder='Phone Number' name='phone_number' value={formData.phone_number} onchange={HandleInputchange} is_null={emptyFields.includes('phone_number')} />
+                                </div>
 
                                 <div className={OuterContainerInputBoxStyle}>
                                     <InputBox placeholder='Company' name='company' value={formData.company} onchange={HandleInputchange} is_null={emptyFields.includes('company')} />
                                     <InputBox placeholder='VAT/Tax ID' name='taxId' value={formData.taxId} onchange={HandleInputchange} is_null={emptyFields.includes('taxId')} />
-
-
                                 </div>
+                            </div> */}
 
-                                <div className={OuterContainerInputBoxStyle}>
-                                    <InputBox placeholder='Phone Number' name='phone_number' value={formData.phone_number} onchange={HandleInputchange} is_null={emptyFields.includes('phone_number')} />
-
-                                    <span className="w-1/2"></span>
-
-                                </div>
+                            <div className="py-10 ">
+                                <BillingDetails IsBold={true}  setIsBillingDataEdited={setIsBillingDataEdited} ConfirmBillinginfo={SignupPayment} isLoading={IsLoading} BillingDescription={BillingDescription} formData={formData} setFormData={setFormData} setSelectedCountry={setSelectedCountry} SelectedCountry={SelectedCountry} setIsCountyDropdownOpened={setIsCountyDropdownOpened} emptyFields={emptyFields} IsCountyDropdownOpened={IsCountyDropdownOpened} />
                             </div>
 
-                            <div className="flex items-center justify-center px-20 pt-4">
-                                <p className="text-center  text-[#333333] text-sm">We respect your privacy. We store your data securely and used for accessing account
-                                    related information. You may also get promotional Emails from Sembytes.</p>
-                            </div>
+                           
                         </div>
 
                         <PaymentComponent

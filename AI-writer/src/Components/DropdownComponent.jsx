@@ -1,14 +1,16 @@
-import React from 'react'
+import React,{useEffect,useRef} from 'react'
 import { MdKeyboardArrowUp } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { MdInfoOutline } from "react-icons/md";
 import CustomToolTip from './ArticleGenerationComponents/SmallComponents/CustomToolTip';
 
-function DropdownComponent({ label, options, IsLabel = true, IsOpened, IsToolTip = false, IsDarkBackground = true, ToolTipInfo, value, ToggleAction, HandleSelection, isActive }) {
+                       
+function DropdownComponent({ label, options, IsLabel = true, IsOpened, IsToolTip = false, IsDarkBackground = true, ToolTipInfo, value, ToggleAction, HandleSelection, isActive}) {
 
-
+    
+      
     return (
-        <div className={`relative  w-full ${IsDarkBackground ? 'mt-8' : ' mt-0'}`}>
+        <div  className={`relative  w-full ${IsDarkBackground ? 'mt-8' : ' mt-0'}`}>
            {IsLabel && <CustomToolTip title={ToolTipInfo}>
                  <label className="inline-flex items-center mb-1 text-sm text-white lg:text-base xl:text-lg ">{label} {IsToolTip && <MdInfoOutline className='ml-1 text-sm font-bold text-white' />}</label>
             </CustomToolTip>}
@@ -26,12 +28,13 @@ function DropdownComponent({ label, options, IsLabel = true, IsOpened, IsToolTip
                     <MdKeyboardArrowDown className={`${IsOpened ? 'rotate-180' : 'rotate-0'} text-custom-dark-orange transition-transform duration-150  transform  text-2xl`} />
                 </span>
             </div>
+
             {IsOpened && (
-                <ul className={`absolute left-0 right-0 z-10 py-2 mt-1 overflow-auto  ${IsDarkBackground ? 'bg-[#42515F]' : 'bg-[#ffffff]'}  rounded-md shadow-lg max-h-40 scrollbar-hide`}>
+                <ul className={`absolute left-0 right-0 z-10   mt-1 overflow-auto  ${IsDarkBackground ? 'bg-[#42515F]' : 'bg-[#ffffff]'}  rounded-md shadow-lg max-h-40 scrollbar-hide`}>
                     {options.map((option, index) => (
                         <li
                             key={index}
-                            className={`block ${(option === value && IsDarkBackground)  ? 'bg-custom-lighter-orange': '' } px-4 py-2 text-sm lg:text-base  ${IsDarkBackground ? 'hover:bg-[#455665] text-gray-300' : 'text-gray-900 hover:bg-stone-50'}  cursor-pointer  `}
+                            className={`block ${(option === value && !IsDarkBackground)  ? ' bg-custom-light-orange ': '' } ${(option === value && IsDarkBackground)  ? '  bg-[#4c5c6a] text-white': '' } px-4 py-2 text-sm lg:text-base  ${(IsDarkBackground && option !== value ) ? 'hover:bg-[#4c5c6a] text-gray-300' : ' '}  ${(!IsDarkBackground && option !== value ) ? 'hover:bg-custom-light-orange ' : ' '}  cursor-pointer mt-1  `}
                             onClick={() => HandleSelection(option)}
                         >
                             {option}

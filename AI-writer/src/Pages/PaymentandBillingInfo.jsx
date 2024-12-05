@@ -56,6 +56,8 @@ function PaymentandBillingInfo() {
         lastName: '',
         city: '',
         state: '',
+        address: '',
+
         country: '',
         zipCode: '',
         company: '',
@@ -65,18 +67,17 @@ function PaymentandBillingInfo() {
     });
 
     const checkEmptyFields = (formData) => {
+        const NotMandotoryFields = ['company', 'taxId']
+
         // if (!IsPayButtonClicked) {
         //     return
         // }
         const emptyFieldsArray = [];
 
         Object.keys(formData).forEach((field) => {
-
-            if (formData[field] == null || typeof formData[field] !== 'string' || !formData[field].trim()) {
+            if ((formData[field] == null || typeof formData[field] !== 'string' || !formData[field].trim()) && !NotMandotoryFields.includes(field)) {
                 emptyFieldsArray.push(field);  // Push field name to the array if empty
             }
-
-
         });
 
 
@@ -123,11 +124,13 @@ function PaymentandBillingInfo() {
 
         try {
             const response = await Axiosinstance.get('payment/get-billing-details')
+
             const {
                 firstName,
                 lastName,
                 city,
                 state,
+                address,
                 country,
                 zipCode,
                 company,
@@ -142,6 +145,7 @@ function PaymentandBillingInfo() {
                 lastName,
                 city,
                 state,
+                address,
                 country,
                 zipCode,
                 company,
@@ -161,6 +165,8 @@ function PaymentandBillingInfo() {
 
 
     const ConfirmBillinginfo = async () => {
+        const NotMandotoryFields = ['company', 'taxId']
+
         toast.dismiss()
 
         if (!IsBillingDataEdited) {
@@ -175,7 +181,7 @@ function PaymentandBillingInfo() {
             console.log(field)
 
 
-            if (!formData[field].trim()) {
+            if (!formData[field].trim()  && !NotMandotoryFields.includes(field)) {
                 emptyFieldsArray.push(field);  // Push field name to the array if empty
             }
         });
@@ -265,12 +271,12 @@ function PaymentandBillingInfo() {
                         <div className="p-8 space-y-10 border rounded-lg border-slate-300">
                             <div className="flex justify-between ">
                                 <div className="">
-                                    <h6 className="text-xl font-semibold ">Your Plan:{PlanName}</h6>
-                                    <p className="text-[#808080] text-xl"><span className=" text-custom-dark-orange">${PlanAmount / 100}</span>/month</p>
+                                    <h6 className="text-xl font-semibold ">Your Plan:{PlanName ? PlanName : 'N/A'}</h6>
+                                    {PlanAmount !== 0 && (<p className="text-[#808080] text-xl"><span className=" text-custom-dark-orange">${PlanAmount / 100}</span>/month</p>)}
                                 </div>
                                 <div className="">
                                     <h6 className="text-xl font-semibold">Renewal Date:</h6>
-                                    <p className="text-[#808080] text-lg">{RenewalDate}</p>
+                                    <p className="text-[#808080] text-lg">{RenewalDate ? RenewalDate : ''}</p>
                                 </div>
 
                                 <div className="">
@@ -306,7 +312,7 @@ function PaymentandBillingInfo() {
 
 
 
-                        <div className="">
+                        {PaymentHistoryData && (<div className="">
                             <h5 className="text-2xl ">Payments History</h5>
                             <div className="mt-4">
                                 <Table TableColumns={TableColumns} PaymentHistoryData={PaymentHistoryData} IsTableLoading={IsTableLoading} isLoaderColor={true} LoaderSize='4xl' />
@@ -318,12 +324,11 @@ function PaymentandBillingInfo() {
                                     TotalPages={TotalPages}
                                 />)}
                             </div>
-                        </div>
+                        </div>)}
 
 
                         <div className="px-6 py-10 border rounded-lg border-slate-300">
                             <BillingDetails setIsBillingDataEdited={setIsBillingDataEdited} ConfirmBillinginfo={ConfirmBillinginfo} isLoading={IsBillingLoading} BillingDescription={BillingDescription} formData={formData} setFormData={setFormData} setSelectedCountry={setSelectedCountry} SelectedCountry={SelectedCountry} setIsCountyDropdownOpened={setIsCountyDropdownOpened} emptyFields={emptyFields} IsCountyDropdownOpened={IsCountyDropdownOpened} />
-
                         </div>
 
 

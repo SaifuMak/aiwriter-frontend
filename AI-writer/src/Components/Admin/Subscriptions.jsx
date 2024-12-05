@@ -11,10 +11,11 @@ import { convertDate } from '../../Utils/Helperfunctions';
 import { IoIosSearch } from "react-icons/io";
 import { debounce } from 'lodash'; // install lodash if needed
 
+
 function Subscriptions({ GetSubscriptionsListofUsers, IsLoading, SubscriptionsData, nextPage, prevPage, currentPage, TotalPages }) {
   const TableColumns = ['Email', 'Plan', 'Amount', 'Payment date', 'Transaction ID', 'View invoice']
-  const cellStyle = '2xl:py-4 text-center  py-2 px-4'
-
+  const cellStyle = '2xl:py-4 text-center py-0  xl:py-3 px-4'
+  
 
   const [FromDate, setFromDate] = useState(null)
   const [IsFromCalender, setIsFromCalender] = useState(false)

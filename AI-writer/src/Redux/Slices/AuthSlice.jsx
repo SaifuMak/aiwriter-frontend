@@ -7,11 +7,11 @@ const initialState = {
     IsAuthenticated: false,
     Username :'',
     Email:'',
+    IsAdmin : false,
     
     // Profile_img :profile
-    
-};
 
+};
 
 
 const AuthSlice = createSlice({
@@ -19,10 +19,12 @@ const AuthSlice = createSlice({
     initialState,
     
     reducers: {
+        
         loginSuccess(state,action) {
             state.IsAuthenticated = true;
             state.Username = action.payload.username;
             state.Email = action.payload.email;
+            state.IsAdmin = action.payload.is_staff;
         },
 
 
@@ -30,6 +32,7 @@ const AuthSlice = createSlice({
             state.IsAuthenticated = false;
             state.Username = '';
             state.Email = '';
+            state.IsAdmin = false;
            
         },
     }

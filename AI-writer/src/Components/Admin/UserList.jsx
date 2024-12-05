@@ -6,9 +6,8 @@ import Dashboard from './Dashboard'
 import Pagination from '../GeneralComponets/Pagination'
 
 
-
 function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading, nextPage, prevPage, currentPage, TotalPages }) {
-    const cellStyle = '2xl:py-4 text-center  py-2 px-4'
+    const cellStyle = '2xl:py-4 text-center py-0  xl:py-3 px-4'
     const [IsUserDetailsPopup, setIsUserDetailsPopup] = useState(false)
     const [userDetails, setuserDetails] = useState(null)
     const [ShowUserDetails, setShowUserDetails] = useState(false)

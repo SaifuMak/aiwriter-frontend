@@ -5,7 +5,7 @@ import { GrDocumentTime } from "react-icons/gr";
 import { LuFileEdit } from "react-icons/lu";
 import { GrUploadOption } from "react-icons/gr";
 import { IoMenuOutline } from "react-icons/io5";
-import { setWordsCount,setPlanDetails } from '../../Redux/Slices/AssetsSlice'
+import { setWordsCount, setPlanDetails } from '../../Redux/Slices/AssetsSlice'
 
 import CompleteLogo from '../../assets/Logo/CompleteLogo';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,22 +21,24 @@ import { Link } from 'react-router-dom';
 import { BsCashCoin } from "react-icons/bs";
 
 
-function Sidebar({ setIsProfilePopup, IsLogoVisible= true, setIsSidedbarOpened, results }) {
+function Sidebar({ setIsProfilePopup, IsLogoVisible = true, setIsSidedbarOpened, results }) {
 
 
 
   const dispatch = useDispatch()
   const { IsAuthenticated, Username, Email } = useSelector(state => state.auth);
   const { pageSelected } = useSelector(state => state.Navigation);
-  const { ArticleWords, PlagiarisedWords, PlanAmount,PlanName } = useSelector(state => state.Assets);
+  const { ArticleWords, PlagiarisedWords, PlanAmount, PlanName } = useSelector(state => state.Assets);
 
   const { IsRewriteArticleLoadingCompleted } = useSelector((state) => state.ArticleRewriter);
 
 
 
   const getMenuStyle = (page) => {
-    console.log(page, pageSelected, 'selected page, real selected  ')
-    return page === pageSelected ? 'text-[#FB923C] bg-[#FFFFFF1A]' : 'text-white'
+    if (page === pageSelected) {
+      // alert(page, 'this is the requested page')
+    }
+    return page === pageSelected ? 'text-[#FB923C] bg-[#FFFFFF1A] ' : 'text-white'
   }
 
   const HandlePageChange = (page) => {
@@ -90,7 +92,7 @@ function Sidebar({ setIsProfilePopup, IsLogoVisible= true, setIsSidedbarOpened, 
 
     <div className='flex flex-col items-center h-full px-2 py-16 space-y-12 md:py-10 md:space-y-10 xl:space-y-12 xl:px-4 bg-custom-dark'>
 
-     {IsLogoVisible && ( <section className='w-full border rounded-lg xl:py-2 border-custom-dark-orange border-opacity-60 ' >
+      {IsLogoVisible && (<section className='w-full border rounded-lg xl:py-2 border-custom-dark-orange border-opacity-60 ' >
 
         <div className="w-32 mt-2 ml-1 xl:w-44 ">
           <Link to='/' className='cursor-pointer '>
@@ -110,10 +112,10 @@ function Sidebar({ setIsProfilePopup, IsLogoVisible= true, setIsSidedbarOpened, 
 
         <Link to='/saved-files' onClick={() => HandlePageChange('History')} className='cursor-pointer '>
 
-        <div className={`flex items-center  lg:text-base xl:text-base  space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer ${getMenuStyle('History')}  hover:text-custom-dark-orange`}>
-          <AiOutlineFileSync className='' />
-          <span className="">History</span>
-        </div>
+          <div className={`flex items-center  lg:text-base xl:text-base  space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer ${getMenuStyle('History')}  hover:text-custom-dark-orange`}>
+            <AiOutlineFileSync className='' />
+            <span className="">History</span>
+          </div>
         </Link>
 
 
@@ -134,34 +136,39 @@ function Sidebar({ setIsProfilePopup, IsLogoVisible= true, setIsSidedbarOpened, 
           </div>
         </Link>
 
+        
+
 
 
         <Link to='/plagiarism-checker' onClick={() => HandlePageChange('Plagiarism Checker')} className='cursor-pointer '>
+          <div className={`flex items-center  lg:text-base xl:text-base  space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer ${getMenuStyle('Plagiarism Checker')}  hover:text-custom-dark-orange`}>
+            <LuFileEdit className='' />
+            <span className="">Plagiarism Checker</span>
+          </div>
+        </Link>
+
+
+        {/* <Link to='/plagiarism-checker' onClick={() => HandlePageChange('Plagiarism Checker')} className='cursor-pointer '>
 
           <div className={`flex items-center ${getMenuStyle('Plagiarism Checker')}   lg:text-base xl:text-base text-white space-x-1 xl:space-x-2 px-2 xl:px-4 xl:py-1.5 py-1 hover:bg-[#FFFFFF1A] duration-150 cursor-pointer  hover:text-custom-dark-orange`}>
             <MdOutlineDocumentScanner className='' />
             <span className="">Plagiarism Checker
             </span>
           </div>
-        </Link>
-
-        {/* <Link to='/plagiarism-checker'>
-          <div className={menustyle}>
-            <HiOutlineDocumentMagnifyingGlass className='' />
-            <span className="">Plagiarism Checker</span>
-          </div>
         </Link> */}
+
+
 
       </section>
 
 
       <section className="w-full px-2 py-5 space-y-2 border rounded-lg xl:space-y-4 xl:px-4 border-custom-dark-orange border-opacity-60 ">
-   
 
 
-      <div className="flex flex-col space-y-1 text-white">
+
+        <div className="flex flex-col space-y-1 text-white">
           <span className="font-medium ">Current Plan</span>
-          <span className="text-sm">{PlanName === 'Nil'? 'No Plan': PlanName}</span>
+          <span className="text-sm">{PlanName === 'Nil' ? 'No Plan' : PlanName}</span>
         </div>
 
 
@@ -193,8 +200,8 @@ function Sidebar({ setIsProfilePopup, IsLogoVisible= true, setIsSidedbarOpened, 
 
         <div onClick={() => setIsProfilePopup(true)} className="flex items-center justify-between px-2 cursor-pointer xl:px-4 ">
           <div className="flex items-center justify-center space-x-2">
-            <div className="flex items-center justify-center w-6 h-6 rounded-full max-lg:text-sm xl:w-8 xl:h-8 bg-custom-dark-orange">{Username? Username[0]: 'U'}</div>
-            <span className="text-base xl:text-lg">{Username}</span>
+            <div className="flex items-center justify-center w-6 h-6 rounded-full max-lg:text-sm xl:w-8 xl:h-8 bg-custom-dark-orange">{Username ? Username[0] : 'U'}</div>
+            <span className="text-base xl:text-lg ">{Username ? Username : 'N/A' }</span>
           </div>
 
           <IoMenuOutline className='text-3xl text-stone-200' />

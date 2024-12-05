@@ -42,8 +42,10 @@ function Home() {
 
       const email = response.data.email
       const username = response.data.name
+      const IsAdmin = response.data.is_staff
 
-      dispatch(loginSuccess({ username, email }));
+
+      dispatch(loginSuccess({ username, email, IsAdmin }));
 
       setLoading(false)
     }
