@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import GeneralLoader from '../GeneralComponets/Loaders/GeneralLoader'
 import ManageUsers from './ManageUsers'
 import Axiosinstance from '../../Axios/Axiosinstance'
-import Dashboard from './Dashboard'
 import Pagination from '../GeneralComponets/Pagination'
 
 
@@ -10,7 +9,6 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading, nextPage, 
     const cellStyle = '2xl:py-4 text-center py-0  xl:py-3 px-4'
     const [IsUserDetailsPopup, setIsUserDetailsPopup] = useState(false)
     const [userDetails, setuserDetails] = useState(null)
-    const [ShowUserDetails, setShowUserDetails] = useState(false)
     const [UserUpdated, setUserUpdated] = useState(false)
 
 
@@ -57,8 +55,6 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading, nextPage, 
 
         try {
             const response = await Axiosinstance.get(`app-admin/user-details/${email}`)
-            // setIsUserDetailsPopup(true)
-            // setuserDetails(user)
 
             const user = response.data
 
@@ -146,8 +142,6 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading, nextPage, 
 
                     {/* {IsUserDetailsPopup && <ManageUsers userDetails={userDetails} formData={formData} ShowUserDetails={ShowUserDetails} />} */}
 
-
-
                     <Pagination
                         prevPage={prevPage}
                         nextPage={nextPage}
@@ -156,19 +150,12 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading, nextPage, 
                         TotalPages={TotalPages}
                     />
 
-
-
-
                 </div>
             ) : (
                 <ManageUsers setUserUpdated={setUserUpdated} userDetails={userDetails} formData={formData} setIsUserDetailsPopup={setIsUserDetailsPopup} setFormData={setFormData} />
 
             )}
-
-
         </>
-
-
     )
 
 }

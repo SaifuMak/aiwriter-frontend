@@ -9,7 +9,6 @@ const initialState = {
     Email:'',
     IsAdmin : false,
     
-    // Profile_img :profile
 
 };
 
@@ -19,7 +18,7 @@ const AuthSlice = createSlice({
     initialState,
     
     reducers: {
-        
+
         loginSuccess(state,action) {
             state.IsAuthenticated = true;
             state.Username = action.payload.username;
@@ -29,10 +28,7 @@ const AuthSlice = createSlice({
 
 
         setLogout(state) {
-            state.IsAuthenticated = false;
-            state.Username = '';
-            state.Email = '';
-            state.IsAdmin = false;
+           return initialState;
            
         },
     }

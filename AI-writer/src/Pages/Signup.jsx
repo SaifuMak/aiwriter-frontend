@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import InputBox from '../Components/ArticleGenerationComponents/SmallComponents/InputBox'
-import stripeImg from '../assets/Images/stripe.png'
-import paypalImg from '../assets/Images/paypal.png'
-import DropDown from '../Components/ArticleGenerationComponents/SmallComponents/DropDown'
+// import stripeImg from '../assets/Images/stripe.png'
+// import paypalImg from '../assets/Images/paypal.png'
+// import DropDown from '../Components/ArticleGenerationComponents/SmallComponents/DropDown'
 import { countries } from 'countries-list';
-import { VscCheck } from "react-icons/vsc";
+// import { VscCheck } from "react-icons/vsc";
 import Axiosinstance from '../Axios/Axiosinstance'
 import { setLogout, loginSuccess } from '../Redux/Slices/AuthSlice'
 import { useDispatch, useSelector } from 'react-redux';
 
 import AdminNavbar from '../Components/Admin/AdminNavbar'
 
-import SuccessToast from '../Utils/SuccessToast';
+// import SuccessToast from '../Utils/SuccessToast';
 import ErrorToast from '../Utils/ErrorToast';
 
 import Skeleton from 'react-loading-skeleton'
@@ -21,17 +21,17 @@ import { Toaster, toast } from 'sonner';
 import LoginPopup from '../Components/LoginPopup'
 
 
-import PlanCards from '../Components/GeneralComponets/PlanCards'
+// import PlanCards from '../Components/GeneralComponets/PlanCards'
 
 import AccordianComponent from '../Components/GeneralComponets/AccordianComponent'
 
-import PayPalCheckout from '../Components/GeneralComponets/Payments/PayPalCheckout'
-import StripeCheckout from '../Components/GeneralComponets/Payments/StripeCheckout'
+// import PayPalCheckout from '../Components/GeneralComponets/Payments/PayPalCheckout'
+// import StripeCheckout from '../Components/GeneralComponets/Payments/StripeCheckout'
 import PaymentComponent from '../Components/GeneralComponets/Payments/PaymentComponent'
 
-import { LuLoader } from 'react-icons/lu'
+// import { LuLoader } from 'react-icons/lu'
 
-import { loadStripe } from '@stripe/stripe-js';
+// import { loadStripe } from '@stripe/stripe-js';
 
 import { LuLoader2 } from "react-icons/lu";
 
@@ -39,16 +39,22 @@ import { RxCross2 } from "react-icons/rx";
 
 import stripePromise from '../Stripe/Stripe'
 
-import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler'
+// import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler'
 import { getPlanDetails } from '../Utils/AuthService'
-import { setPlanDetails, setWordsCount } from '../Redux/Slices/AssetsSlice'
+// import { setPlanDetails, setWordsCount } from '../Redux/Slices/AssetsSlice'
 import { ResetWordsCount } from '../Redux/Slices/AssetsSlice'
 // const stripePromise = loadStripe('pk_test_51QE1VQJN7jDpKSSQxJ8sJ6r7TRweKoTKY8bCwzwMRLmVTNenHhHFfi6QwDpS3I1raNNwo52VpQie8SrlDzx63Vjp00VIO5XxmF');
 
-import SearchableDropdown from '../Components/ArticleGenerationComponents/SmallComponents/SearchableDropdown'
+// import SearchableDropdown from '../Components/ArticleGenerationComponents/SmallComponents/SearchableDropdown'
 import BillingDetails from '../Components/Profile/BillingDetails'
 
+import { useLocation } from 'react-router-dom'
+
+
+
+
 function Signup() {
+    const location = useLocation()
     const [IsCountyDropdownOpened, setIsCountyDropdownOpened] = useState(false)
     const [SelectedCountry, setSelectedCountry] = useState('')
     const [selectedPlan, setselectedPlan] = useState('')
@@ -63,7 +69,7 @@ function Signup() {
     const [IsPasswordVisible, setIsPasswordVisible] = useState(false)
     const [IsConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false)
 
-    const [IsPasswordNotMatching, setIsPasswordNotMatching] = useState(false)
+    // const [IsPasswordNotMatching, setIsPasswordNotMatching] = useState(false)
 
     const [IsLoginPopup, setIsLoginPopup] = useState(false)
 
@@ -96,7 +102,6 @@ function Signup() {
         name: '',
         password: '',
         confirmPassword: '',
-
         firstName: '',
         lastName: '',
         city: '',
@@ -112,16 +117,18 @@ function Signup() {
     });
 
 
+
     const HandleInputchange = (e) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
             [name]: value
         });
-
     }
 
 
+
+    
     const [Name, setName] = useState('')
     // const [Email, setEmail] = useState('')
     const [isCheckingAuthStatus, setIsCheckingAuthStatus] = useState(true)
@@ -149,10 +156,11 @@ function Signup() {
 
     const dispatch = useDispatch()
 
-
+    
 
     const PricePlans = {
         STARTER: {
+            Id: 'X1234A9',
             name: 'STARTER',
             price: '2',
             cardColor: '#D9E5F1',
@@ -165,7 +173,9 @@ function Signup() {
             ]
         },
 
+
         PROFESSIONAL: {
+            Id: 'Y5678B1',
             name: 'PROFESSIONAL',
             price: '29',
             cardColor: '#FFEFE9',
@@ -180,7 +190,9 @@ function Signup() {
             ]
         },
 
+        
         ENTERPRISE: {
+            Id: 'Z9012C3',
             name: 'ENTERPRISE',
             price: '99',
             cardColor: '#FFF2C9',
@@ -193,6 +205,7 @@ function Signup() {
                 'Buy Addons when needed'
             ]
         },
+
         CUSTOM: {
             name: 'CUSTOM',
             price: CustomPrice,
@@ -284,26 +297,6 @@ function Signup() {
 
 
 
-    // const HandleFillSelectedPlanDetails = (plan = selectedPlan) => {
-
-    //     const selectedPlan = PricePlans[plan];
-    //     console.log(selectedPlan, 'this is the selected plan----------')
-
-
-
-    //     if (selectedPlan) {
-    //         setSelectedPlanDetails({
-    //             PlanName: selectedPlan.name,
-    //             PlanPrice: selectedPlan.price,
-    //             PlanDetails: selectedPlan.description,
-    //             ContentWords: selectedPlan.ContentWords,
-    //             PlagWords: selectedPlan.PlagWords,
-    //         });
-    //     }
-
-    // }
-
-
     const GetSelectedPlanDetails = (Is_willing_to_change_plan) => {
 
         let PlanDetails = {}
@@ -311,7 +304,7 @@ function Signup() {
         if (selectedPlan) {
 
             const PlanSelected = PricePlans[selectedPlan];
-            console.log(PlanSelected, 'this is the selected plan----------')
+            // console.log(PlanSelected, 'this is the selected plan----------')
 
             if (selectedPlan !== 'CUSTOM') {
 
@@ -506,7 +499,7 @@ function Signup() {
             const username = response.data.name
             const IsAdmin = response.data.is_staff
 
-            dispatch(loginSuccess({ username, email,IsAdmin }));
+            dispatch(loginSuccess({ username, email, IsAdmin }));
             setFormData({
                 ...formData,
                 action: 'logged',
@@ -621,7 +614,7 @@ function Signup() {
 
         const emptyFieldsArray = [];
 
-    
+
         const NotMandotoryFields = ['company', 'taxId']
 
         Object.keys(formData).forEach((field) => {
@@ -665,6 +658,8 @@ function Signup() {
             return
         }
 
+
+
         console.log(formData)
 
         let email
@@ -675,6 +670,8 @@ function Signup() {
         else {
             email = Email
         }
+
+
 
         // alert('ready to call api')
         setIsLoading(true)
@@ -691,11 +688,8 @@ function Signup() {
             await GetLoginStatus(false)
             ErrorToast(Object.values(error.response.data)[0][0])
             setIsLoading(false)
-
         }
     }
-
-
 
 
     const handleStripePayment = async (Is_willing_to_change_plan = false) => {
@@ -741,6 +735,7 @@ function Signup() {
     };
 
 
+
     // user agreed to change the existing plan 
     const RetryStripePayment = () => {
         setIsLoading(true)
@@ -767,10 +762,6 @@ function Signup() {
 
 
 
-
-
-
-
     useEffect(() => {
         setCustomPrice(calculateCustomPrice())
         checkEmptyFields(formData)
@@ -785,10 +776,9 @@ function Signup() {
         getPlanDetails(dispatch, setNewPlanPurchased)
         getPlanDetails(dispatch, setNewPlanPurchased)
 
-
-
-
     }, [IsLoginPopup])
+
+
 
 
     useEffect(() => {
@@ -798,18 +788,62 @@ function Signup() {
                 setIsCustomPlanSelected(true)
                 setselectedPlan(PlanName)
                 setselectedPreviousPlan(PlanName)
-
             }
-
             setselectedPlan(PlanName)
             setselectedPreviousPlan(PlanName)
         }
         else {
-            setselectedPlan('STARTER')
-            setselectedPreviousPlan('STARTER')
-        }
+            const Queryurl = new URLSearchParams(location.search)
+            const plan_id = Queryurl.get('id')
+            console.log(plan_id, 'this is the plan ')
 
+            
+            if(plan_id){
+            
+               const foundPlan = Object.values(PricePlans).find((plan)=> plan_id === plan['Id']);
+               if (foundPlan) {
+                setselectedPlan(foundPlan.name); 
+                setselectedPreviousPlan(foundPlan.name); // Assuming you want both to be the same
+              } else {
+                setselectedPlan("STARTER"); // Default if no plan is found
+                setselectedPreviousPlan("STARTER");
+              }
+               
+            }
+            else{
+                setselectedPlan('STARTER')
+                setselectedPreviousPlan('STARTER')
+            }
+        }
+        
     }, [setNewPlanPurchased, NewPlanPurchased, PlanName])
+
+
+    // const Queryurl = new URLSearchParams(location.search)
+    // const plan_id = Queryurl.get('id')
+    // if(plan_id){
+    //     plan = PlanDetails
+
+    // }
+
+    // useEffect(() => {
+        
+    // const Queryurl = new URLSearchParams(location.search)
+    // const plan_id = Queryurl.get('id')
+    
+    // if(plan_id){
+    //    const foundPlan = Object.values(PricePlans).find((plan)=>plan_id === plan['Id']);
+    //    if (foundPlan) {
+    //     setselectedPlan(foundPlan.name); // Set the matched plan
+    //     setselectedPreviousPlan(foundPlan.name); // Assuming you want both to be the same
+    //   } else {
+    //     setselectedPlan("STARTER"); // Default if no plan is found
+    //     setselectedPreviousPlan("STARTER");
+    //   }
+       
+    // }
+       
+    // }, [])
 
 
 
@@ -1033,10 +1067,10 @@ function Signup() {
                             </div> */}
 
                             <div className="py-10 ">
-                                <BillingDetails IsBold={true}  setIsBillingDataEdited={setIsBillingDataEdited} ConfirmBillinginfo={SignupPayment} isLoading={IsLoading} BillingDescription={BillingDescription} formData={formData} setFormData={setFormData} setSelectedCountry={setSelectedCountry} SelectedCountry={SelectedCountry} setIsCountyDropdownOpened={setIsCountyDropdownOpened} emptyFields={emptyFields} IsCountyDropdownOpened={IsCountyDropdownOpened} />
+                                <BillingDetails IsBold={true} setIsBillingDataEdited={setIsBillingDataEdited} ConfirmBillinginfo={SignupPayment} isLoading={IsLoading} BillingDescription={BillingDescription} formData={formData} setFormData={setFormData} setSelectedCountry={setSelectedCountry} SelectedCountry={SelectedCountry} setIsCountyDropdownOpened={setIsCountyDropdownOpened} emptyFields={emptyFields} IsCountyDropdownOpened={IsCountyDropdownOpened} />
                             </div>
 
-                           
+
                         </div>
 
                         <PaymentComponent

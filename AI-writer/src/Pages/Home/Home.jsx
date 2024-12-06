@@ -28,22 +28,20 @@ function Home() {
 
 
   useEffect(() => {
+
     dispatch(setSelectedPage('Home'))
-
-
+    
   }, [])
-
 
 
   const GetLoginStatus = async () => {
     try {
       const response = await Axiosinstance.get('api/check_login_status')
 
-
       const email = response.data.email
       const username = response.data.name
       const IsAdmin = response.data.is_staff
-
+      console.log('called the check status---------------- ')
 
       dispatch(loginSuccess({ username, email, IsAdmin }));
 

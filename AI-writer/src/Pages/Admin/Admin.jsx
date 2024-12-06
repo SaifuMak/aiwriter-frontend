@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AdminSidebar from '../../Components/Admin/AdminSidebar'
 import AdminNavbar from '../../Components/Admin/AdminNavbar'
 import Dashboard from '../../Components/Admin/Dashboard'
@@ -14,12 +14,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import OpacityLoader from '../../Components/GeneralComponets/Loaders/OpacityLoader'
 import { getPageNumber } from '../../Utils/Helperfunctions'
 import { getTotalPagesCount } from '../../Utils/Helperfunctions'
-
+import { useNavigate } from 'react-router-dom'
 
 
 
 function Admin() {
+    
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const { IsSessionExpired } = useSelector((state) => state.Navigation);
 
     const { currentPageOfAdmin } = useSelector(state => state.Adminslice);
@@ -40,7 +42,27 @@ function Admin() {
     const [TotalPagesSubcriptionList, setTotalPagesSubcriptionList] = useState(null)
 
 
+    const GetLoginStatus = async () => {
+        try {
+          const response = await Axiosinstance.get('api/check_login_status')
     
+         
+          const IsAdmin = response.data.is_staff
+          
+          if(!IsAdmin){
+            navigate('/')
+          }
+          
+          setIsLoading(false)
+        }
+    
+        catch (error) {
+    
+            setIsLoading(false)
+    
+    
+        }
+      }
 
     const GetUsersList = async (page = 1) => {
         try {
@@ -92,6 +114,11 @@ function Admin() {
         }
     }
 
+
+    useEffect(() => {
+        GetLoginStatus()
+    }, [])
+    
 
 
     return (

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { VscCheck } from "react-icons/vsc";
 import { useDispatch, useSelector } from 'react-redux';
-import { setKeywords, setSelectedKeywordsRedux, setisManualKeywordsEnabled } from '../../Redux/Slices/ArticleGenerationSlice'
+import { setSelectedKeywordsRedux, setisManualKeywordsEnabled } from '../../Redux/Slices/ArticleGenerationSlice'
 import { Switch, FormControlLabel } from '@mui/material';
 import { Toaster, toast } from 'sonner';
 import { LuRefreshCcw } from "react-icons/lu";
@@ -12,45 +12,20 @@ function KeywordsForArticle({ handleSidebarOptionsVisible, Regeneratekeywords, s
 
 
     const dispatch = useDispatch()
-    const [isOn, setIsOn] = useState(false);
-    const [selectedTopic, setselectedTopic] = useState('')
-    // const [SelectedKeywords, setSelectedKeywords] = useState([])
     const { keywords, selectedKeywords, isManualKeywordsEnabled } = useSelector((state) => state.articleGeneration);
 
 
-    const DataStyle = 'px-4   xl:text-base text-sm py-6 xl:py-8 border-b w-1/4  text-center'
-    const TableHeading = ['Keyword', 'Search Volume']
+    const DataStyle = 'px-4   xl:text-base text-sm py-6 xl:py-8 border-b w-1/4'
+    const TableHeading = ['Keywords']
 
     const handleToggle = () => {
         dispatch(setisManualKeywordsEnabled())
     };
 
 
-    console.log(keywords, '-----------keyword comp------------------')
 
 
 
-    // const handleSelection = (data) => {
-    //     const reduxKeywordsArray = selectedKeywords
-    //     ? selectedKeywords.split(', ').filter(Boolean) // Filter out empty strings
-    //     : [];
-
-    //   setSelectedKeywords((prev) => {
-    //     // Combine local and Redux keywords into one array
-    //     const combinedKeywords = [...reduxKeywordsArray, ...prev];
-
-    //         const updatedKeywords = combinedKeywords.includes(data)
-    //             ? combinedKeywords.filter(item => item !== data) // Remove the keyword if it already exists
-    //             : [...combinedKeywords, data]; // Add the keyword if it does not exist
-
-    //         // Dispatch the action with the updated array
-    //         const keywordsString = updatedKeywords.join(', ');
-
-    //         // Dispatch the action with the formatted string
-    //         dispatch(setSelectedKeywordsRedux(keywordsString));
-    //         return updatedKeywords;
-    //     });
-    // };
 
     const handleSelection = (data) => {
         // Split the existing Redux keywords string into an array
@@ -77,9 +52,9 @@ function KeywordsForArticle({ handleSidebarOptionsVisible, Regeneratekeywords, s
         <div className="w-full px-4 py-10 space-y-4 xl:px-16">
             <div className="flex items-center justify-between ">
                 <h2 className="text-lg lg:text-2xl xl:text-2xl">Choose keywords for your Article</h2>
-                <div className="flex items-center px-6 py-2 space-x-4 border shadow-md rounded-2xl border-custom-dark-orange">
+                <div className="flex items-center w-[380px] md:w-[350px] max-lg:text-sm 2xl:w-[400px] px-4 py-2 space-x-4 border shadow-md rounded-2xl border-custom-dark-orange">
 
-                    <span className="text-lg lg:text-xl xl:text-xl text-custom-black-text ">Enter Your Own keywords</span>
+                    <span className=" 2xl:text-xl text-custom-black-text">Enter Your Own keywords</span>
                     <FormControlLabel
                         control={
                             <Switch
@@ -101,9 +76,10 @@ function KeywordsForArticle({ handleSidebarOptionsVisible, Regeneratekeywords, s
                 </div>
 
             </div>
-            <div className="grid grid-cols-2 rounded-lg ">
+
+            <div className="rounded-lg ">
                 {TableHeading.map((title, index) => (
-                    <div key={index} className="grid items-center justify-center px-4 py-6 font-semibold text-center max-sm:text-sm bg-custom-light-orange ">{title}</div>))}
+                    <div key={index} className="w-full px-6 py-6 font-semibold max-sm:text-sm bg-custom-light-orange">{title}</div>))}
             </div>
 
 
@@ -114,8 +90,16 @@ function KeywordsForArticle({ handleSidebarOptionsVisible, Regeneratekeywords, s
                         {keywords && keywords.map((data, index) => (
                             <tr key={index} onClick={() => handleSelection(data)} className={` ${selectedKeywords.includes(data) ? 'bg-[#FB923C0D]' : 'bg-white'} duration-100`}>
                                 <td className={DataStyle}>
+                                    <td className='flex '>
+                                        <div className="relative xl:p-1.5 ">
+                                            {selectedKeywords.includes(data) && (<VscCheck className='absolute -top-0.5 -right-0.5 duration-500 xl:text-xl xl:top-1 xl:right-1 ' />)}
+                                            <span className={`flex items-center border duration-500 border-custom-dark-orange justify-center w-4 h-4 xl:w-5 xl:h-5 rounded-full ${selectedKeywords.includes(data) ? 'bg-custom-dark-orange' : 'bg-transparent'} `}></span>
+                                        </div>
+                                        <span className='w-full ml-4 xl:mt-1'>{data}</span>
+                                    </td>
 
-                                    <div className="flex sm:px-2 lg:px-12 xl:px-12 2xl:px-28">
+
+                                    {/* <div className="flex sm:px-2 lg:px-12 xl:px-12 2xl:px-28">
 
                                         <div className="flex space-x-2 ">
                                             <div className="relative xl:p-1.5 ">
@@ -124,9 +108,8 @@ function KeywordsForArticle({ handleSidebarOptionsVisible, Regeneratekeywords, s
                                             </div>
                                             <span className='w-full xl:mt-1'>{data}</span>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </td>
-                                <td className={DataStyle}>10</td>
                             </tr>
 
 
@@ -138,9 +121,9 @@ function KeywordsForArticle({ handleSidebarOptionsVisible, Regeneratekeywords, s
 
             <div className="flex justify-end ">
                 <div className="flex justify-between w-7/12">
-                <button onClick={handleSidebarOptionsVisible} className="px-6 py-1.5 mt-5 font-semibold tracking-wide text-center text-white rounded-lg hover:bg-hover-button-color bg-custom-dark-orange">Next</button>
+                    <button onClick={handleSidebarOptionsVisible} className="px-6 py-1.5 mt-5 font-semibold tracking-wide text-center text-white rounded-lg hover:bg-hover-button-color bg-custom-dark-orange">Next</button>
 
-                    <button onClick={()=>showPopupAndCallAPI(Regeneratekeywords)} className="flex items-center justify-center  px-4 py-1.5 mt-5  tracking-wide text-center group text-white rounded-lg bg-custom-dark hover:opacity-85"><LuRefreshCcw className='mr-2 text-white duration-300 group-hover:animate-spin' />Regenerate Keywords</button>
+                    <button onClick={() => showPopupAndCallAPI(Regeneratekeywords)} className="flex items-center justify-center  px-4 py-1.5 mt-5  tracking-wide text-center group text-white rounded-lg bg-custom-dark hover:opacity-85"><LuRefreshCcw className='mr-2 text-white duration-300 group-hover:animate-spin' />Regenerate Keywords</button>
 
                 </div>
 
