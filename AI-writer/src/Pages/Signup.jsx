@@ -227,10 +227,6 @@ function Signup() {
     const countryNames = Object.values(countries).map(country => country.name).sort((a, b) => a.localeCompare(b)); // Sort alphabetically;
 
 
-
-
-
-
     // this calculates the custom price upon the slider change 
     const calculateCustomPrice = (contentWords = CustomContentWords, plagiarismWords = CustomPlagiarisedWords) => {
         // HandleFillSelectedPlanDetails()
@@ -270,26 +266,26 @@ function Signup() {
             setCustomPrice(calculateCustomPrice(CustomContentWords, newPlagiarisedValue))
 
         }
-
-
     }
 
 
-    const HandleCountrydropdown = () => {
-        setIsCountyDropdownOpened(!IsCountyDropdownOpened)
-    }
+    // const HandleCountrydropdown = () => {
+    //     setIsCountyDropdownOpened(!IsCountyDropdownOpened)
+    // }
 
 
-    const HandleCountrySelection = (option) => {
-        setFormData({
-            ...formData,
-            country: option
+    // const HandleCountrySelection = (option) => {
+    //     setFormData({
+    //         ...formData,
+    //         country: option
 
-        });
-        setSelectedCountry(option)
-        setSearchQuery(option)
-        setIsCountyDropdownOpened(false)
-    }
+    //     });
+    //     setSelectedCountry(option)
+    //     setSearchQuery(option)
+    //     setIsCountyDropdownOpened(false)
+    // }
+
+
 
     const ShowPlans = () => {
         setShowPlanLists(true)

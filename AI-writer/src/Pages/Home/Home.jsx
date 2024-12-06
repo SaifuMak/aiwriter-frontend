@@ -13,10 +13,16 @@ import Sidebar from '../../Components/Sidebar/Sidebar'
 import ArticleCard from '../../Components/ArticleCard'
 import { LuLoader2 } from "react-icons/lu";
 import Popup from '../../Components/ArticleGenerationComponents/SmallComponents/Popup';
+import SessionExpiredPopup from '../../Components/ArticleGenerationComponents/SmallComponents/SessionExpiredPopup';
+import { HandleForbiddenGenericErrors } from '../../Utils/ErrorMessageHandler';
+
+
 
 function Home() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { IsSessionExpired } = useSelector((state) => state.Navigation);
+
   const [IsSidebarVisible, setIsSidebarVisible] = useState(false)
   const [IsProfilePopup, setIsProfilePopup] = useState(false)
   const [isloading, setLoading] = useState(false)
@@ -27,10 +33,11 @@ function Home() {
   const { PlanAmount } = useSelector(state => state.Assets);
 
 
+
   useEffect(() => {
 
     dispatch(setSelectedPage('Home'))
-    
+
   }, [])
 
 
@@ -52,9 +59,9 @@ function Home() {
 
       console.log(error, '&&&&&&&&&&&&&')
       dispatch(setLogout())
+      HandleForbiddenGenericErrors(error, dispatch)
       navigate('/login')
       setLoading(false)
-
 
     }
   }
@@ -205,6 +212,9 @@ function Home() {
         cancelLabel='Cancel'
         actionLink='/purchase-plan'
       />}
+
+      {IsSessionExpired && <SessionExpiredPopup />}
+
 
     </>
   )

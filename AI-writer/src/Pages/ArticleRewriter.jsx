@@ -32,6 +32,8 @@ import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler'
 import OpacityLoader from '../Components/GeneralComponets/Loaders/OpacityLoader'
 import SessionExpiredPopup from '../Components/ArticleGenerationComponents/SmallComponents/SessionExpiredPopup'
 
+
+
 function ArticleRewriter() {
 
     const dispatch = useDispatch()
@@ -159,7 +161,6 @@ function ArticleRewriter() {
                 dispatch(setLoading(false))
             }
 
-
         }
         catch(error){
             // console.log(response.data.error)
@@ -168,7 +169,6 @@ function ArticleRewriter() {
                 dispatch(setLoading(false))
             }, 500);
             HandleForbiddenGenericErrors(error, dispatch)
-
 
         }
     }
@@ -248,6 +248,9 @@ function ArticleRewriter() {
 
 
             </div>
+
+            {IsSessionExpired && <SessionExpiredPopup />}
+
         </>
     )
 }

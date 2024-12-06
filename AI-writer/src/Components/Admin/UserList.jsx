@@ -91,6 +91,8 @@ function UserList({ GetUsersList, UsersData, IsLoading, setIsLoading, nextPage, 
         }
         catch (error) {
             setIsLoading(false)
+            HandleForbiddenGenericErrors(error, dispatch)
+
         }
     }
 

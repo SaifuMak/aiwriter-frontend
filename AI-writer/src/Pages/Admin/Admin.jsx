@@ -46,7 +46,6 @@ function Admin() {
         try {
           const response = await Axiosinstance.get('api/check_login_status')
     
-         
           const IsAdmin = response.data.is_staff
           
           if(!IsAdmin){
@@ -55,15 +54,16 @@ function Admin() {
           
           setIsLoading(false)
         }
-    
+
         catch (error) {
     
             setIsLoading(false)
-    
-    
+
         }
       }
 
+
+      
     const GetUsersList = async (page = 1) => {
         try {
 
@@ -107,6 +107,7 @@ function Admin() {
             setTotalPagesSubcriptionList(totalPages)
             setIsLoading(false)
         }
+
         catch (error) {
             console.log(error)
             setIsLoading(false)

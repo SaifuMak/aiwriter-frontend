@@ -19,7 +19,7 @@ const Table = ({ TableColumns,isLoaderColor,LoaderSize, PaymentHistoryData, IsTa
 
             ) : (
 
-                PaymentHistoryData ? (
+                PaymentHistoryData.length > 0 ? (
                     <div className={`p-2 overflow-x-auto    ${IsTableLoading && 'min-h-[380px]'} `} >
                         <table className="min-w-full bg-white ">
                             <thead >
@@ -27,7 +27,6 @@ const Table = ({ TableColumns,isLoaderColor,LoaderSize, PaymentHistoryData, IsTa
                                     {TableColumns.map((column, index) => (
                                         <th key={index} className='px-4 py-6 font-semibold text-left text-gray-800 uppercase'>{column}</th>
                                     ))}
-
                                 </tr>
                             </thead>
                             <tbody>
@@ -40,22 +39,16 @@ const Table = ({ TableColumns,isLoaderColor,LoaderSize, PaymentHistoryData, IsTa
                                         <td className={cellStyle}>{payment.name_of_plan}{payment.name_of_plan !== 'Add_on_credits' && '(monthly)'}</td>
                                         <td className={cellStyle}>${payment.cost_of_plan/100}</td>
                                         <td className='px-4 py-4 text-sm underline text-custom-dark-orange'>Download Invoice</td>
-
-
                                     </tr>
-
                                 ))}
-
-
                             </tbody>
                         </table>
                     </div >
 
                 ) : (
-                    <div className="flex items-center justify-center min-h-[380px]  ">
+                    <div className="flex items-center justify-center min-h-[80px]  ">
                         <h3 className=" text-slate-600"> No transactions have been recorded so far. </h3>
                     </div>
-
                 )
             )}
         </>

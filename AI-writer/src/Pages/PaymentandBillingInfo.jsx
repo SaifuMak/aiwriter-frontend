@@ -15,9 +15,13 @@ import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler';
 import Popup from '../Components/ArticleGenerationComponents/SmallComponents/Popup'
 import Pagination from '../Components/GeneralComponets/Pagination';
 import { getPageNumber, getTotalPagesCount } from '../Utils/Helperfunctions';
+import SessionExpiredPopup from '../Components/ArticleGenerationComponents/SmallComponents/SessionExpiredPopup';
 
 
 function PaymentandBillingInfo() {
+
+
+    const { IsSessionExpired } = useSelector((state) => state.Navigation);
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -31,23 +35,17 @@ function PaymentandBillingInfo() {
 
     const BillingDescription = 'These details will be used to provide invoices for your purchases. Please make sure you are entering right details. If you change the below details, new invoices will reflect new data.'
 
-    const [PaymentHistoryData, setPaymentHistoryData] = useState(null)
+    const [PaymentHistoryData, setPaymentHistoryData] = useState([])
     const [IsTableLoading, setIsTableLoading] = useState(true)
     const [IsBillingLoading, setIsBillingLoading] = useState(false)
     const [isAddonPopup, setIsAddonPopup] = useState(false)
 
-
-
     const { ArticleWords, PlagiarisedWords, AddOnArticleWords, AddOnPlagiarisedWords, PlanName, PlanAmount, PlanPurchasedDate, RenewalDate } = useSelector(state => state.Assets);
-
-
-
 
     const [emptyFields, setEmptyFields] = useState([]);
     const [IsCountyDropdownOpened, setIsCountyDropdownOpened] = useState(false)
     const [SelectedCountry, setSelectedCountry] = useState('')
     const [IsBillingDataEdited, setIsBillingDataEdited] = useState(false)
-
 
 
     const [formData, setFormData] = useState({
@@ -80,20 +78,13 @@ function PaymentandBillingInfo() {
             }
         });
 
-
-
         setEmptyFields(emptyFieldsArray);  // Update the state with empty fields
         return emptyFieldsArray.length > 0;
     };
 
 
 
-
-
-
     const getPaymentHistory = async (page = 1) => {
-
-
 
         try {
             const response = await Axiosinstance.get(`payment/payment-history?page=${page}`)
@@ -112,6 +103,7 @@ function PaymentandBillingInfo() {
         }
         catch (error) {
             setIsTableLoading(false)
+
 
         }
     }
@@ -158,6 +150,7 @@ function PaymentandBillingInfo() {
         }
         catch (error) {
             setIsBillingLoading(false)
+
         }
     }
 
@@ -181,7 +174,7 @@ function PaymentandBillingInfo() {
             console.log(field)
 
 
-            if (!formData[field].trim()  && !NotMandotoryFields.includes(field)) {
+            if (!formData[field].trim() && !NotMandotoryFields.includes(field)) {
                 emptyFieldsArray.push(field);  // Push field name to the array if empty
             }
         });
@@ -214,6 +207,7 @@ function PaymentandBillingInfo() {
         catch (error) {
             setIsBillingLoading(false)
             setIsBillingDataEdited(false)
+            HandleForbiddenGenericErrors(error, dispatch)
 
         }
 
@@ -228,7 +222,7 @@ function PaymentandBillingInfo() {
         }
         catch (error) {
             setIsAddonPopup(true)
-            HandleForbiddenGenericErrors(error)
+            HandleForbiddenGenericErrors(error, dispatch)
 
         }
 
@@ -271,7 +265,8 @@ function PaymentandBillingInfo() {
                         <div className="p-8 space-y-10 border rounded-lg border-slate-300">
                             <div className="flex justify-between ">
                                 <div className="">
-                                    <h6 className="text-xl font-semibold ">Your Plan:{PlanName ? PlanName : 'N/A'}</h6>
+
+                                    <h6 className={`text-xl font-semibold `}>Your Plan: <span className={`${PlanName !== 'Nil' ? 'font-semibold' : ' font-normal'}`}>{PlanName}</span></h6>
                                     {PlanAmount !== 0 && (<p className="text-[#808080] text-xl"><span className=" text-custom-dark-orange">${PlanAmount / 100}</span>/month</p>)}
                                 </div>
                                 <div className="">
@@ -289,7 +284,6 @@ function PaymentandBillingInfo() {
                                     )}
                                 </div>
                             </div>
-
 
                             <div className="flex items-center justify-between w-full ">
                                 <div className="w-full space-y-3 ">
@@ -311,10 +305,9 @@ function PaymentandBillingInfo() {
                         </div>
 
 
-
-                        {PaymentHistoryData && (<div className="">
+                        <div className="">
                             <h5 className="text-2xl ">Payments History</h5>
-                            <div className="mt-4">
+                            {PaymentHistoryData && (<div className="mt-4">
                                 <Table TableColumns={TableColumns} PaymentHistoryData={PaymentHistoryData} IsTableLoading={IsTableLoading} isLoaderColor={true} LoaderSize='4xl' />
                                 {(!IsTableLoading && PaymentHistoryData.length > 0) && (<Pagination
                                     prevPage={prevPage}
@@ -323,15 +316,13 @@ function PaymentandBillingInfo() {
                                     currentPage={currentPage}
                                     TotalPages={TotalPages}
                                 />)}
-                            </div>
-                        </div>)}
+                            </div>)}
+                        </div>
 
 
                         <div className="px-6 py-10 border rounded-lg border-slate-300">
                             <BillingDetails setIsBillingDataEdited={setIsBillingDataEdited} ConfirmBillinginfo={ConfirmBillinginfo} isLoading={IsBillingLoading} BillingDescription={BillingDescription} formData={formData} setFormData={setFormData} setSelectedCountry={setSelectedCountry} SelectedCountry={SelectedCountry} setIsCountyDropdownOpened={setIsCountyDropdownOpened} emptyFields={emptyFields} IsCountyDropdownOpened={IsCountyDropdownOpened} />
                         </div>
-
-
                     </div>
 
                 </div>
@@ -344,6 +335,8 @@ function PaymentandBillingInfo() {
                 ShowPopUp={setIsAddonPopup}
                 isButtons={false}
             />}
+
+            {IsSessionExpired && <SessionExpiredPopup />}
 
         </>
 

@@ -29,10 +29,13 @@ import ProfileDetails from '../Components/Profile/ProfileDetails'
 
 import './styles/plagiarism.css';
 
+import SessionExpiredPopup from '../Components/ArticleGenerationComponents/SmallComponents/SessionExpiredPopup'
+import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler'
 
 
 function Plagiarism() {
 
+    const { IsSessionExpired } = useSelector((state) => state.Navigation);
     const dispatch = useDispatch()
     const fileInputRef = useRef()
 
@@ -46,13 +49,6 @@ function Plagiarism() {
 
     const [checkedTime, setCheckedTime] = useState(null)
     const [checkedDate, setCheckedDate] = useState(null)
-
-
-
-
-
-
-
 
     const [IsSidedbarOpened, setIsSidedbarOpened] = useState(false)
     const [IsMobileArticleSidebarOpened, setIsMobileArticleSidebarOpened] = useState(false)
@@ -269,15 +265,13 @@ function Plagiarism() {
             setIsediting(false)
             dispatch(setWinstonResult(response.data.results))
 
-
-
         }
 
         catch (error) {
             console.log(error)
-            ErrorToast(error.response.data.error)
+            HandleForbiddenGenericErrors(error,dispatch)
+            // ErrorToast(error.response.data.error)
             setIsLoading(false)
-
 
         }
     }
@@ -690,12 +684,6 @@ function Plagiarism() {
 
 
 
-
-
-
-
-
-
     return (
         <>
             <div className="flex justify-center  h-full bg-[#FEF2E8] font-poppins ">
@@ -857,6 +845,10 @@ function Plagiarism() {
                 <Toaster position="bottom-right" />
 
             </div>
+
+
+            {IsSessionExpired && <SessionExpiredPopup />}
+
         </>
     )
 }

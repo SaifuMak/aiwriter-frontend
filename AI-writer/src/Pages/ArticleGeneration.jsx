@@ -546,6 +546,8 @@ function ArticleGeneration() {
                 {AlertPopup && <AlertPopUp handleIgnoreContinue={handleIgnoreContinue} HandleClosePopUp={HandleClosePopUp} />}
 
             </div>
+            {IsSessionExpired && <SessionExpiredPopup />}
+
         </>
     )
 }

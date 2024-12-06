@@ -57,8 +57,8 @@ function ProfileSettings({HandleAddonCreditsEligibility}) {
 
 
             <div className="flex flex-col justify-center px-8 space-y-2 max-lg:hidden">
-                <Link to='#' className="flex items-center "><GoTriangleRight className='lg:text-2xl ' /><span className="text-sm lg:text-lg ">Profile Settings</span></Link>
-                <Link to='#' className="flex items-center"><GoTriangleRight className='lg:text-2xl' /><span className="text-sm lg:text-lg ">Plan Details</span></Link>
+                <Link to='/settings' className="flex items-center "><GoTriangleRight className='lg:text-2xl ' /><span className="text-sm lg:text-lg ">Profile Settings</span></Link>
+                <Link to='/plan-details' className="flex items-center"><GoTriangleRight className='lg:text-2xl' /><span className="text-sm lg:text-lg ">Plan Details</span></Link>
                 <Link to='#' className="flex items-center"><GoTriangleRight className='lg:text-2xl' /><span className="text-sm lg:text-lg ">Billing</span></Link>
                 <Link to='#' className="flex items-center"><GoTriangleRight className='lg:text-2xl' /><span className="text-sm lg:text-lg ">Help</span></Link>
                 <span onClick={LogoutConfirm} className="flex items-center cursor-pointer"><GoTriangleRight className='lg:text-2xl' /><span className="lg:text-lg text-sm  text-[#EB1E1E]">Logout</span></span>

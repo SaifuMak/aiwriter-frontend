@@ -2,20 +2,20 @@ import React, { useState } from 'react'
 import Sidebar from '../Components/Sidebar/Sidebar'
 import CardComponent from '../Components/CardComponent'
 import ProfileDetails from '../Components/Profile/ProfileDetails'
-import { IoMenuOutline } from "react-icons/io5";
 import SelectionCard from '../Components/SelectionCard';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {  setArticleWriterSelected,setFinalArticleWriterSelected } from '../Redux/Slices/SelectedToolSlice'
 import { resetArticleGeneration } from '../Redux/Slices/ArticleGenerationSlice'
-import SuccessToast from '../Utils/SuccessToast';
-import ErrorToast from '../Utils/ErrorToast';
 import { Toaster, toast } from 'sonner';
+import SessionExpiredPopup from '../Components/ArticleGenerationComponents/SmallComponents/SessionExpiredPopup';
+
 
 
 
 function WriterStep() {
     const dispatch = useDispatch()
+    const { IsSessionExpired } = useSelector((state) => state.Navigation);
 
   const { IsArticleLoadingCompleted } = useSelector((state) => state.articleGeneration); // HTML string from backend
 
@@ -130,6 +130,7 @@ function WriterStep() {
             </div>
             <Toaster  />
 
+            {IsSessionExpired && <SessionExpiredPopup />}
 
         </div>
 

@@ -561,6 +561,7 @@ function ArticleGenerate2() {
 
                 {AlertPopup && <AlertPopUp handleIgnoreContinue={handleIgnoreContinue} HandleClosePopUp={HandleClosePopUp} />}
 
+                {IsSessionExpired && <SessionExpiredPopup />}
 
             </div>
         </>

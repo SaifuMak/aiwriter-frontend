@@ -8,9 +8,15 @@ import { Toaster, toast } from 'sonner';
 import Axiosinstance from '../Axios/Axiosinstance'
 import stripePromise from '../Stripe/Stripe'
 import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler'
+import { useDispatch, useSelector } from 'react-redux'
+import SessionExpiredPopup from '../Components/ArticleGenerationComponents/SmallComponents/SessionExpiredPopup'
+
 
 
 function AddOnCredits() {
+    const dispatch = useDispatch()
+    const { IsSessionExpired } = useSelector((state) => state.Navigation);
+
 
     const [CustomContentWords, setCustomContentWords] = useState(0)
     const [CustomPlagiarisedWords, setCustomPlagiarisedWords] = useState(0)
@@ -100,7 +106,7 @@ function AddOnCredits() {
 
             const { error } = await stripe.redirectToCheckout({ sessionId });
             if (error) console.error('Stripe Checkout error');
-            
+
             setTimeout(() => {
                 setIsLoading(false)
 
@@ -109,13 +115,13 @@ function AddOnCredits() {
         }
 
         catch (error) {
-            HandleForbiddenGenericErrors(error)
+            HandleForbiddenGenericErrors(error, dispatch)
             setTimeout(() => {
-            setIsLoading(false)
-                
+                setIsLoading(false)
+
             }, 500);
         }
-        
+
 
     }
 
@@ -213,7 +219,6 @@ function AddOnCredits() {
                                 IsLoading={IsLoading}
                                 isBorder={false}
                             />
-
                         </div>
 
 
@@ -222,6 +227,7 @@ function AddOnCredits() {
                 </div>
             </div>
             <Toaster />
+            {IsSessionExpired && <SessionExpiredPopup />}
 
 
         </>
