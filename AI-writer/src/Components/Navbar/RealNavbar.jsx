@@ -18,6 +18,8 @@ function RealNavbar({ isFullWidth = false, isDashboard = true }) {
     const [IsNavbarMenu, setIsNavbarMenu] = useState(false)
     const dropdownref = useRef()
 
+
+    
     const LogoutConfirm = () => {
         handleLogout(dispatch, navigate)
 
