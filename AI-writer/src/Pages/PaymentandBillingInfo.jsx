@@ -17,6 +17,7 @@ import Pagination from '../Components/GeneralComponets/Pagination';
 import { getPageNumber, getTotalPagesCount } from '../Utils/Helperfunctions';
 import SessionExpiredPopup from '../Components/ArticleGenerationComponents/SmallComponents/SessionExpiredPopup';
 
+import RealNavbar from '../Components/Navbar/RealNavbar';
 
 function PaymentandBillingInfo() {
 
@@ -242,7 +243,7 @@ function PaymentandBillingInfo() {
 
         <>
 
-            <AdminNavbar />
+            <RealNavbar />
 
 
             <div className="flex items-center justify-center w-full my-24 font-poppins">
