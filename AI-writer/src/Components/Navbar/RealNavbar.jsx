@@ -1,5 +1,6 @@
-import React, { useState, useRef,useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import CompleteLogo from '../../assets/Logo/CompleteLogo'
+import hatboy from '../../assets/Avatars/hatboy.png'
 import { Link } from 'react-router-dom'
 import { IoIosArrowBack } from "react-icons/io";
 import { useDispatch } from 'react-redux';
@@ -8,41 +9,65 @@ import { handleLogout } from '../../Utils/AuthService';
 import { useSelector } from 'react-redux';
 import user from '../../assets/Images/user.png'
 import { RiArrowDropDownLine } from "react-icons/ri";
+import { MdKeyboardArrowUp } from "react-icons/md";
 
 
-function RealNavbar({ isFullWidth = false, isDashboard = true }) {
+function RealNavbar({ isFullWidth = false, isDashboard = false }) {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const options = ['Home', 'Settings', 'Plan details', 'Logout']
+    // const options = ['Home', 'Settings', 'Plan details', 'Logout']
+
+    const options = [
+        { label: 'Home', link: '/' },
+        { label: 'Settings', link: '/settings' },
+        { label: 'Plan details', link: '/plan-details' },
+        { label: 'Logout', link: '/login' }
+    ];
+
     const { IsAuthenticated, Username } = useSelector(state => state.auth);
     const [IsNavbarMenu, setIsNavbarMenu] = useState(false)
     const dropdownref = useRef()
 
+    const HandleNavigation =(link)=>{
+        if(link === '/login' ){
+            handleLogout(dispatch, navigate)
+        }
+        else{
+            navigate(link)
+        }
+    }
 
-    
+
     const LogoutConfirm = () => {
         handleLogout(dispatch, navigate)
 
     }
 
+    // const handleToggleDropdown = () => {
+    //     setIsNavbarMenu(!IsNavbarMenu)
+    // }
     const handleToggleDropdown = () => {
-        setIsNavbarMenu(!IsNavbarMenu)
-    }
+        setIsNavbarMenu((prev) => !prev);
+    };
 
-    useEffect(() => {
 
-        const handleCloseDropdown = (e) => {
-            if (dropdownref.current &&
-                !dropdownref.current.contains(e.target)) {
-                setSortByDropdown(false);
 
-            }
-        }
+    // useEffect(() => {
 
-        document.addEventListener('mousedown', handleCloseDropdown)
-        return () => document.removeEventListener('mousedown', handleCloseDropdown)
+    //     const handleCloseDropdown = (e) => {
+    //         if (dropdownref.current &&
+    //             !dropdownref.current.contains(e.target)) {
+    //             setIsNavbarMenu(false);
 
-    }, [])
+    //         }
+    //     }
+
+    //     document.addEventListener('mousedown', handleCloseDropdown)
+    //     return () => document.removeEventListener('mousedown', handleCloseDropdown)
+
+    // }, [])
+
+
 
 
     return (
@@ -69,20 +94,20 @@ function RealNavbar({ isFullWidth = false, isDashboard = true }) {
                     <>
                         <div ref={dropdownref} onClick={handleToggleDropdown} className="relative flex justify-center group ">
                             {/* <h6 className="text-xl text-white capitalize">{Username ? Username : 'User'}</h6> */}
-                            <div className="flex cursor-pointer  items-center justify-center shadow-custom-dark-orange border-2   w-10 h-10 rounded-full text-xl text-custom-dark-orange bg-[#213343]">
-                                <img src={user} alt="" className="w-full h-full rounded-full bg-slate-200" />
+                            <div className="flex items-center justify-center w-10 h-10 text-xl bg-red-300 border-2 rounded-full cursor-pointer shadow-custom-dark-orange text-custom-dark-orange ">
+                                <img src={hatboy} alt="" className="w-full h-full rounded-full bg-slate-200" />
                             </div>
-                            <span className="absolute -bottom-1 left-9 "><RiArrowDropDownLine className='text-3xl text-white ' /></span>
-
+                            <span className="absolute -bottom-1 left-9 "><RiArrowDropDownLine className={`text-3xl ${IsNavbarMenu ? 'rotate-180 transform ' : ''} text-white`} /> </span>
                         </div>
                         {IsNavbarMenu && (<ul className={`absolute  right-2 py-2     z-10  top-[66px] shadow-2xl  mt-1 overflow-auto  bg-white    rounded-md  w-[150px]  scrollbar-hide`}>
                             {options.map((option, index) => (
                                 <li
                                     key={index}
+                                    onClick={()=>HandleNavigation(option.link)}
                                     className={`block text-nowrap px-2 hover:text-custom-dark-orange duration-150  text-lg cursor-pointer mt-1  hover:bg-slate-50  `}
 
                                 >
-                                    {option}
+                                    {option.label}
                                 </li>
                             ))}
                         </ul>)}

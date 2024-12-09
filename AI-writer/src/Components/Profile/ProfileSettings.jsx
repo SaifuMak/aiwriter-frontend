@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { handleLogout } from '../../Utils/AuthService';
+import { FaPen } from "react-icons/fa";
 
 
-function ProfileSettings({HandleAddonCreditsEligibility}) {
+
+function ProfileSettings({ HandleAddonCreditsEligibility,ToggleAvatar }) {
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -25,7 +27,11 @@ function ProfileSettings({HandleAddonCreditsEligibility}) {
 
         <div className="items-center justify-center w-full space-y-10 max-lg:justify-around max-lg:space-x-4 lg:w-3/12 max-lg:flex">
             <div className="flex flex-col items-center justify-center">
-                <div className="flex items-center text-5xl justify-center shadow-custom-dark-orange border-2  border-custom-dark-orange w-12 h-12 rounded-full max-lg:text-2xl lg:w-24 lg:h-24 text-custom-dark-orange bg-[#213343]">{Username ? Username[0] : 'U'}</div>
+                {/* <div className="flex items-center text-5xl justify-center shadow-custom-dark-orange border-2  border-custom-dark-orange w-12 h-12 rounded-full max-lg:text-2xl lg:w-24 lg:h-24 text-custom-dark-orange bg-[#213343]">{Username ? Username[0] : 'U'}</div> */}
+             
+                <div onClick={ToggleAvatar} className="flex relative items-center justify-center  w-12 h-12 rounded-full max-lg:text-2xl lg:w-24 lg:h-24 text-custom-dark-orange bg-[#213343]">
+                <FaPen className='absolute top-2 right-2 text-custom-dark-orange' />
+                </div>
                 <div className="flex flex-col items-center justify-center mt-4 max-lg:text-sm ">
                     <span className="font-semibold ">{Username}</span>
                     <span className=" max-lg:text-xs">{Email}</span>
@@ -34,7 +40,7 @@ function ProfileSettings({HandleAddonCreditsEligibility}) {
 
 
             <div className="flex flex-col max-lg:text-sm items-center justify-center 2xl:px-10 px-6 text-center py-6 2xl:py-10 space-y-3 bg-[#F8F8F8]">
-              
+
                 <h6 className="font-semibold ">Your Credits:</h6>
                 <p className="">Content Generation: {ArticleWords} words</p>
                 <p className="">Plagiarism checker: {PlagiarisedWords} words</p>
@@ -42,7 +48,7 @@ function ProfileSettings({HandleAddonCreditsEligibility}) {
 
 
                 {PlanAmount === 0 ? (
-              <Link to='/purchase-plan'><p className="underline cursor-pointer text-custom-dark-orange decoration-custom-dark-orange ">Purchase plan</p></Link>
+                    <Link to='/purchase-plan'><p className="underline cursor-pointer text-custom-dark-orange decoration-custom-dark-orange ">Purchase plan</p></Link>
 
                 ) : (
                     <div className="flex justify-between w-full ">

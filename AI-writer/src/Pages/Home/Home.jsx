@@ -13,7 +13,6 @@ import Sidebar from '../../Components/Sidebar/Sidebar'
 import ArticleCard from '../../Components/ArticleCard'
 import { LuLoader2 } from "react-icons/lu";
 import Popup from '../../Components/ArticleGenerationComponents/SmallComponents/Popup';
-import SessionExpiredPopup from '../../Components/ArticleGenerationComponents/SmallComponents/SessionExpiredPopup';
 import { HandleForbiddenGenericErrors } from '../../Utils/ErrorMessageHandler';
 
 
@@ -21,7 +20,7 @@ import { HandleForbiddenGenericErrors } from '../../Utils/ErrorMessageHandler';
 function Home() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { IsSessionExpired } = useSelector((state) => state.Navigation);
+  // const { IsSessionExpired } = useSelector((state) => state.Navigation);
 
   const [IsSidebarVisible, setIsSidebarVisible] = useState(false)
   const [IsProfilePopup, setIsProfilePopup] = useState(false)
@@ -213,7 +212,7 @@ function Home() {
         actionLink='/purchase-plan'
       />}
 
-      {IsSessionExpired && <SessionExpiredPopup />}
+      {/* {IsSessionExpired && <SessionExpiredPopup />} */}
 
 
     </>

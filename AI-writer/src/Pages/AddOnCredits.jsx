@@ -10,6 +10,8 @@ import stripePromise from '../Stripe/Stripe'
 import { HandleForbiddenGenericErrors } from '../Utils/ErrorMessageHandler'
 import { useDispatch, useSelector } from 'react-redux'
 import SessionExpiredPopup from '../Components/ArticleGenerationComponents/SmallComponents/SessionExpiredPopup'
+import RealNavbar from '../Components/Navbar/RealNavbar';
+
 
 
 
@@ -122,14 +124,13 @@ function AddOnCredits() {
             }, 500);
         }
 
-
     }
 
 
 
     return (
         <>
-            <AdminNavbar />
+            <RealNavbar />
 
             <div className='flex items-center justify-center font-poppins'>
 

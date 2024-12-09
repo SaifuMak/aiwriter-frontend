@@ -105,6 +105,8 @@ function ArticleHistory({ handleToggle, SelectedTab }) {
         }
     }
 
+
+    
     const HandleFavorite = async (Id) => {
         toast.dismiss()
         try {

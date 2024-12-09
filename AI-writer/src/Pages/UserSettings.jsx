@@ -10,7 +10,7 @@ import Axiosinstance from '../Axios/Axiosinstance';
 import ErrorToast from '../Utils/ErrorToast';
 import SuccessToast from '../Utils/SuccessToast';
 import { Toaster, toast } from 'sonner';
-import { GetLoginStatus,handleLogout } from '../Utils/AuthService';
+import { GetLoginStatus, handleLogout } from '../Utils/AuthService';
 import { useNavigate } from 'react-router-dom';
 import { LuLoader2 } from "react-icons/lu";
 
@@ -19,6 +19,10 @@ import { IoEyeOutline } from "react-icons/io5";
 import { IoEyeOffOutline } from "react-icons/io5";
 import { loginSuccess } from '../Redux/Slices/AuthSlice';
 import ProfileSettings from '../Components/Profile/ProfileSettings';
+import AvatarDisplay from '../Components/Avatar/AvatarDisplay';
+
+
+
 
 function UserSettings() {
     const dispatch = useDispatch()
@@ -45,6 +49,12 @@ function UserSettings() {
 
     const [IsPasswordNotMatching, setIsPasswordNotMatching] = useState(false)
     // const Username = 'Richard'
+
+    const [ShowAvatars, setShowAvatars] = useState(false)
+
+    const ToggleAvatar = () => {
+        setShowAvatars(!ShowAvatars)
+    }
 
     const HandleEmail = (e) => {
         if (!isEmailTypingStarted) {
@@ -159,8 +169,8 @@ function UserSettings() {
         }
     }
 
-    const LogoutConfirm =()=>{
-        handleLogout(dispatch,navigate)
+    const LogoutConfirm = () => {
+        handleLogout(dispatch, navigate)
     }
 
 
@@ -189,15 +199,15 @@ function UserSettings() {
     }, [IsEmailEditable]);
 
 
-    
+
     return (
 
         <>
-   
-        <AdminNavbar LogoutConfirm = {LogoutConfirm} />
-    
 
-            <div className="flex items-center justify-center w-full mt-24 font-poppins">
+            <AdminNavbar LogoutConfirm={LogoutConfirm} />
+
+
+            <div className="relative flex items-center justify-center w-full mt-24 font-poppins">
 
 
                 <div className="w-11/12 lg:flex lg:space-x-12 ">
@@ -211,7 +221,7 @@ function UserSettings() {
                         <Link to='#' className="flex items-center"><span className="lg:text-lg text-sm  text-[#EB1E1E]">Logout</span></Link>
                     </div>
 
-                    <ProfileSettings LogoutConfirm={LogoutConfirm}/>
+                    <ProfileSettings LogoutConfirm={LogoutConfirm} ToggleAvatar={ToggleAvatar} />
 
 
 
@@ -252,12 +262,15 @@ function UserSettings() {
                                         {(confirmPasswordError && confirmPassword) && <span className="text-sm text-red-500 ">{confirmPasswordError}</span>}
                                     </div>
                                 </div>
-
                                 <button onClick={ChangePasswordApi} className="bg-[#213343] flex justify-center items-center font-semibold text-white w-48 h-10 rounded-md text-nowrap">{PasswordApiLoading ? <LuLoader2 className='text-2xl animate-spin ' /> : 'Change Password'}</button>
-
                             </div>
                         </div>
                     </div>
+
+                    {/*                     
+                    {ShowAvatars && (<div className="absolute ">
+                        <AvatarDisplay />
+                    </div>)} */}
 
                 </div>
             </div>
